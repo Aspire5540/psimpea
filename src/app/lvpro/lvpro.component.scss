@@ -1,0 +1,93 @@
+table {
+  width: 100%;
+}
+.mat-select-content{
+  width:2000px;
+  background-color: red;
+  font-size: 10px;   
+}
+.bg-success {
+background-color: #e0308e !important;
+}
+.mat-row:nth-child(even){
+background-color: #dae8f5;
+}
+th.mat-header-cell{
+  color: rgb(10, 6, 223);
+  font-weight: bold;
+  justify-content:center;
+}
+.wrfont{
+  color: #FFF;
+
+}
+.mat-card{
+  background:#30366C ;
+}
+.mat-cell {
+  text-align: center;
+  justify-content:center;
+}
+.mat-header-cell {
+text-align: center;
+justify-content:center;
+}
+.mat-button-toggle {
+background-color: #ffffff;
+color:  #000000;
+font-weight: bold;
+width: 150px;
+}
+
+.mat-button-toggle-checked {
+background-color: #e0308e;
+color: rgb(255, 255, 255);
+
+}
+.mat-form-field.placeholder {
+  color: #00D318;
+}
+
+.mat-input-element::placeholder{
+  color: white;
+}
+
+
+.not-empty-select.mat-selected {
+  color: green !important;
+}
+.mat-select-value-text {
+  color:white !important;
+}
+
+::ng-deep .mat-select-value{    
+  color: white!important;  }
+
+.input-lg {
+  font-size: 15px;
+}
+ 
+.table-lg {
+  font-size: 14px;
+  color: black;
+  background-color:snow;
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color:rgb(255, 255, 255);
+  font-size: medium;
+  background-color: #30366C;
+  }
+  
+  ::ng-deep .mat-tab-list .mat-tab-labels {
+  color:rgb(255, 255, 255);
+  background-color:#4e5595;
+  }
+  
+
+
+/* Styles for the ink bar */
+
+  
+  
+   
