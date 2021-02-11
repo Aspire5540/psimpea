@@ -1,12 +1,13 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
-import {NgForm} from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ConfigService } from '../config/config.service';
 
-import {MatTableDataSource,MatPaginator} from '@angular/material';
-import { wbsdata  } from '../model/user.model';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { wbsdata } from '../model/user.model';
 import { AuthService } from '../config/auth.service';
-import { HttpClient} from '@angular/common/http';
-import {FileuploadService} from '../config/fileupload.service';
+import { HttpClient } from '@angular/common/http';
+import { FileuploadService } from '../config/fileupload.service';
+import{ GlobalConstants } from '../common/global-constants';
 
 @Component({
   selector: 'app-upload',
@@ -18,28 +19,42 @@ export class UploadComponent implements OnInit {
   @ViewChild('pm', { static: false }) pmForm: NgForm;
   @ViewChild('ldcad', { static: false }) ldcadForm: NgForm;
 
-  URL ="http://127.0.0.1/psisservice/uploadssap/";
+  URL = "http://127.0.0.1/psisservice/uploadssap/";
   uploadDocResponse = '';
   uploadDocResponse2 = '';
   uploadDocResponse3 = '';
   uploadDocResponse4 = '';
-  uploadDocResponse5 ='';
-  autoPeaCod='';
-  constructor(private configService :ConfigService,public authService: AuthService,private http: HttpClient,private uploadService : FileuploadService) { }
-  peaCode="";
-  ngOnInit() {
-    this.peaCode = localStorage.getItem('peaCode');
-    
+  uploadDocResponse5 = '';
+  autoPeaCod = '';
+  constructor(private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) { }
+  peaCode = "";
+  region='';
+  regionLetter = {'n1': 'A',
+    'n2': 'B',
+    'n3': 'C',
+    'ne1': 'D',
+    'ne2': 'E',
+    'ne3': 'F',
+    'c1': 'G',
+    'c2': 'H',
+    'c3': 'I',
+    's1': 'J',
+    's2': 'K',
+    's3': 'L'};
 
-    
+  ngOnInit() {
+    this.peaCode = localStorage.getItem('peaCode'); 
+    // this.region='n2';
+    //console.log(GlobalConstants.region);
   }
-  checkAutho(){
-    if(this.peaCode==this.autoPeaCod){
+  checkAutho() {
+    this.autoPeaCod=this.regionLetter[GlobalConstants.region]+"00000";
+    if (this.peaCode == this.autoPeaCod) {
       return true;
-    }else{
-      return true;
+    } else {
+      return false;
     }
-   
+
   }
 
   handleFile048(event) {
@@ -47,9 +62,9 @@ export class UploadComponent implements OnInit {
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
     this.uploadService.uploadZap048(formData).subscribe(res => {
-        this.uploadDocResponse = res.status;   
-        //console.log(res);   
-      }
+      this.uploadDocResponse = res.status;
+      //console.log(res);   
+    }
     );
   }
   handleFileLDCAD(event) {
@@ -57,9 +72,9 @@ export class UploadComponent implements OnInit {
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
     this.uploadService.uploadLDCAD(formData).subscribe(res => {
-        this.uploadDocResponse2 = res.status;   
-        console.log(this.uploadDocResponse2);   
-      }
+      this.uploadDocResponse2 = res.status;
+      console.log(this.uploadDocResponse2);
+    }
     );
   }
   handleFilePEANAME(event) {
@@ -67,9 +82,9 @@ export class UploadComponent implements OnInit {
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
     this.uploadService.uploadPEANAME(formData).subscribe(res => {
-        this.uploadDocResponse3 = res.status;   
-        //console.log(res);   
-      }
+      this.uploadDocResponse3 = res.status;
+      //console.log(res);   
+    }
     );
   }
   handleFilePEANAME2(event) {
@@ -77,9 +92,9 @@ export class UploadComponent implements OnInit {
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
     this.uploadService.uploadPEANAME2(formData).subscribe(res => {
-        this.uploadDocResponse5 = res.status;   
-        //console.log(res);   
-      }
+      this.uploadDocResponse5 = res.status;
+      //console.log(res);   
+    }
     );
   }
   handleFilePM(event) {
@@ -87,64 +102,64 @@ export class UploadComponent implements OnInit {
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
     this.uploadService.uploadPM(formData).subscribe(res => {
-        this.uploadDocResponse4 = res.status;   
-        //console.log(res);   
-      }
+      this.uploadDocResponse4 = res.status;
+      //console.log(res);   
+    }
     );
   }
 
-  onSubmit(){
+  onSubmit() {
 
-    this.configService.postdata2('w048tosql.php',this.registerForm.value).subscribe((data=>{
-      if(data['status']==1){
-          this.registerForm.resetForm();
-          alert("เก็บข้อมูลแล้วเสร็จ");
-      }else{
+    this.configService.postdata2('w048tosql.php', this.registerForm.value).subscribe((data => {
+      if (data['status'] == 1) {
+        this.registerForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
         alert(data['data']);
       }
 
     }))
   }
 
-  uploadLDCAD(){
-    this.configService.postdata2('uploadsql/ldcadtosql.php',{}).subscribe((data=>{
-      if(data['status']==1){
-          this.ldcadForm.resetForm();
-          alert("เก็บข้อมูลแล้วเสร็จ");
-      }else{
+  uploadLDCAD() {
+    this.configService.postdata2('uploadsql/ldcadtosql.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.ldcadForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
         alert(data['data']);
       }
 
     }))
   }
-  uploadPEANAME(){
-    this.configService.postdata2('uploadsql/peanametosql.php',{}).subscribe((data=>{
-      if(data['status']==1){
-          this.ldcadForm.resetForm();
-          alert("เก็บข้อมูลแล้วเสร็จ");
-      }else{
+  uploadPEANAME() {
+    this.configService.postdata2('uploadsql/peanametosql.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.ldcadForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
         alert(data['data']);
       }
 
     }))
   }
-  uploadPEANAME2(){
-    this.configService.postdata2('uploadsql/peaname2tosql.php',{}).subscribe((data=>{
-      if(data['status']==1){
-          this.ldcadForm.resetForm();
-          alert("เก็บข้อมูลแล้วเสร็จ");
-      }else{
+  uploadPEANAME2() {
+    this.configService.postdata2('uploadsql/peaname2tosql.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.ldcadForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
         alert(data['data']);
       }
 
     }))
   }
-  uploadPM(){
-    this.configService.postdata2('uploadsql/PMtosql.php',{}).subscribe((data=>{
-      if(data['status']==1){
-          this.pmForm.resetForm();
-          alert("เก็บข้อมูลแล้วเสร็จ");
-      }else{
+  uploadPM() {
+    this.configService.postdata2('uploadsql/PMtosql.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.pmForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
         alert(data['data']);
       }
 

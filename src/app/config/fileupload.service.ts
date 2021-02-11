@@ -36,6 +36,7 @@ export class FileuploadService {
   }
   public uploadZap048(data) {
     let uploadURL = `${this.SERVER_URL}/uploadZap048.php`; 
+    data.append('region', this.region);
     return this.http.post<any>(uploadURL, data);
   } 
   public uploadLDCAD(data) {

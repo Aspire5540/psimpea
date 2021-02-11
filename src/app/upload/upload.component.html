@@ -1,11 +1,11 @@
 
 <app-loader></app-loader>
-<div class="row" *ngIf="checkAutho()">
+<div class="row" *ngIf="!checkAutho()">
     <h1 class="card-title">ไม่มีสิทธิ์ใช้งาน</h1> 
 
 </div>
 
-<div class="row" *ngIf="!checkAutho()">
+<div class="row" *ngIf="checkAutho()">
   <div class="col-6 grid-margin">
     <div class="card">
       <div class="card-body">     
