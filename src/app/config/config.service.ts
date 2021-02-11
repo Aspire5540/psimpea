@@ -6,6 +6,7 @@ import { wbsdata,jobreq,trdata,appJob,jobprogress,meterdata,meterdata2,
   trphase,meterdata3,jobRemain,jobRemain2,ezxdevice,matreq,trmatch} from '../model/user.model';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import{ GlobalConstants } from '../common/global-constants';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -29,56 +30,56 @@ export class ConfigService {
   constructor(private http: HttpClient) {
     //this.headers.append('Content-Type','application/x-www-form-urlencoded');
     //this.options.headers = this.headers;
-    this.subdomain = "n2";
+    //GlobalConstants.region = "n2";
    }
    getData(endpoint){
-     return this.http.get(this.hostUrl+endpoint+"&region="+this.subdomain);
+     return this.http.get(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
    }
    getWbs(endpoint): Observable<wbsdata[]> {
-    return this.http.get<wbsdata[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<wbsdata[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getezxdevice(endpoint): Observable<ezxdevice[]> {
-    return this.http.get<ezxdevice[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<ezxdevice[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getJobRemain(endpoint): Observable<jobRemain[]> {
-    return this.http.get<jobRemain[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<jobRemain[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getBYRemain(endpoint): Observable<jobRemain[]> {
-    return this.http.get<jobRemain2[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<jobRemain2[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getJob(endpoint): Observable<jobreq[]> {
-    return this.http.get<jobreq[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<jobreq[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
 
   getMatReq(endpoint): Observable<matreq[]> {
-    return this.http.get<matreq[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<matreq[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getTr(endpoint): Observable<trdata[]> {
-    return this.http.get<trdata[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<trdata[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getTr2(endpoint): Observable<trphase[]> {
-    return this.http.get<trphase[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<trphase[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getmeterdata2(endpoint): Observable<meterdata2[]> {
-    return this.http.get<meterdata2[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<meterdata2[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getmeterdata3(endpoint): Observable<meterdata3[]> {
-    return this.http.get<meterdata3[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<meterdata3[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getMeter(endpoint): Observable<meterdata[]> {
-    return this.http.get<meterdata[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<meterdata[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getTrMatch(endpoint): Observable<trmatch[]> {
-    return this.http.get<trmatch[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<trmatch[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getAppJob(endpoint): Observable<appJob[]> {
-    return this.http.get<appJob[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<appJob[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getJobProgress(endpoint): Observable<jobprogress[]> {
-    return this.http.get<jobprogress[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
+    return this.http.get<jobprogress[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
   }
   getStatus(endpoint,params){
-    params["region"] = this.subdomain;
+    params["region"] = GlobalConstants.region;
     return this.http.post(this.hostUrl+endpoint,JSON.stringify(params));
   }
   /*
@@ -87,7 +88,7 @@ export class ConfigService {
   }
   */
   postdata2 (endpoint,params){
-    params["region"] = this.subdomain;
+    params["region"] = GlobalConstants.region;
     return this.http.post(this.hostUrl+endpoint,JSON.stringify(params));
   }
   /*
