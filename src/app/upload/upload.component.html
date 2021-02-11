@@ -1,11 +1,11 @@
 
 <app-loader></app-loader>
-<div class="row" *ngIf="peaCode != 'B00000'">
+<div class="row" *ngIf="checkAutho()">
     <h1 class="card-title">ไม่มีสิทธิ์ใช้งาน</h1> 
 
 </div>
 
-<div class="row" *ngIf="peaCode == 'B00000'">
+<div class="row" *ngIf="!checkAutho()">
   <div class="col-6 grid-margin">
     <div class="card">
       <div class="card-body">     
@@ -102,7 +102,7 @@
     <div class="card">
       <div class="card-body">     
         <h1 class="card-title"> Upload PM </h1>        
-        <form class="form-sample" #PMForm="ngForm" (ngSubmit)="uploadPM()">
+        <form class="form-sample" #pm="ngForm" (ngSubmit)="uploadPM()">
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
@@ -116,11 +116,92 @@
             </div>
           </div>
             <div class="col-md-3">
-              <button type="submit" [disabled]="!PMForm.valid" class="btn btn-success mr-2">Submit</button>
+              <button type="submit" [disabled]="!pm.valid" class="btn btn-success mr-2">Submit</button>
             </div>
         
          </form>
       </div>
     </div>
   </div>
+
+  <div class="col-6 grid-margin">
+    <div class="card">
+      <div class="card-body">     
+        <h1 class="card-title"> Upload LDCAD </h1>        
+        <form class="form-sample" #ldcad="ngForm" (ngSubmit)="uploadLDCAD()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="input-lg" for="file">เลือกไฟล์ LDCAD.xlsx </label>
+                    <input type="file"
+                           id="file"
+                           name="filename"
+                           (change)="handleFileLDCAD($event)" ngModel required>
+                    <label class="input-lg"> {{uploadDocResponse2}} </label>                  
+                </div>
+            </div>
+          </div>
+            <div class="col-md-3">
+              <button type="submit" [disabled]="!ldcad.valid" class="btn btn-success">Submit</button>
+            </div>
+        
+         </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-6 grid-margin">
+    <div class="card">
+      <div class="card-body">     
+        <h1 class="card-title"> Upload PEANAME </h1>        
+        <form class="form-sample" #peaname="ngForm" (ngSubmit)="uploadPEANAME()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="input-lg" for="file">เลือกไฟล์ PEANAME.xlsx </label>
+                    <input type="file"
+                           id="file"
+                           name="filename"
+                           (change)="handleFilePEANAME($event)" ngModel required>
+                    <label class="input-lg"> {{uploadDocResponse3}} </label>                  
+                </div>
+            </div>
+          </div>
+            <div class="col-md-3">
+              <button type="submit" [disabled]="!peaname.valid" class="btn btn-success">Submit</button>
+            </div>
+        
+         </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 grid-margin">
+    <div class="card">
+      <div class="card-body">     
+        <h1 class="card-title"> Upload PEANAME2 </h1>        
+        <form class="form-sample" #peaname2="ngForm" (ngSubmit)="uploadPEANAME2()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="input-lg" for="file">เลือกไฟล์ PEANAME2.xlsx </label>
+                    <input type="file"
+                           id="file"
+                           name="filename"
+                           (change)="handleFilePEANAME2($event)" ngModel required>
+                    <label class="input-lg"> {{uploadDocResponse5}} </label>                  
+                </div>
+            </div>
+          </div>
+            <div class="col-md-3">
+              <button type="submit" [disabled]="!peaname2.valid" class="btn btn-success">Submit</button>
+            </div>
+        
+         </form>
+      </div>
+    </div>
+  </div>
+
+
 </div>

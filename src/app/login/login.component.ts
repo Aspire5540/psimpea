@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
    
 
     //this.returnUrl = '/phasecheck';
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/ldcad'
+    // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/ldcad';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/upload'
     this.authService.logout();
     this.configService.changeMessage();
   }

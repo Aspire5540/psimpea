@@ -6,10 +6,10 @@ import { HttpClient} from '@angular/common/http';
   providedIn: 'root'
 })
 export class FileuploadService {
-  SERVER_URL: string = "http://172.30.212.148/psisservice/";
+  SERVER_URL: string = "http://172.30.212.189/psisservice/";
   //SERVER_URL: string = "http://127.0.0.1/psisservice/";
  
-  
+  region='n3';
 
   constructor(private http: HttpClient) { }
 
@@ -37,16 +37,25 @@ export class FileuploadService {
     let uploadURL = `${this.SERVER_URL}/uploadZap048.php`; 
     return this.http.post<any>(uploadURL, data);
   } 
-  public uploadGIS(data) {
-    let uploadURL = `${this.SERVER_URL}/uploadGIS.php`; 
+  public uploadLDCAD(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadLDCAD.php`; 
+    // console.log(data.append('region',this.region));
+    data.append('region', this.region);
     return this.http.post<any>(uploadURL, data);
   } 
-  public uploadLvpro(data) {
-    let uploadURL = `${this.SERVER_URL}/uploadLvpro.php`; 
+  public uploadPEANAME(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadPEANAME.php`; 
+    data.append('region', this.region);
+    return this.http.post<any>(uploadURL, data);
+  }
+  public uploadPEANAME2(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadPEANAME2.php`; 
+    data.append('region', this.region);
     return this.http.post<any>(uploadURL, data);
   }
   public uploadPM(data) {
     let uploadURL = `${this.SERVER_URL}/uploadPM.php`; 
+    data.append('region', this.region);
     return this.http.post<any>(uploadURL, data);
   }  
 }

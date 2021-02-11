@@ -15,20 +15,33 @@ import {FileuploadService} from '../config/fileupload.service';
 })
 export class UploadComponent implements OnInit {
   @ViewChild('f', { static: false }) registerForm: NgForm;
+  @ViewChild('pm', { static: false }) pmForm: NgForm;
+  @ViewChild('ldcad', { static: false }) ldcadForm: NgForm;
 
   URL ="http://127.0.0.1/psisservice/uploadssap/";
   uploadDocResponse = '';
   uploadDocResponse2 = '';
   uploadDocResponse3 = '';
   uploadDocResponse4 = '';
+  uploadDocResponse5 ='';
+  autoPeaCod='';
   constructor(private configService :ConfigService,public authService: AuthService,private http: HttpClient,private uploadService : FileuploadService) { }
   peaCode="";
   ngOnInit() {
     this.peaCode = localStorage.getItem('peaCode');
- 
+    
 
     
   }
+  checkAutho(){
+    if(this.peaCode==this.autoPeaCod){
+      return true;
+    }else{
+      return true;
+    }
+   
+  }
+
   handleFile048(event) {
     //console.log(event.target.files[0]);
     const formData = new FormData();
@@ -39,22 +52,32 @@ export class UploadComponent implements OnInit {
       }
     );
   }
-  handleFileGIS(event) {
+  handleFileLDCAD(event) {
     //console.log(event.target.files[0]);
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
-    this.uploadService.uploadGIS(formData).subscribe(res => {
+    this.uploadService.uploadLDCAD(formData).subscribe(res => {
         this.uploadDocResponse2 = res.status;   
+        console.log(this.uploadDocResponse2);   
+      }
+    );
+  }
+  handleFilePEANAME(event) {
+    //console.log(event.target.files[0]);
+    const formData = new FormData();
+    formData.append('avatar', event.target.files[0]);
+    this.uploadService.uploadPEANAME(formData).subscribe(res => {
+        this.uploadDocResponse3 = res.status;   
         //console.log(res);   
       }
     );
   }
-  handleFileLvpro(event) {
+  handleFilePEANAME2(event) {
     //console.log(event.target.files[0]);
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
-    this.uploadService.uploadLvpro(formData).subscribe(res => {
-        this.uploadDocResponse3 = res.status;   
+    this.uploadService.uploadPEANAME2(formData).subscribe(res => {
+        this.uploadDocResponse5 = res.status;   
         //console.log(res);   
       }
     );
@@ -69,6 +92,7 @@ export class UploadComponent implements OnInit {
       }
     );
   }
+
   onSubmit(){
 
     this.configService.postdata2('w048tosql.php',this.registerForm.value).subscribe((data=>{
@@ -81,10 +105,11 @@ export class UploadComponent implements OnInit {
 
     }))
   }
-  onSubmit2(){
-    this.configService.postdata2('phase/gistosql.php',{}).subscribe((data=>{
+
+  uploadLDCAD(){
+    this.configService.postdata2('uploadsql/ldcadtosql.php',{}).subscribe((data=>{
       if(data['status']==1){
-          this.registerForm.resetForm();
+          this.ldcadForm.resetForm();
           alert("เก็บข้อมูลแล้วเสร็จ");
       }else{
         alert(data['data']);
@@ -92,10 +117,21 @@ export class UploadComponent implements OnInit {
 
     }))
   }
-  uploadLvpro(){
-    this.configService.postdata2('uploadsql/lvprotosql.php',{}).subscribe((data=>{
+  uploadPEANAME(){
+    this.configService.postdata2('uploadsql/peanametosql.php',{}).subscribe((data=>{
       if(data['status']==1){
-          this.registerForm.resetForm();
+          this.ldcadForm.resetForm();
+          alert("เก็บข้อมูลแล้วเสร็จ");
+      }else{
+        alert(data['data']);
+      }
+
+    }))
+  }
+  uploadPEANAME2(){
+    this.configService.postdata2('uploadsql/peaname2tosql.php',{}).subscribe((data=>{
+      if(data['status']==1){
+          this.ldcadForm.resetForm();
           alert("เก็บข้อมูลแล้วเสร็จ");
       }else{
         alert(data['data']);
@@ -106,7 +142,7 @@ export class UploadComponent implements OnInit {
   uploadPM(){
     this.configService.postdata2('uploadsql/PMtosql.php',{}).subscribe((data=>{
       if(data['status']==1){
-          this.registerForm.resetForm();
+          this.pmForm.resetForm();
           alert("เก็บข้อมูลแล้วเสร็จ");
       }else{
         alert(data['data']);
