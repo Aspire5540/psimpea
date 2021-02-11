@@ -31,7 +31,8 @@ export class UploadComponent implements OnInit {
 
 
   ngOnInit() {
-    this.peaCode = localStorage.getItem('peaCode'); 
+    // this.peaCode = localStorage.getItem('peaCode'); 
+    this.peaCode = 'C00000'; 
   }
   checkAutho() {
     this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";
@@ -96,7 +97,7 @@ export class UploadComponent implements OnInit {
 
   onSubmit() {
 
-    this.configService.postdata2('w048tosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/w048tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.registerForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
