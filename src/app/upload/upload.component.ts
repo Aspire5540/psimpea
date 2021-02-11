@@ -19,7 +19,7 @@ export class UploadComponent implements OnInit {
   @ViewChild('pm', { static: false }) pmForm: NgForm;
   @ViewChild('ldcad', { static: false }) ldcadForm: NgForm;
 
-  URL = "http://127.0.0.1/psisservice/uploadssap/";
+  // URL = "http://127.0.0.1/psisservice/uploadssap/";
   uploadDocResponse = '';
   uploadDocResponse2 = '';
   uploadDocResponse3 = '';
@@ -28,27 +28,13 @@ export class UploadComponent implements OnInit {
   autoPeaCod = '';
   constructor(private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) { }
   peaCode = "";
-  region='';
-  regionLetter = {'n1': 'A',
-    'n2': 'B',
-    'n3': 'C',
-    'ne1': 'D',
-    'ne2': 'E',
-    'ne3': 'F',
-    'c1': 'G',
-    'c2': 'H',
-    'c3': 'I',
-    's1': 'J',
-    's2': 'K',
-    's3': 'L'};
+
 
   ngOnInit() {
     this.peaCode = localStorage.getItem('peaCode'); 
-    // this.region='n2';
-    //console.log(GlobalConstants.region);
   }
   checkAutho() {
-    this.autoPeaCod=this.regionLetter[GlobalConstants.region]+"00000";
+    this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";
     if (this.peaCode == this.autoPeaCod) {
       return true;
     } else {
@@ -110,7 +96,7 @@ export class UploadComponent implements OnInit {
 
   onSubmit() {
 
-    this.configService.postdata2('w048tosql.php', this.registerForm.value).subscribe((data => {
+    this.configService.postdata2('w048tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.registerForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
