@@ -204,8 +204,13 @@ export class LVProComponent implements OnInit {
     this.getpeaList2();
 
   }
+  
 
   ngOnInit() {
+    var parts = location.hostname.split('.');
+    console.log(parts);
+    var subdomain = parts.shift();
+    console.log(subdomain);
     //this.peaCode = localStorage.getItem('peaCode');
     // this.getTrData();
     // this.getStatus();
@@ -214,7 +219,7 @@ export class LVProComponent implements OnInit {
     this.getTRmatch();
     this.getJobProgressPea();
     // console.log("url:", this.router.url);
-    // console.log(window.location);
+    console.log(window.location);
     // this.getMatReq();
     //this.getMeterData();
 
@@ -394,7 +399,7 @@ export class LVProComponent implements OnInit {
 
   }
   getpeaList() {
-    this.configService.postdata2('phase/rdpeaall.php', {}).subscribe((data => {
+    this.configService.postdata2('rdpeaall2.php', {}).subscribe((data => {
       console.log(data);
 
       if (data["status"] == 1) {

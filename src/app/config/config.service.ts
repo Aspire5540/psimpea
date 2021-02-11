@@ -19,63 +19,66 @@ export class ConfigService {
   currentMessage = this.messageSource.asObservable();
   //private serviceUrl = 'https://jsonplaceholder.typicode.com/users';
 
-  hostUrl = 'http://172.30.212.148/psisservice/';
+  hostUrl = 'http://172.30.212.189/psisservice/';
+  //hostUrl = 'http://172.30.212.148/psisservice/';
   // hostUrl = 'http://127.0.0.1/psisservice/';
   
   //headers = new Headers();
   //options = new RequestOptions()
-
+  subdomain = "";
   constructor(private http: HttpClient) {
     //this.headers.append('Content-Type','application/x-www-form-urlencoded');
     //this.options.headers = this.headers;
+    this.subdomain = "n2";
    }
    getData(endpoint){
-     return this.http.get(this.hostUrl+endpoint);
+     return this.http.get(this.hostUrl+endpoint+"&region="+this.subdomain);
    }
    getWbs(endpoint): Observable<wbsdata[]> {
-    return this.http.get<wbsdata[]>(this.hostUrl+endpoint);
+    return this.http.get<wbsdata[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getezxdevice(endpoint): Observable<ezxdevice[]> {
-    return this.http.get<ezxdevice[]>(this.hostUrl+endpoint);
+    return this.http.get<ezxdevice[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getJobRemain(endpoint): Observable<jobRemain[]> {
-    return this.http.get<jobRemain[]>(this.hostUrl+endpoint);
+    return this.http.get<jobRemain[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getBYRemain(endpoint): Observable<jobRemain[]> {
-    return this.http.get<jobRemain2[]>(this.hostUrl+endpoint);
+    return this.http.get<jobRemain2[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getJob(endpoint): Observable<jobreq[]> {
-    return this.http.get<jobreq[]>(this.hostUrl+endpoint);
+    return this.http.get<jobreq[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
 
   getMatReq(endpoint): Observable<matreq[]> {
-    return this.http.get<matreq[]>(this.hostUrl+endpoint);
+    return this.http.get<matreq[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getTr(endpoint): Observable<trdata[]> {
-    return this.http.get<trdata[]>(this.hostUrl+endpoint);
+    return this.http.get<trdata[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getTr2(endpoint): Observable<trphase[]> {
-    return this.http.get<trphase[]>(this.hostUrl+endpoint);
+    return this.http.get<trphase[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getmeterdata2(endpoint): Observable<meterdata2[]> {
-    return this.http.get<meterdata2[]>(this.hostUrl+endpoint);
+    return this.http.get<meterdata2[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getmeterdata3(endpoint): Observable<meterdata3[]> {
-    return this.http.get<meterdata3[]>(this.hostUrl+endpoint);
+    return this.http.get<meterdata3[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getMeter(endpoint): Observable<meterdata[]> {
-    return this.http.get<meterdata[]>(this.hostUrl+endpoint);
+    return this.http.get<meterdata[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getTrMatch(endpoint): Observable<trmatch[]> {
-    return this.http.get<trmatch[]>(this.hostUrl+endpoint);
+    return this.http.get<trmatch[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getAppJob(endpoint): Observable<appJob[]> {
-    return this.http.get<appJob[]>(this.hostUrl+endpoint);
+    return this.http.get<appJob[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getJobProgress(endpoint): Observable<jobprogress[]> {
-    return this.http.get<jobprogress[]>(this.hostUrl+endpoint);
+    return this.http.get<jobprogress[]>(this.hostUrl+endpoint+"&region="+this.subdomain);
   }
   getStatus(endpoint,params){
+    params["region"] = this.subdomain;
     return this.http.post(this.hostUrl+endpoint,JSON.stringify(params));
   }
   /*
@@ -84,6 +87,7 @@ export class ConfigService {
   }
   */
   postdata2 (endpoint,params){
+    params["region"] = this.subdomain;
     return this.http.post(this.hostUrl+endpoint,JSON.stringify(params));
   }
   /*

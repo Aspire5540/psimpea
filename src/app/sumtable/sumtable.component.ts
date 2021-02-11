@@ -67,7 +67,8 @@ solveMetsIm = ['ตัดจ่ายใหม่',
   ];
   selectAppChoice='';
   //file upload
-  URL = "http://172.30.212.148/psisservice/uploads/";
+  URL = "http://172.30.212.189/psisservice/uploads/";
+  //URL = "http://172.30.212.148/psisservice/uploads/";
   //URL = "http://127.0.0.1/psisservice/uploads/";
   private file: File | null = null;
   error: string;
