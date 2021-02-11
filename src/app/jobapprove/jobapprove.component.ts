@@ -35,7 +35,8 @@ export class JobapproveComponent implements OnInit {
   nwbsApp = [];
   peaname = [];
   peaCode = "";
-  URL = "http://172.30.212.148/psisservice/uploads/";
+  URL = "http://172.30.212.189/psisservice/uploads/";
+  //URL = "http://172.30.212.148/psisservice/uploads/";
   WorkCostPercentPea = [];
   matCostPercentPea = [];
   WorkCostPea = [];
