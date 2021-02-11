@@ -29,6 +29,7 @@ import {
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../format-datepicker';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import{ GlobalConstants } from '../common/global-constants';
 
 
 
@@ -164,7 +165,9 @@ export class LVProComponent implements OnInit {
   selPeaName = 'กฟน.2';
   selMatchPeaName = 'กฟน.2';
   selPeapeaCode = 'B00000';
-  selPeapeaCode2 = 'B000';
+  selPeapeaCode2 = 'xx';
+  region='xx';
+  selAoj = 'xx';
   currentMatherPea = "";
   currentPea = "";
   TrTotal = 0;
@@ -552,6 +555,9 @@ export class LVProComponent implements OnInit {
   selectMatchPea(event) {
 
     this.selMatchPeaName = event.value[2];
+    this.selPeapeaCode2 = event.value[1];
+    this.selAoj = GlobalConstants.regionNumber[GlobalConstants.region]+this.selPeapeaCode2.substr(1,2);
+    this.region = GlobalConstants.region;
     this.getTRmatch();
     //this.getJobClsdPea();
 
@@ -1399,7 +1405,7 @@ export class LVProComponent implements OnInit {
 
   }
   getTRmatch() {
-    this.configService.getTrMatch('ldcad/rdMatchTR.php?peaName2=' + this.selMatchPeaName)
+    this.configService.getTrMatch('ldcad/rdMatchTR.php?aoj=' + this.selAoj)
       //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
       .subscribe(res => {
         this.dataSource2.data = res as trmatch[];
@@ -1413,7 +1419,7 @@ export class LVProComponent implements OnInit {
 
   getMatReq() {
     this.configService.getMatReq('ldcad/getmatreq.php?nDay=' + this.nDate)
-      //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
+      //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000)
       .subscribe(res => {
         this.dataSource3.data = res as matreq[];
         this.dataSource3.paginator = this.paginator3;
