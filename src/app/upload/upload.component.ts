@@ -25,6 +25,8 @@ export class UploadComponent implements OnInit {
   uploadDocResponse3 = '';
   uploadDocResponse4 = '';
   uploadDocResponse5 = '';
+  uploadDocResponse6 = '';
+  uploadDocResponse7 = '';
   autoPeaCod = '';
   constructor(private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) { }
   peaCode = "";
@@ -94,6 +96,26 @@ export class UploadComponent implements OnInit {
     }
     );
   }
+  handleFilemb52(event) {
+    //console.log(event.target.files[0]);
+    const formData = new FormData();
+    formData.append('avatar', event.target.files[0]);
+    this.uploadService.uploadmb52(formData).subscribe(res => {
+      this.uploadDocResponse6 = res.status;
+      //console.log(res);   
+    }
+    );
+  }
+  handleFilecn52n(event) {
+    //console.log(event.target.files[0]);
+    const formData = new FormData();
+    formData.append('avatar', event.target.files[0]);
+    this.uploadService.uploadcn52n(formData).subscribe(res => {
+      this.uploadDocResponse7 = res.status;
+      //console.log(res);   
+    }
+    );
+  }
 
   onSubmit() {
 
@@ -143,6 +165,28 @@ export class UploadComponent implements OnInit {
   }
   uploadPM() {
     this.configService.postdata2('uploadsql/PMtosql.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.pmForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
+        alert(data['data']);
+      }
+
+    }))
+  }
+  uploadmb52() {
+    this.configService.postdata2('uploadsql/mb52tosql.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.pmForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
+        alert(data['data']);
+      }
+
+    }))
+  }
+  uploadcn52n() {
+    this.configService.postdata2('uploadsql/cn52ntosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");

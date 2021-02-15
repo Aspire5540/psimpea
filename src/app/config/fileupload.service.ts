@@ -59,6 +59,16 @@ export class FileuploadService {
     let uploadURL = `${this.SERVER_URL}/uploadPM.php`; 
     data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
-  }  
+  }
+  public uploadmb52(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadmb52.php`; 
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  }
+  public uploadcn52n(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadcn52n.php`; 
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  }    
 }
 
