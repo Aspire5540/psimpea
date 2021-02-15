@@ -593,11 +593,11 @@ export class LVProComponent implements OnInit {
         var total = 0;
 
         // data['dataPkva'].forEach(element => {
-        //   if (kvaByPeaObj[this.peaname["B" + element.Pea]]) {
-        //     kvaByPeaObj[this.peaname["B" + element.Pea]].push([element.kva, Number(element.totalTr)]);
+        //   if (kvaByPeaObj[this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + element.Pea]]) {
+        //     kvaByPeaObj[this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + element.Pea]].push([element.kva, Number(element.totalTr)]);
         //   } else {
-        //     kvaByPeaObj[this.peaname["B" + element.Pea]] = [];
-        //     kvaByPeaObj[this.peaname["B" + element.Pea]].push([element.kva, Number(element.totalTr)]);
+        //     kvaByPeaObj[this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + element.Pea]] = [];
+        //     kvaByPeaObj[this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + element.Pea]].push([element.kva, Number(element.totalTr)]);
         //   }
         // });
         // console.log(kvaByPeaObj);
@@ -605,16 +605,17 @@ export class LVProComponent implements OnInit {
         //   kvaObj[element.Pea] = Number(element.totalTr);
         //   this.TrTotal = this.TrTotal + Number(element.totalTr);
         // });
+
         firstLoop = true;
         lastPea = '';
         total = 0;
         kvaByPeaObj['wbs'] = [];
         for (var i = 0; i < data['data'].length; i++) {
-          if (kvaByPeaObj['wbs'][this.peaname["B" + data['data'][i].Pea]]) {
-            kvaByPeaObj['wbs'][this.peaname["B" + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].totalTr)]);
+          if (kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]]) {
+            kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].totalTr)]);
           } else {
-            kvaByPeaObj['wbs'][this.peaname["B" + data['data'][i].Pea]] = [];
-            kvaByPeaObj['wbs'][this.peaname["B" + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].totalTr)]);
+            kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].totalTr)]);
           }
           // console.log(data['dataP'][i],data['dataP'][i].Pea!=lastPea && !firstLoop);
           if (data['data'][i].Pea != lastPea && !firstLoop) {
@@ -638,17 +639,17 @@ export class LVProComponent implements OnInit {
         //   this.TrTotal = this.TrTotal + Number(element.totalTr);
         //   this.TrTotalClsd = this.TrTotalClsd + Number(element.totalTr);
         // });
-
+        console.log(this.peaname);
         firstLoop = true;
         lastPea = '';
         total = 0;
         kvaByPeaObj['gis'] = [];
         for (var i = 0; i < data['dataGIS'].length; i++) {
-          if (kvaByPeaObj['gis'][this.peaname["B" + data['dataGIS'][i].Pea]]) {
-            kvaByPeaObj['gis'][this.peaname["B" + data['dataGIS'][i].Pea]].push([data['dataGIS'][i].kva, Number(data['dataGIS'][i].totalTr)]);
+          if (kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataGIS'][i].Pea]]) {
+            kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataGIS'][i].Pea]].push([data['dataGIS'][i].kva, Number(data['dataGIS'][i].totalTr)]);
           } else {
-            kvaByPeaObj['gis'][this.peaname["B" + data['dataGIS'][i].Pea]] = [];
-            kvaByPeaObj['gis'][this.peaname["B" + data['dataGIS'][i].Pea]].push([data['dataGIS'][i].kva, Number(data['dataGIS'][i].totalTr)]);
+            kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataGIS'][i].Pea]] = [];
+            kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataGIS'][i].Pea]].push([data['dataGIS'][i].kva, Number(data['dataGIS'][i].totalTr)]);
           }
 
           // console.log(data['dataP'][i],data['dataP'][i].Pea!=lastPea && !firstLoop);
@@ -678,11 +679,11 @@ export class LVProComponent implements OnInit {
         total = 0;
         kvaByPeaObj['no'] = [];
         for (var i = 0; i < data['dataNo'].length; i++) {
-          if (kvaByPeaObj['no'][this.peaname["B" + data['dataNo'][i].Pea]]) {
-            kvaByPeaObj['no'][this.peaname["B" + data['dataNo'][i].Pea]].push([data['dataNo'][i].kva, Number(data['dataNo'][i].totalTr)]);
+          if (kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataNo'][i].Pea]]) {
+            kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataNo'][i].Pea]].push([data['dataNo'][i].kva, Number(data['dataNo'][i].totalTr)]);
           } else {
-            kvaByPeaObj['no'][this.peaname["B" + data['dataNo'][i].Pea]] = [];
-            kvaByPeaObj['no'][this.peaname["B" + data['dataNo'][i].Pea]].push([data['dataNo'][i].kva, Number(data['dataNo'][i].totalTr)]);
+            kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataNo'][i].Pea]] = [];
+            kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataNo'][i].Pea]].push([data['dataNo'][i].kva, Number(data['dataNo'][i].totalTr)]);
           }
 
           // console.log(data['dataP'][i],data['dataP'][i].Pea!=lastPea && !firstLoop);
@@ -708,11 +709,11 @@ export class LVProComponent implements OnInit {
         total = 0;
         kvaByPeaObj['clsd'] = [];
         for (var i = 0; i < data['dataCLSD'].length; i++) {
-          if (kvaByPeaObj['clsd'][this.peaname["B" + data['dataCLSD'][i].Pea]]) {
-            kvaByPeaObj['clsd'][this.peaname["B" + data['dataCLSD'][i].Pea]].push([data['dataCLSD'][i].kva, Number(data['dataCLSD'][i].totalTr)]);
+          if (kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataCLSD'][i].Pea]]) {
+            kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataCLSD'][i].Pea]].push([data['dataCLSD'][i].kva, Number(data['dataCLSD'][i].totalTr)]);
           } else {
-            kvaByPeaObj['clsd'][this.peaname["B" + data['dataCLSD'][i].Pea]] = [];
-            kvaByPeaObj['clsd'][this.peaname["B" + data['dataCLSD'][i].Pea]].push([data['dataCLSD'][i].kva, Number(data['dataCLSD'][i].totalTr)]);
+            kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataCLSD'][i].Pea]] = [];
+            kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataCLSD'][i].Pea]].push([data['dataCLSD'][i].kva, Number(data['dataCLSD'][i].totalTr)]);
           }
 
           // console.log(data['dataP'][i],data['dataP'][i].Pea!=lastPea && !firstLoop);
@@ -738,11 +739,11 @@ export class LVProComponent implements OnInit {
         if (this.option == '1' || this.option == '6' || this.option == '3') {
           kvaByPeaObj['volt'] = [];
           for (var i = 0; i < data['dataVoltage'].length; i++) {
-            if (kvaByPeaObj['volt'][this.peaname["B" + data['dataVoltage'][i].Pea]]) {
-              kvaByPeaObj['volt'][this.peaname["B" + data['dataVoltage'][i].Pea]].push([data['dataVoltage'][i].kva, Number(data['dataVoltage'][i].totalTr)]);
+            if (kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]]) {
+              kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]].push([data['dataVoltage'][i].kva, Number(data['dataVoltage'][i].totalTr)]);
             } else {
-              kvaByPeaObj['volt'][this.peaname["B" + data['dataVoltage'][i].Pea]] = [];
-              kvaByPeaObj['volt'][this.peaname["B" + data['dataVoltage'][i].Pea]].push([data['dataVoltage'][i].kva, Number(data['dataVoltage'][i].totalTr)]);
+              kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]] = [];
+              kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]].push([data['dataVoltage'][i].kva, Number(data['dataVoltage'][i].totalTr)]);
             }
 
             // console.log(data['dataP'][i],data['dataP'][i].Pea!=lastPea && !firstLoop);
@@ -769,16 +770,16 @@ export class LVProComponent implements OnInit {
         // var kvaPln=[];
         kvaByPeaObj['plan'] = [];
         for (var i = 0; i < data['dataP'].length; i++) {
-          if (kvaByPeaObj['plan'][this.peaname["B" + data['dataP'][i].Pea]]) {
-            kvaByPeaObj['plan'][this.peaname["B" + data['dataP'][i].Pea]].push([data['dataP'][i].kva, Number(data['dataP'][i].totalTr)]);
+          if (kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i].Pea]]) {
+            kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i].Pea]].push([data['dataP'][i].kva, Number(data['dataP'][i].totalTr)]);
           } else {
-            kvaByPeaObj['plan'][this.peaname["B" + data['dataP'][i].Pea]] = [];
-            kvaByPeaObj['plan'][this.peaname["B" + data['dataP'][i].Pea]].push([data['dataP'][i].kva, Number(data['dataP'][i].totalTr)]);
+            kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i].Pea]] = [];
+            kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i].Pea]].push([data['dataP'][i].kva, Number(data['dataP'][i].totalTr)]);
           }
 
           // console.log(data['dataP'][i],data['dataP'][i].Pea!=lastPea && !firstLoop);
           if (data['dataP'][i].Pea != lastPea && !firstLoop) {
-            Pea.push(this.peaname["B" + data['dataP'][i - 1].Pea]);
+            Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i - 1].Pea]);
             peaInd.push(data['dataP'][i - 1].Pea);
             kvaPln.push(total);
             total = Number(data['dataP'][i].totalTr);
@@ -786,7 +787,7 @@ export class LVProComponent implements OnInit {
             total = total + Number(data['dataP'][i].totalTr);
           }
           if (i == data['dataP'].length - 1) {
-            Pea.push(this.peaname["B" + data['dataP'][i].Pea]);
+            Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i].Pea]);
             kvaPln.push(total);
             peaInd.push(data['dataP'][i].Pea);
           }
@@ -798,7 +799,7 @@ export class LVProComponent implements OnInit {
         // console.log(kvaByPeaObj);
         for (var i = 0; i < peaInd.length; i++) {
           // data['dataP'].forEach(element => {
-          // Pea.push(this.peaname["B" + element.Pea]);
+          // Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + element.Pea]);
 
 
           // this.TrPlnTal = this.TrPlnTal + Number(element.totalTr);
