@@ -150,7 +150,6 @@
     </div>
   </div>
 
-
   <div class="col-6 grid-margin">
     <div class="card">
       <div class="card-body">     
@@ -203,5 +202,56 @@
     </div>
   </div>
 
+  <div class="col-6 grid-margin">
+    <div class="card">
+      <div class="card-body">     
+        <h1 class="card-title"> Upload mb52 </h1>        
+        <form class="form-sample" #mb52="ngForm" (ngSubmit)="uploadmb52()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="input-lg" for="file">เลือกไฟล์ mb52 </label>
+                    <input type="file"
+                           id="file"
+                           name="filename"
+                           (change)="handleFilemb52($event)" ngModel required>
+                    <label class="input-lg"> {{uploadDocResponse6}} </label>                  
+                </div>
+            </div>
+          </div>
+            <div class="col-md-3">
+              <button type="submit" [disabled]="!mb52.valid" class="btn btn-success">Submit</button>
+            </div>
+        
+         </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 grid-margin">
+    <div class="card">
+      <div class="card-body">     
+        <h1 class="card-title"> Upload cn52n </h1>        
+        <form class="form-sample" #cn52n="ngForm" (ngSubmit)="uploadcn52n()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="input-lg" for="file">เลือกไฟล์ cn52n </label>
+                    <input type="file"
+                           id="file"
+                           name="filename"
+                           (change)="handleFilecn52n($event)" ngModel required>
+                    <label class="input-lg"> {{uploadDocResponse7}} </label>                  
+                </div>
+            </div>
+          </div>
+            <div class="col-md-3">
+              <button type="submit" [disabled]="!cn52n.valid" class="btn btn-success">Submit</button>
+            </div>
+        
+         </form>
+      </div>
+    </div>
+  </div>
 
 </div>
