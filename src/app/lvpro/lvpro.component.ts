@@ -1393,7 +1393,11 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-
+  //console.log(this.peaCode);
+  //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
+  //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
+  this.peaCode = "C00000";
+  if(this.peaCode.includes (GlobalConstants.regionLetter[GlobalConstants.region].trim())){
     this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
       //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
       .subscribe(res => {
@@ -1403,7 +1407,7 @@ export class LVProComponent implements OnInit {
         this.dataSource1.paginator = this.paginator1;
         this.dataSource1.sort = this.sort1;
       })
-
+    }
   }
   getTRmatch() {
     this.configService.getTrMatch('ldcad/rdMatchTR.php?aoj=' + this.selAoj)
