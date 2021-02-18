@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ConfigService } from '../config/config.service';
 import { Router } from '@angular/router';
@@ -29,7 +29,7 @@ import {
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../format-datepicker';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import{ GlobalConstants } from '../common/global-constants';
+import { GlobalConstants } from '../common/global-constants';
 
 
 
@@ -92,7 +92,7 @@ export class LVProComponent implements OnInit {
   testArry = { '100': 20 };
 
   option = "2";
-  displayedColumns1 = ['aoj', 'PEA_TR', 'kva', 'Location', 'PLoadTOT', 'minV', 'Ub', 'wbs', 'jobStatus', 'Status', 'loadResult','loadMea', 'rundate', 'expDate', 'workstatus'];
+  displayedColumns1 = ['aoj', 'PEA_TR', 'kva', 'Location', 'PLoadTOT', 'minV', 'Ub', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'rundate', 'expDate', 'workstatus'];
 
   displayedColumns2 = ['PEA_TR',
     'PEANAME',
@@ -166,7 +166,7 @@ export class LVProComponent implements OnInit {
   selMatchPeaName = 'กฟน.2';
   selPeapeaCode = 'B00000';
   selPeapeaCode2 = 'xx';
-  region='xx';
+  region = 'xx';
   selAoj = 'xx';
   currentMatherPea = "";
   currentPea = "";
@@ -207,7 +207,9 @@ export class LVProComponent implements OnInit {
     this.getpeaList2();
 
   }
-  
+  // AfterViewInit(){
+  //   this.getJobProgressPea2();
+  // }
 
   ngOnInit() {
     var parts = location.hostname.split('.');
@@ -219,8 +221,8 @@ export class LVProComponent implements OnInit {
     // this.getStatus();
     // this.getMat("1");
     this.getinfo();
-    this.getTRmatch();
-    this.getJobProgressPea();
+    //this.getTRmatch();
+    this.getJobProgressPea2();
     // console.log("url:", this.router.url);
     console.log(window.location);
     // this.getMatReq();
@@ -301,7 +303,7 @@ export class LVProComponent implements OnInit {
       if (data['status'] == 1) {
         this.getTrData();
         //  this.getStatus();
-        // this.getJobProgressPea();
+        // this.getJobProgressPea2();
         //console.log(this.peaname);
       } else {
         alert(data['data']);
@@ -314,7 +316,7 @@ export class LVProComponent implements OnInit {
       if (data['status'] == 1) {
         this.getTrData();
         //  this.getStatus();
-        this.getJobProgressPea();
+        this.getJobProgressPea2();
         //console.log(this.peaname);
       } else {
         alert(data['data']);
@@ -365,14 +367,14 @@ export class LVProComponent implements OnInit {
         return false;
       }
     }
-    
+
     if (trdata.Status != null) {
       if (trdata.Status.includes('แก้ไขข้อมูล GIS แล้ว') || trdata.Status.includes('ไม่พบปัญหา')) {
         if (trdata.wbs != null) {
           if (trdata.wbs[0] != '2' && trdata.wbs[0] !== 'P' && trdata.wbs[0] !== 'I' && trdata.wbs[0] !== 'C') {
             return false;
-          } 
-        }else{
+          }
+        } else {
           return false;
         }
 
@@ -446,7 +448,7 @@ export class LVProComponent implements OnInit {
     //   this.showTR = true;
     //   this.getLoad100();
     // }
-    this.getJobProgressPea();
+    this.getJobProgressPea2();
 
   }
   getLoad100() {
@@ -547,7 +549,7 @@ export class LVProComponent implements OnInit {
     this.selPeaName = event.value[2];
     this.selPeapeaCode = event.value[1];
     this.currentMatherPea = this.peaname[this.selPeapeaCode];
-    this.getJobProgressPea();
+    this.getJobProgressPea2();
     //this.getJobClsdPea();
 
 
@@ -556,17 +558,687 @@ export class LVProComponent implements OnInit {
 
     this.selMatchPeaName = event.value[2];
     this.selPeapeaCode2 = event.value[1];
-    this.selAoj = GlobalConstants.regionNumber[GlobalConstants.region]+this.selPeapeaCode2.substr(1,2);
+    this.selAoj = GlobalConstants.regionNumber[GlobalConstants.region] + this.selPeapeaCode2.substr(1, 2);
     this.region = GlobalConstants.region;
     this.getTRmatch();
     //this.getJobClsdPea();
 
 
   }
+  getJobProgressPea2() {
+
+    this.configService.postdata2('ldcad/rdLoad2.php', { peaCode: this.selPeapeaCode, option: this.option }).subscribe((data => {
+      if (data['status'] == 1) {
+
+        var Pea = [];
+        var kva = [];
+        var GIS = [];
+        var CLSD = [];
+        var No = [];
+        var Volt = [];
+        this.TrTotal = 0;
+        var kvaPln = [];
+        this.TrPlnTal = 0;
+        var VoltObj = [];
+        this.TrTotalClsd = 0;
+        var kvaByPeaObj = [];
+        var firstLoop = true;
+        var lastPea = '';
+        var total = 0;
+
+       
+
+
+        firstLoop = true;
+        lastPea = '';
+        total = 0;
+        if (this.option == '1' || this.option == '6' || this.option == '3') {
+          kvaByPeaObj['volt'] = [];
+          for (var i = 0; i < data['dataVoltage'].length; i++) {
+            if (kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]]) {
+              kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]].push([data['dataVoltage'][i].kva, Number(data['dataVoltage'][i].totalTr)]);
+            } else {
+              kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]] = [];
+              kvaByPeaObj['volt'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataVoltage'][i].Pea]].push([data['dataVoltage'][i].kva, Number(data['dataVoltage'][i].totalTr)]);
+            }
+
+            // console.log(data['dataP'][i],data['dataP'][i].Pea!=lastPea && !firstLoop);
+            if (data['dataVoltage'][i].Pea != lastPea && !firstLoop) {
+              VoltObj[data['dataVoltage'][i - 1].Pea] = total;
+              total = Number(data['dataVoltage'][i].totalTr);
+            } else {
+              total = total + Number(data['dataVoltage'][i].totalTr);
+            }
+            if (i == data['dataVoltage'].length - 1) {
+              VoltObj[data['dataVoltage'][i].Pea] = total;
+            }
+            lastPea = data['dataVoltage'][i].Pea;
+            firstLoop = false;
+          }
+        }
+
+
+        firstLoop = true;
+        lastPea = '';
+        var totalTR = 0;
+        var totalWBS = 0;
+        var totalGIS = 0;
+        var totalNO = 0;
+        var totalCLSD = 0;
+        var peaInd = [];
+
+        // var kvaPln=[];
+        kvaByPeaObj['plan'] = [];
+        kvaByPeaObj['wbs'] = [];
+        kvaByPeaObj['gis'] = [];
+        kvaByPeaObj['no'] = [];
+        kvaByPeaObj['clsd'] = [];
+        console.log(data['data']);
+        for (var i = 0; i < data['data'].length; i++) {
+          if (kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]]) {
+            kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nTR)]);
+            kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nWBS)]);
+            kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nGIS)]);
+            kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nNo)]);
+            kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nCLSD)]);
+          } else {
+            kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nTR)]);
+            kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nWBS)]);
+            kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nGIS)]);
+            kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nNo)]);
+            kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nCLSD)]);
+
+          }
+
+          // console.log(data['data'][i],data['data'][i].Pea!=lastPea && !firstLoop);
+          if (data['data'][i].Pea != lastPea && !firstLoop) {
+            Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i - 1].Pea]);
+            peaInd.push(data['data'][i - 1].Pea);
+            kvaPln.push(totalTR);
+            kva.push(totalWBS);
+            GIS.push(totalGIS);
+            No.push(totalNO);
+            CLSD.push(totalCLSD);
+            totalTR = Number(data['data'][i].nTR);
+            totalWBS = Number(data['data'][i].nWBS);
+            totalGIS = Number(data['data'][i].nGIS);
+            totalNO = Number(data['data'][i].nNo);
+            totalCLSD = Number(data['data'][i].nCLSD);
+          } else {
+            totalTR = totalTR + Number(data['data'][i].nTR);
+            totalWBS = totalWBS + Number(data['data'][i].nWBS);
+            totalGIS = totalGIS + Number(data['data'][i].nGIS);
+            totalNO = totalNO + Number(data['data'][i].nNo);
+            totalCLSD = totalCLSD + Number(data['data'][i].nCLSD);
+          }
+          if (i == data['data'].length - 1) {
+            Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]);
+            kvaPln.push(totalTR);
+            kva.push(totalWBS);
+            GIS.push(totalGIS);
+            No.push(totalNO);
+            CLSD.push(totalCLSD);
+            peaInd.push(data['data'][i].Pea);
+          }
+          this.TrPlnTal = this.TrPlnTal + Number(data['data'][i].nTR);
+          lastPea = data['data'][i].Pea;
+          firstLoop = false;
+          this.TrTotal = this.TrTotal + Number(data['data'][i].nWBS) + Number(data['data'][i].nGIS) + Number(data['data'][i].nNo);
+          this.TrTotalClsd = this.TrTotalClsd + Number(data['data'][i].nCLSD) + Number(data['data'][i].nGIS) + Number(data['data'][i].nNo);
+        }
+
+        for (var i = 0; i < peaInd.length; i++) {
+ 
+          if (this.option == '1' || this.option == '3' || this.option == '6') {
+            if (VoltObj[peaInd[i]]) {
+              Volt.push(VoltObj[peaInd[i]]);
+              // kvaPercent.push(kvaObj[peaInd[i]] / element.totalTr * 100)
+              kvaPln[i] = kvaPln[i] - Volt[i];
+            } else {
+              Volt.push(0);
+              // kvaPercent.push(0);
+            }
+          }
+        }
+        // });
+
+        //this.kvaTotal=505;
+        //APEX CHART
+
+        this.chartOptions1 = {
+          series: [this.TrTotal / this.TrPlnTal * 100, this.TrTotalClsd / this.TrPlnTal * 100],
+          chart: {
+            height: 400,
+            type: "radialBar",
+            stacked: true,
+            toolbar: {
+              show: false
+            }
+          },
+          fill: {
+            colors: ['#118ab2', '#ffd166'],
+          },
+          plotOptions: {
+            radialBar: {
+              startAngle: 0,
+              endAngle: 360,
+              hollow: {
+                margin: 0,
+                size: "70%",
+                background: "#30366C",
+                image: undefined,
+                position: "front",
+                dropShadow: {
+                  enabled: true,
+                  top: 3,
+                  left: 0,
+                  blur: 4,
+                  opacity: 0.24
+                }
+              },
+              track: {
+                background: "#fff",
+                strokeWidth: "67%",
+                margin: 0, // margin is in pixels
+                dropShadow: {
+                  enabled: true,
+                  top: -3,
+                  left: 0,
+                  blur: 4,
+                  opacity: 0.35
+                }
+              },
+
+              dataLabels: {
+                show: true,
+                name: {
+                  offsetY: -10,
+                  show: true,
+                  color: "#fff",
+                  fontSize: "17px",
+                },
+                total: {
+                  show: true,
+                  label: 'ผลการตรวจสอบ : ผลการปิดงาน',
+                  color: "white",
+                  formatter: function (val) {
+                    return parseInt(val.config.series[0].toString(), 10).toString() + "%" + " : " + parseInt(val.config.series[1].toString(), 10).toString() + "%";
+                  }
+                  // formatter: function () {
+                  //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+                  //   return 249
+                  // }
+                },
+                value: {
+                  formatter: function (val) {
+                    return parseInt(val.toString(), 10).toString() + "%";
+                  },
+                  color: "#fff",
+                  fontSize: "36px",
+                  show: true
+                }
+              }
+            }
+          },
+          stroke: {
+            lineCap: "round"
+          },
+          labels: ["ผลการตรวจสอบ", "ผลการปิดงาน"]
+
+        };
+
+
+        // Chart JS ====================================
+        var chartData = {};
+        if (this.option != '1' && this.option != '3' && this.option != '6') {
+          chartData = {
+            labels: Pea,
+            segmentShowStroke: false,
+            datasets: [
+              {
+                label: 'ปิด WBS/ใบสั่ง แล้ว',
+                stack: 'Stack 1',
+                data: CLSD,
+                backgroundColor: '#cc8400',
+              },
+              {
+                label: 'แก้ไข GIS',
+                stack: 'Stack 1',
+                data: GIS,
+                backgroundColor: '#ffd166',
+              },
+              {
+                label: 'ไม่พบปัญหา',
+                stack: 'Stack 1',
+                data: No,
+                backgroundColor: '#ffd166',
+              },
+              {
+                label: 'มี WBS/ใบสั่ง แล้ว',
+                stack: 'Stack 2',
+                data: kva,
+                backgroundColor: '#118ab2',
+              },
+              {
+                label: 'แก้ไข GIS',
+                stack: 'Stack 2',
+                data: GIS,
+                backgroundColor: '#ffd166',
+              },
+              {
+                label: 'ไม่พบปัญหา',
+                stack: 'Stack 2',
+                data: No,
+                backgroundColor: '#ffd166',
+              },
+              {
+                label: 'หม้อแปลงทั้งหมด',
+                stack: 'Stack 3',
+                data: kvaPln,
+                backgroundColor: '#06d6a0',
+              },
+            ]
+          };
+        } else {
+          if (this.option == '6') {
+            chartData = {
+              labels: Pea,
+              datasets: [
+                {
+                  label: 'ปิด WBS/ใบสั่ง แล้ว',
+                  stack: 'Stack 1',
+                  data: CLSD,
+                  backgroundColor: '#cc8400',
+                },
+                {
+                  label: 'แก้ไข GIS',
+                  stack: 'Stack 1',
+                  data: GIS,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'ไม่พบปัญหา',
+                  stack: 'Stack 1',
+                  data: No,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'มี WBS/ใบสั่ง แล้ว',
+                  stack: 'Stack 2',
+                  data: kva,
+                  backgroundColor: '#118ab2',
+                },
+                {
+                  label: 'แก้ไข GIS',
+                  stack: 'Stack 2',
+                  data: GIS,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'ไม่พบปัญหา',
+                  stack: 'Stack 2',
+                  data: No,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'แรงดัน 200-204 V',
+                  stack: 'Stack 3',
+                  data: Volt,
+                  backgroundColor: '#ef476f',
+                },
+                {
+                  label: 'แรงดัน 205-210 V',
+                  stack: 'Stack 3',
+                  data: kvaPln,
+                  backgroundColor: '#06d6a0',
+                },
+              ]
+            }
+          } else if (this.option == '3') {
+            chartData = {
+              labels: Pea,
+              datasets: [
+                {
+                  label: 'ปิด WBS/ใบสั่ง แล้ว',
+                  stack: 'Stack 1',
+                  data: CLSD,
+                  backgroundColor: '#cc8400',
+                },
+                {
+                  label: 'แก้ไข GIS',
+                  stack: 'Stack 1',
+                  data: GIS,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'ไม่พบปัญหา',
+                  stack: 'Stack 1',
+                  data: No,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'มี WBS/ใบสั่ง แล้ว',
+                  stack: 'Stack 2',
+                  data: kva,
+                  backgroundColor: '#118ab2',
+                },
+                {
+                  label: 'แก้ไข GIS',
+                  stack: 'Stack 2',
+                  data: GIS,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'ไม่พบปัญหา',
+                  stack: 'Stack 2',
+                  data: No,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: '%UB >50%',
+                  stack: 'Stack 3',
+                  data: kvaPln,
+                  backgroundColor: '#ef476f',
+                },
+
+                {
+                  label: '%UB 25-50%',
+                  stack: 'Stack 3',
+                  data: Volt,
+                  backgroundColor: '#06d6a0',
+                },
+              ]
+            }
+          } else if (this.option == '1') {
+            chartData = {
+              labels: Pea,
+              datasets: [
+                {
+                  label: 'ปิด WBS/ใบสั่ง แล้ว',
+                  stack: 'Stack 1',
+                  data: CLSD,
+                  backgroundColor: '#cc8400',
+                },
+                {
+                  label: 'แก้ไข GIS',
+                  stack: 'Stack 1',
+                  data: GIS,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'ไม่พบปัญหา',
+                  stack: 'Stack 1',
+                  data: No,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'มี WBS/ใบสั่ง แล้ว',
+                  stack: 'Stack 2',
+                  data: kva,
+                  backgroundColor: '#118ab2',
+                },
+                {
+                  label: 'แก้ไข GIS',
+                  stack: 'Stack 2',
+                  data: GIS,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'ไม่พบปัญหา',
+                  stack: 'Stack 2',
+                  data: No,
+                  backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'โหลด 90-100%',
+                  stack: 'Stack 3',
+                  data: kvaPln,
+                  backgroundColor: '#ef476f',
+                },
+                {
+                  label: 'โหลด 80-90%',
+                  stack: 'Stack 3',
+                  data: Volt,
+                  backgroundColor: '#06d6a0',
+                },
+
+              ]
+            }
+          }
+
+
+        }
+
+        // if (this.chartResult) this.chartResult.destroy();
+        this.chartResult = new Chart('chartResult', {
+          type: 'horizontalBar',
+          data: chartData,
+          options: {
+            indexAxis: 'y',
+            // Elements options apply to all of the options unless overridden in a dataset
+            // In this case, we are setting the border of each horizontal bar to be 2px wide
+            elements: {
+              bar: {
+                borderWidth: 2,
+              }
+            },
+            color: '#fff',
+            responsive: true,
+            maintainAspectRatio: false,
+            tooltips: {
+              position: 'nearest',
+              mode: 'single',
+              callbacks: {
+                label: function (tooltipItem, data, myData = kvaByPeaObj) {
+                  // console.log(myData[tooltipItem.label],tooltipItem);
+
+                  var ind = tooltipItem.datasetIndex;
+                  var arryLabel = [];
+                  var kvaObj = [];
+                  var voltObj = [];
+                  var gisObj = [];
+                  var noObj = [];
+                  if (data.datasets[tooltipItem.datasetIndex].label.includes('ทั้งหมด')) {
+                    kvaObj = myData["plan"][tooltipItem.label];
+                  } else if (data.datasets[tooltipItem.datasetIndex].label.includes('มี WBS')) {
+                    kvaObj = myData["wbs"][tooltipItem.label];
+                  } else if (data.datasets[tooltipItem.datasetIndex].label.includes('ปิด WBS')) {
+                    kvaObj = myData["clsd"][tooltipItem.label];
+                  } else if (data.datasets[tooltipItem.datasetIndex].label.includes('แรงดัน 205-210') ||
+                    data.datasets[tooltipItem.datasetIndex].label.includes('โหลด 90-100') ||
+                    data.datasets[tooltipItem.datasetIndex].label.includes('%UB >50')) {
+                    var plnObj = myData["plan"][tooltipItem.label];
+                    voltObj = myData["volt"][tooltipItem.label];
+                    for (var i = 0; i < plnObj.length; i++) {
+                      kvaObj.push([plnObj[i][0], plnObj[i][1]]);
+                      for (var j = 0; j < voltObj.length; j++) {
+                        if (kvaObj[i][0] == voltObj[j][0]) {
+                          kvaObj[i][1] = plnObj[i][1] - voltObj[j][1];
+                          break
+                        }
+                      }
+                    }
+                  } else if (data.datasets[tooltipItem.datasetIndex].label.includes('แรงดัน 200-204') ||
+                    data.datasets[tooltipItem.datasetIndex].label.includes('โหลด 80-90') ||
+                    data.datasets[tooltipItem.datasetIndex].label.includes('%UB 25')) {
+                    kvaObj = myData["volt"][tooltipItem.label];
+                  } else if (data.datasets[tooltipItem.datasetIndex].label.includes('ไม่พบ') ||
+                    data.datasets[tooltipItem.datasetIndex].label.includes('GIS')) {
+                    noObj = myData["no"][tooltipItem.label] ? myData["no"][tooltipItem.label] : [];
+                    gisObj = myData["gis"][tooltipItem.label] ? myData["gis"][tooltipItem.label] : [];
+                    var kvalist = [];
+                    for (var i = 0; i < gisObj.length; i++) {
+                      kvaObj.push([gisObj[i][0], gisObj[i][1], 0]);
+                      kvalist.push(gisObj[i][0]);
+                    }
+                    for (var j = 0; j < noObj.length; j++) {
+                      if (kvalist.indexOf(noObj[j][0]) >= 0) {
+                        kvaObj[kvalist.indexOf(noObj[j][0])][2] = noObj[j][1];
+                      } else {
+                        kvaObj.push([noObj[j][0], 0, noObj[j][1]]);
+                      }
+                      kvaObj = kvaObj.sort(function (a, b) {
+                        if (Number(a[0]) < Number(b[0])) return -1;
+                        if (Number(a[0]) > Number(b[0])) return 1;
+                        return 0;
+                      });
+                    }
+                  }
+                  if (ind == 1 || ind == 2 || ind == 4 || ind == 5) {
+                    arryLabel.push(data.datasets[1].label + " : " + data.datasets[1].data[tooltipItem.index] + " เครื่อง , " + data.datasets[2].label + " : " + data.datasets[2].data[tooltipItem.index] + "เครื่อง");
+                    kvaObj.forEach(element => {
+                      if (element[1] > 0 || element[2] > 0) {
+                        arryLabel.push(element[0] + ' kVA ' + element[1] + "," + element[2] + ' เครื่อง')
+                      }
+                    });
+
+
+                    return arryLabel;
+                  } else {
+                    arryLabel.push(data.datasets[tooltipItem.datasetIndex].label + " : " + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + " เครื่อง");
+                    kvaObj.forEach(element => {
+                      if (element[1] > 0) {
+                        arryLabel.push(element[0] + ' kVA ' + element[1] + ' เครื่อง')
+                      }
+                    });
+                    // console.log(arryLabel);
+                    return arryLabel
+                  }
+                }
+              },
+              // filter: function (tooltipItem, data) {
+              //   console.log(tooltipItem, data);
+              //   var label = data.datasets[tooltipItem.datasetIndex].label;
+              //   if ((label.includes('GIS') || label.includes('ไม่พบปัญหา')) && tooltipItem.datasetIndex > 2) {
+              //     return false;
+              //   } else {
+              //     return true;
+              //   }
+              // }
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                filter: function (item, chart) {
+                  var show = true;
+                  if ((item.text.includes('GIS') || item.text.includes('ไม่พบปัญหา') && item.datasetIndex > 2)) {
+                    show = false;
+                  }
+                  return show;
+                },
+                display: true,
+                defaultFontSize: 30,
+                fontColor: 'white'
+              }
+            },
+            scales: {
+              xAxes: [{
+                ticks: {
+                  fontSize: 14,
+                  fontColor: "white",
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  fontSize: 14,
+                  fontColor: "white",
+                }
+              }]
+            },
+            animation: {
+              onComplete: function () {
+                this.options.animation.onComplete = null;
+                var ctx = this.chart.ctx;
+                ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+                ctx.fillStyle = "white";
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'center';
+                // console.log(this.data.datasets);
+                var sum = [];
+                var sumClsd = [];
+                var psum = [];
+                var pclsd = [];
+                var aryLen = this.data.datasets.length - 1;
+                if (this.data.datasets.length == 7) {
+                  for (var i = 0; i < this.data.datasets[1].data.length; i++) {
+                    sum.push(this.data.datasets[1].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
+                    sumClsd.push(this.data.datasets[0].data[i] + this.data.datasets[1].data[i] + this.data.datasets[2].data[i])
+                    psum.push(Math.round(sum[i] / this.data.datasets[aryLen].data[i] * 100));
+                    pclsd.push(Math.round(sumClsd[i] / this.data.datasets[aryLen].data[i] * 100));
+                  }
+
+                  this.data.datasets.forEach(function (dataset) {
+                    for (var i = 0; i < dataset.data.length; i++) {
+                      for (var key in dataset._meta) {
+                        var model = dataset._meta[key].data[i]._model;
+                        //console.log(i,model,dataset.stack);
+                        if (model.datasetLabel.includes("หม้อแปลงทั้งหมด")) {
+                          ctx.fillText(dataset.data[i] + " เครื่อง", model.x + 10, model.y);
+                        } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 1")) {
+                          ctx.fillText(sumClsd[i] + " เครื่อง , " + pclsd[i] + "%", model.x + 10, model.y);
+                        } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 2")) {
+                          ctx.fillText(sum[i] + " เครื่อง , " + psum[i] + "%", model.x + 10, model.y);
+                        }
+                        // else if (model.datasetLabel.includes("ปิด WBS/ใบสั่ง")) {
+                        //   ctx.fillText(dataset.data[i] + " เครื่อง , " + pclsd[i] + "%", model.x + 10, model.y);
+                        // }
+                        // console.log(model);
+                      }
+
+                    }
+                  });
+                } else {
+                  var total = []
+                  for (var i = 0; i < this.data.datasets[1].data.length; i++) {
+                    total.push(Number(this.data.datasets[aryLen - 1].data[i]) + Number(this.data.datasets[aryLen].data[i]));
+                  }
+                  for (var i = 0; i < this.data.datasets[1].data.length; i++) {
+                    sum.push(this.data.datasets[1].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
+                    sumClsd.push(this.data.datasets[0].data[i] + this.data.datasets[1].data[i] + this.data.datasets[2].data[i])
+                    psum.push(Math.round(sum[i] / total[i] * 100));
+                    pclsd.push(Math.round(sumClsd[i] / total[i] * 100));
+                  }
+
+                  this.data.datasets.forEach(function (dataset) {
+                    for (var i = 0; i < dataset.data.length; i++) {
+                      for (var key in dataset._meta) {
+                        var model = dataset._meta[key].data[i]._model;
+                        if (model.datasetLabel.includes("แรงดัน 205-210") || model.datasetLabel.includes("%UB 25") || model.datasetLabel.includes("โหลด 80-90")) {
+                          ctx.fillText(total[i] + " เครื่อง", model.x + 10, model.y);
+                        } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 1")) {
+                          ctx.fillText(sumClsd[i] + " เครื่อง , " + pclsd[i] + "%", model.x + 10, model.y);
+                        } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 2")) {
+                          ctx.fillText(sum[i] + " เครื่อง , " + psum[i] + "%", model.x + 10, model.y);
+                        }
+                        // console.log(model);
+                      }
+
+                    }
+                  });
+
+                }
+              }
+            }
+          }
+        });
+
+      } else {
+        alert(data['data']);
+      }
+
+    }));
+
+  }
   getJobProgressPea() {
     //จำนวนงานคงค้าง %เบิกจ่าย
     //this.getRoicP();
-    this.configService.postdata2('ldcad/rdLoad.php', { peaCode: this.selPeapeaCode, option: this.option }).subscribe((data => {
+    console.log("Gggg");
+    this.configService.postdata2('ldcad/rdLoad2.php', { peaCode: this.selPeapeaCode, option: this.option }).subscribe((data => {
       if (data['status'] == 1) {
 
         var Pea = [];
@@ -610,6 +1282,7 @@ export class LVProComponent implements OnInit {
         lastPea = '';
         total = 0;
         kvaByPeaObj['wbs'] = [];
+
         for (var i = 0; i < data['data'].length; i++) {
           if (kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]]) {
             kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].totalTr)]);
@@ -639,7 +1312,7 @@ export class LVProComponent implements OnInit {
         //   this.TrTotal = this.TrTotal + Number(element.totalTr);
         //   this.TrTotalClsd = this.TrTotalClsd + Number(element.totalTr);
         // });
-        console.log(this.peaname);
+
         firstLoop = true;
         lastPea = '';
         total = 0;
@@ -769,6 +1442,7 @@ export class LVProComponent implements OnInit {
 
         // var kvaPln=[];
         kvaByPeaObj['plan'] = [];
+
         for (var i = 0; i < data['dataP'].length; i++) {
           if (kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i].Pea]]) {
             kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['dataP'][i].Pea]].push([data['dataP'][i].kva, Number(data['dataP'][i].totalTr)]);
@@ -797,6 +1471,7 @@ export class LVProComponent implements OnInit {
         }
 
         // console.log(kvaByPeaObj);
+        console.log(Pea, kvaPln, "xxx");
         for (var i = 0; i < peaInd.length; i++) {
           // data['dataP'].forEach(element => {
           // Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + element.Pea]);
@@ -856,7 +1531,7 @@ export class LVProComponent implements OnInit {
           }
         }
         // });
-        // console.log(Pea,Volt);
+
         //this.kvaTotal=505;
         //APEX CHART
 
@@ -1387,26 +2062,26 @@ export class LVProComponent implements OnInit {
 
   }
   callData() {
-    this.getJobProgressPea();
+    this.getJobProgressPea2();
     //this.getTrPea();
     //this.getBudgetPea();
     //this.getRemianData();
   }
   public getTrData = () => {
-  //console.log(this.peaCode);
-  //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
-  //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
-  this.peaCode = "C00000";
-  if(this.peaCode.includes (GlobalConstants.regionLetter[GlobalConstants.region].trim())){
-    this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
-      //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
-      .subscribe(res => {
-        // this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort1;
-        this.dataSource1.data = res as trdata[];
-        this.dataSource1.paginator = this.paginator1;
-        this.dataSource1.sort = this.sort1;
-      })
+    //console.log(this.peaCode);
+    //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
+    //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
+    this.peaCode = "C00000";
+    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
+      this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
+        //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
+        .subscribe(res => {
+          // this.dataSource.paginator = this.paginator1;
+          // this.dataSource.sort = this.sort1;
+          this.dataSource1.data = res as trdata[];
+          this.dataSource1.paginator = this.paginator1;
+          this.dataSource1.sort = this.sort1;
+        })
     }
   }
   getTRmatch() {
@@ -1740,7 +2415,7 @@ export class LVProComponent implements OnInit {
       if (data['status'] == 1) {
         this.getTrData();
         //  this.getStatus();
-        this.getJobProgressPea();
+        this.getJobProgressPea2();
         //console.log(this.peaname);
       } else {
         alert(data['data']);
@@ -1753,7 +2428,7 @@ export class LVProComponent implements OnInit {
   //     if (data['status'] == 1) {
   //       this.getTrData();
   //       //  this.getStatus();
-  //       this.getJobProgressPea();
+  //       this.getJobProgressPea2();
   //       //console.log(this.peaname);
   //     } else {
   //       alert(data['data']);
