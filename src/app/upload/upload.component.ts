@@ -27,6 +27,7 @@ export class UploadComponent implements OnInit {
   uploadDocResponse5 = '';
   uploadDocResponse6 = '';
   uploadDocResponse7 = '';
+  uploadDocResponse8 = '';
   autoPeaCod = '';
   constructor(private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) { }
   peaCode = "";
@@ -117,6 +118,17 @@ export class UploadComponent implements OnInit {
     );
   }
 
+  handleFilezcn52n(event) {
+    //console.log(event.target.files[0]);
+    const formData = new FormData();
+    formData.append('avatar', event.target.files[0]);
+    this.uploadService.uploadzcn52n(formData).subscribe(res => {
+      this.uploadDocResponse8 = res.status;
+      //console.log(res);   
+    }
+    );
+  }
+
   onSubmit() {
 
     this.configService.postdata2('uploadsql/w048tosql.php', {}).subscribe((data => {
@@ -196,4 +208,16 @@ export class UploadComponent implements OnInit {
 
     }))
   }
+  uploadzcn52n() {
+    this.configService.postdata2('uploadsql/zcn52ntosql.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.pmForm.resetForm();
+        alert("เก็บข้อมูลแล้วเสร็จ");
+      } else {
+        alert(data['data']);
+      }
+
+    }))
+  }
 }
+
