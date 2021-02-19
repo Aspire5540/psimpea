@@ -69,6 +69,11 @@ export class FileuploadService {
     let uploadURL = `${this.SERVER_URL}/uploadcn52n.php`; 
     data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
-  }    
+  } 
+  public uploadzcn52n(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadzcn52n.php`; 
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  }       
 }
 

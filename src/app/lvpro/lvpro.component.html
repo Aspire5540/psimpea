@@ -478,7 +478,7 @@
                 <table class="mat-elevation-z8" style="background-color:royalblue" mat-table matSort #sort1="matSort" [dataSource]="dataSource1">
                   <ng-container matColumnDef="aoj">
                     <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> AOJ </th>
-                    <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.aoj}}</td>
+                    <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.Aoj}}</td>
                   </ng-container>
 
                   <ng-container matColumnDef="PEA_TR">
@@ -515,14 +515,14 @@
                   <ng-container matColumnDef="wbs">
                     <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>หมายเลข WBS/ใบสั่ง</th>
                     <td class="table-lg" mat-cell *matCellDef="let trdata">
-                      <div *ngIf="checkAoj(trdata.aoj)">
+                      <div *ngIf="checkAoj(trdata.Aoj)">
                         <mat-form-field>
-                          <input value={{trdata.wbs}} name="wbs" matInput placeholder="ใส่หมายเลข WBS/ใบสั่ง"
+                          <input value={{trdata.WBS}} name="wbs" matInput placeholder="ใส่หมายเลข WBS/ใบสั่ง"
                             (change)="applyWBS([$event.target.value,trdata])">
                         </mat-form-field>
                       </div>
-                      <div *ngIf="!checkAoj(trdata.aoj)">
-                        <mat-label>{{trdata.wbs}}</mat-label>
+                      <div *ngIf="!checkAoj(trdata.Aoj)">
+                        <mat-label>{{trdata.WBS}}</mat-label>
                       </div>
                     </td>
                   </ng-container>
@@ -549,17 +549,17 @@
                   <ng-container matColumnDef="Status">
                     <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>หมายเหตุ</th>
                     <td class="table-lg" mat-cell *matCellDef="let trdata">
-                      <div *ngIf="checkAoj(trdata.aoj)">
+                      <div *ngIf="checkAoj(trdata.Aoj)">
                         <mat-form-field>
                           <mat-label>{{trdata.Status}}</mat-label>
                           <mat-select [(value)]="selected" (selectionChange)="selectStatus($event)">
-                            <mat-option *ngFor="let Status of Statuss" [value]="[Status.value,trdata]">
+                            <mat-option *ngFor="let Status of Statuss" [value]="[Statuss.value,trdata]">
                               {{Status.value}}
                             </mat-option>
                           </mat-select>
                         </mat-form-field>
                       </div>
-                      <div *ngIf="!checkAoj(trdata.aoj)">
+                      <div *ngIf="!checkAoj(trdata.Aoj)">
 
                         <mat-label>{{trdata.Status}}</mat-label>
 
