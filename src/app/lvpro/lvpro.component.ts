@@ -212,10 +212,10 @@ export class LVProComponent implements OnInit {
   // }
 
   ngOnInit() {
-    var parts = location.hostname.split('.');
-    console.log(parts);
-    var subdomain = parts.shift();
-    console.log(subdomain);
+    // var parts = location.hostname.split('.');
+    // console.log(parts);
+    // var subdomain = parts.shift();
+    // console.log(subdomain);
     //this.peaCode = localStorage.getItem('peaCode');
     // this.getTrData();
     // this.getStatus();
@@ -2071,7 +2071,7 @@ export class LVProComponent implements OnInit {
     //console.log(this.peaCode);
     //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
     //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
-    this.peaCode = "C00000";
+    // this.peaCode = "C00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')

@@ -1,5 +1,10 @@
 export class GlobalConstants {
-    public static region: string = 'c3';
+    // var parts = location.hostname.split('.').shift();
+    // console.log(parts);
+    // var subdomain = parts.shift();
+    // console.log(subdomain);
+    // public static region: string = 'c3';
+    public static region: string = location.hostname.split('.').shift();
     public static regionLetter = {'n1': 'A',
     'n2': 'B',
     'n3': 'C',
@@ -24,4 +29,17 @@ export class GlobalConstants {
     's1': '10',
     's2': '11',
     's3': '12'};
+
+    public static regionThai = {'n1': 'กฟน.1',
+    'n2': 'กฟน.2',
+    'n3': 'กฟน.3',
+    'ne1': 'กฟฉ.1',
+    'ne2': 'กฟฉ.2',
+    'ne3': 'กฟฉ.3',
+    'c1': 'กฟก.1',
+    'c2': 'กฟก.2',
+    'c3': 'กฟก.3',
+    's1': 'กฟต.1',
+    's2': 'กฟต.1',
+    's3': 'กฟต.2'};
 }
