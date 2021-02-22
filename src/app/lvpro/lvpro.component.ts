@@ -191,7 +191,9 @@ export class LVProComponent implements OnInit {
     { value: '-' },
     { value: 'อยู่ระหว่างตรวจสอบ' },
     { value: 'อยู่ระหว่างสำรวจประมาณการ' },
-    // { value: 'อยู่ระหว่างแก้ไขข้อมูล GIS' },
+    { value: 'อยู่ระหว่างก่อสร้าง' },
+    { value: 'ก่อสร้างแล้วเสร็จ' },
+    { value: 'อยู่ระหว่างแก้ไขข้อมูล GIS' },
     { value: 'แก้ไขข้อมูล GIS แล้ว' },
     { value: 'ไม่พบปัญหา' },
     { value: 'อื่นๆ โปรดระบุ' },
@@ -2367,7 +2369,7 @@ export class LVProComponent implements OnInit {
     //console.log(this.peaCode);
     //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
     //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
-    this.peaCode = "G00000";
+    this.peaCode = "D00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
@@ -2706,17 +2708,21 @@ export class LVProComponent implements OnInit {
     this.dataSource2.filter = (filterValue).trim().toLowerCase();
   }
   applyWBS(event) {
+    if(window.confirm('คุณต้องการแก้ไขข้อมูล WBS/หมายเลขใบสั่ง ใช่หรือไม่?')){
     this.configService.postdata2('wriWBS.php', { TRNumber: event[1].PEA_TR, WBS: event[0] }).subscribe((data => {
       if (data['status'] == 1) {
         this.getTrData();
         //  this.getStatus();
         this.getJobProgressPea2();
         //console.log(this.peaname);
-      } else {
+    } else {
         alert(data['data']);
       }
-
     }));
+  }else{
+    this.getTrData();
+    this.getJobProgressPea2();
+  }
   }
   // applyNote(event) {
   //   this.configService.postdata2('wriNote.php', { TRNumber: event[1].PEA_TR, note: event[0] }).subscribe((data => {
