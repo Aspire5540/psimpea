@@ -660,6 +660,7 @@ export class LVProComponent implements OnInit {
     }
     // console.log(regions, jobDone, inprogress, jobRemain);
     this.chartPEA = {
+      colors:['#F44336', '#E91E63', '#9C27B0'],
       series: [
         {
           name: "ยังไม่มีแผนงาน",
@@ -679,9 +680,8 @@ export class LVProComponent implements OnInit {
         height: 700,
         width:1000,
         stacked: true,
-        stackType: "100%"
+        stackType: "100%",
       },
-      
       xaxis: {
         categories: regions
       },
