@@ -1244,7 +1244,7 @@ export class LVProComponent implements OnInit {
   //console.log(this.peaCode);
   //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
   //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
-  this.peaCode = "I00000";
+  this.peaCode = "G00000";
   if(this.peaCode.includes (GlobalConstants.regionLetter[GlobalConstants.region].trim())){
     this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
       //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')

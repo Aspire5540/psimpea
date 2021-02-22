@@ -1,5 +1,5 @@
 export class GlobalConstants {
-    public static region: string = 'c3';
+    public static region: string = 'c1';
     public static regionLetter = {'n1': 'A',
     'n2': 'B',
     'n3': 'C',
