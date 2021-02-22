@@ -10,6 +10,7 @@ import { FileuploadService } from '../config/fileupload.service';
 import { Chart } from 'chart.js';
 import { MatSort } from '@angular/material/sort';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 import {
   ApexNonAxisChartSeries,
   ApexAxisChartSeries,
@@ -19,6 +20,8 @@ import {
   ApexDataLabels,
   ApexStroke,
   ApexGrid,
+  ApexResponsive,
+  ApexLegend,
   ApexYAxis,
   ApexXAxis,
   ApexPlotOptions,
@@ -36,18 +39,14 @@ import { GlobalConstants } from '../common/global-constants';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
-  stroke: ApexStroke;
   dataLabels: ApexDataLabels;
   plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
+  responsive: ApexResponsive[];
   xaxis: ApexXAxis;
-  grid: ApexGrid;
-  colors: string[];
-  tooltip: ApexTooltip;
-  title: ApexTitleSubtitle;
+  legend: ApexLegend;
   fill: ApexFill;
-
 };
+
 export type ChartOptions2 = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
@@ -82,15 +81,29 @@ export type ChartOptions3 = {
   ]
 })
 export class LVProComponent implements OnInit {
+  @ViewChild("chart",{ static: true }) chart: ChartComponent;
+  
   public pClsChart: Partial<ChartOptions2>;
   public chartOptions1: Partial<ChartOptions2>;
-  public chartOptions2: Partial<ChartOptions>;
-  public chartOptions3: Partial<ChartOptions>;
+  public chartn1: Partial<ChartOptions2>;
+  public chartn2: Partial<ChartOptions2>;
+  public chartn3: Partial<ChartOptions2>;
+  public chartne1: Partial<ChartOptions2>;
+  public chartne2: Partial<ChartOptions2>;
+  public chartne3: Partial<ChartOptions2>;
+  public chartc1: Partial<ChartOptions2>;
+  public chartc2: Partial<ChartOptions2>;
+  public chartc3: Partial<ChartOptions2>;
+  public charts1: Partial<ChartOptions2>;
+  public charts2: Partial<ChartOptions2>;
+  public charts3: Partial<ChartOptions2>;
+  public chartPEA: Partial<ChartOptions>;
+  // public chartOptions3: Partial<ChartOptions>;
 
   // myBarClsd: Chart;
   // BarMat: Chart;
   testArry = { '100': 20 };
-
+  trAllReg: any;
   option = "2";
   displayedColumns1 = ['aoj', 'PEA_TR', 'kva', 'Location', 'PLoadTOT', 'minV', 'Ub', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'rundate', 'expDate', 'workstatus'];
 
@@ -104,7 +117,7 @@ export class LVProComponent implements OnInit {
     'location2',
     'distance',
     'map'];
-
+  problemPEA = [];
   displayedColumns3 = ['matCode', 'matName', 'nMat', 'peaName'];
   // public dataSource = new MatTableDataSource<trdata>();
   // public dataSource = new MatTableDataSource<trdata>();
@@ -128,6 +141,7 @@ export class LVProComponent implements OnInit {
   @ViewChild('paginator3', { static: true }) paginator3: MatPaginator;
   @ViewChild('sort3', { static: true }) sort3: MatSort;
 
+
   condition = 0;
   peaCode = "";
   nDate = "15";
@@ -140,6 +154,7 @@ export class LVProComponent implements OnInit {
   // myDonutWBS5: Chart;
   // myDonutWBS6: Chart;
   chartResult: Chart;
+  chartResultPEA: Chart;
   chartMat: Chart;
   chartTR: Chart;
   updateDate: string;
@@ -157,7 +172,6 @@ export class LVProComponent implements OnInit {
   // WBS5perPEA_TR2: number;
   // WBS6perPEA_TR3: number;
   meterdata = [];
-
   peaname = {};
   peaname2 = [];
   selBudjet = ['', ''];
@@ -183,7 +197,8 @@ export class LVProComponent implements OnInit {
     { value: 'อื่นๆ โปรดระบุ' },
   ];
 
-
+  option2 = '1';
+  regionData = {};
   Conditions = [
     //{value: 0,viewvalue: 'หม้อแปลงทั้งหมด'},
     { value: 2, viewvalue: 'แรงดัน<200 Volt' },
@@ -199,19 +214,30 @@ export class LVProComponent implements OnInit {
 
   ];
 
+  regionSelect = [
+    //{value: 0,viewvalue: 'หม้อแปลงทั้งหมด'},
+    { value: 1, viewvalue: 'ภาค 1' },
+    { value: 2, viewvalue: 'ภาค 2' },
+    { value: 3, viewvalue: 'ภาค 3' },
+    { value: 4, viewvalue: 'ภาค 4' },
+    { value: 5, viewvalue: 'ทุกเขต' },
+
+  ];
 
 
 
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer, private router: Router, private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) {
     this.getpeaList();
     this.getpeaList2();
-
+    this.getDataRegion();
+   
   }
   // AfterViewInit(){
   //   this.getJobProgressPea2();
   // }
 
   ngOnInit() {
+    this.getDataRegionByProblem();
     // var parts = location.hostname.split('.');
     // console.log(parts);
     // var subdomain = parts.shift();
@@ -223,8 +249,10 @@ export class LVProComponent implements OnInit {
     this.getinfo();
     //this.getTRmatch();
     this.getJobProgressPea2();
+
+
     // console.log("url:", this.router.url);
-    console.log(window.location);
+
     // this.getMatReq();
     //this.getMeterData();
 
@@ -243,6 +271,9 @@ export class LVProComponent implements OnInit {
     //this.peaNum = this.peaCode.substr(1, 5);
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
+  selectRegion(){
+    this.getDataRegionByProblem();
+  }
   openDialog(trdata): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '300px',
@@ -250,8 +281,6 @@ export class LVProComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(wbsdata => {
-      // console.log('The dialog was closed');
-      console.log(wbsdata);
       if (wbsdata) {
         if (this.checkAoj(wbsdata.aoj)) {
           this.reTr(wbsdata);
@@ -340,6 +369,7 @@ export class LVProComponent implements OnInit {
     }
   }
   checkwbs(wbs, Status) {
+
     if (Status != null) {
       //console.log(Status, Status.includes("แก้ไขข้อมูล GIS แล้ว"));
       if (Status.includes("แก้ไขข้อมูล GIS แล้ว")) {
@@ -350,7 +380,7 @@ export class LVProComponent implements OnInit {
     }
     if (wbs == null) {
       return true;
-    } else if (wbs.length == 0) {
+    } else if (wbs.length < 2) {
       return true;
     } else {
       return false;
@@ -363,7 +393,7 @@ export class LVProComponent implements OnInit {
     if (trdata.jobStatus != null && trdata.jobStatus.length > 1) {
       if (trdata.jobStatus.slice(trdata.jobStatus.length - 2)[0] == 'D' || trdata.jobStatus.slice(trdata.jobStatus.length - 2)[0] == 'F') {
         return false;
-      } else if (trdata.wbs[0] !== '4' && (trdata.jobStatus.includes('CLSD') || trdata.jobStatus.includes('TECO'))) {
+      } else if (trdata.WBS[0] !== '4' && (trdata.jobStatus.includes('CLSD') || trdata.jobStatus.includes('TECO'))) {
         return false;
       }
     }
@@ -371,7 +401,7 @@ export class LVProComponent implements OnInit {
     if (trdata.Status != null) {
       if (trdata.Status.includes('แก้ไขข้อมูล GIS แล้ว') || trdata.Status.includes('ไม่พบปัญหา')) {
         if (trdata.wbs != null) {
-          if (trdata.wbs[0] != '2' && trdata.wbs[0] !== 'P' && trdata.wbs[0] !== 'I' && trdata.wbs[0] !== 'C') {
+          if (trdata.wbs[0] != '2' && trdata.WBS[0] !== 'P' && trdata.WBS[0] !== 'I' && trdata.WBS[0] !== 'C') {
             return false;
           }
         } else {
@@ -391,10 +421,9 @@ export class LVProComponent implements OnInit {
 
 
   checkAoj(Aoj) {
-
     if (Aoj.substring(2, 5) == this.peaCode.substring(1, 4) && this.peaCode.slice(-1) == "1") {
       return true;
-    } else if (this.peaCode == "B00000") {
+    } else if (this.peaCode.substr(1, 3).includes("000")) {
       return true;
     } else if (Aoj.substring(2, 7) == this.peaCode.substring(1, 6)) {
       return true;
@@ -405,7 +434,7 @@ export class LVProComponent implements OnInit {
   }
   getpeaList() {
     this.configService.postdata2('rdpeaall2.php', {}).subscribe((data => {
-      console.log(data);
+
 
       if (data["status"] == 1) {
         data["data"].forEach(element => {
@@ -565,6 +594,1102 @@ export class LVProComponent implements OnInit {
 
 
   }
+  getDataRegion() {
+    var dataCnt = 0;
+    var regions = Object.keys(GlobalConstants.regionLetter);
+    this.configService.postdata2('ldcad/rdTRAll.php', {}).subscribe((data => {
+      if (data['status'] == 1) {
+        this.trAllReg = data;
+        //console.log('trall',data);
+      } else {
+        alert(data['data']);
+      }
+
+    }));
+    this.regionData = [];
+    regions.forEach(region => {
+      this.configService.postdata('ldcad/rdProblemAll.php', { region: region }).subscribe((data => {
+        if (data['status'] == 1) {
+          this.regionData[region] = data["data"][0];
+          dataCnt++;
+          if (dataCnt == 12) {
+            this.getJobProgressPea();
+          }
+
+        } else {
+          alert(data['data']);
+        }
+
+      }));
+    });
+
+  }
+  getDataRegionByProblem() {
+    var dataCnt = 0;
+    this.problemPEA = [];
+    var regions = Object.keys(GlobalConstants.regionLetter);
+    regions.forEach(region => {
+      this.configService.postdata('ldcad/rdLoadRegion.php', { region: region, option: this.option2 }).subscribe((data => {
+        if (data['status'] == 1) {
+          this.problemPEA[region] = data["data"][0];
+          dataCnt++;
+          if (dataCnt == 12) {
+            this.dashboradPEA();
+          }
+
+        } else {
+          alert(data['data']);
+        }
+
+      }));
+    });
+
+  }
+  dashboradPEA() {
+    console.log("PEAdash");
+    var regions = Object.keys(GlobalConstants.regionLetter);
+    var inprogress = [];
+    var jobDone = [];
+    var jobRemain = [];
+    var data = [];
+    for (var i = 0; i < regions.length; i++) {
+      data = this.problemPEA[regions[i]];
+      jobDone.push(Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+      inprogress.push(Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+      jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+    }
+    // console.log(regions, jobDone, inprogress, jobRemain);
+    this.chartPEA = {
+      series: [
+        {
+          name: "ยังไม่มีแผนงาน",
+          data: jobRemain
+        },
+        {
+          name: "ดำเนินการแล้วเสร็จ",
+          data: jobDone
+        },
+        {
+          name: "อยู่ระหว่างดำเนินการ",
+          data: inprogress
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 700,
+        width:1000,
+        stacked: true,
+        stackType: "100%"
+      },
+      
+      xaxis: {
+        categories: regions
+      },
+      fill: {
+        opacity: 1,
+        colors: ['#B05CBA', '#D9D9D9', '#ED639E'],
+      },
+      legend: {
+        position: "right",
+        offsetX: 0,
+        offsetY: 50,
+      },
+      dataLabels: {
+        style: {
+          colors: ['#F44336', '#E91E63', '#9C27B0']
+        }
+      }
+    };
+  
+  }
+  getJobProgressPea() {
+    // (Number(this.regionData[1].nCLSD)+Number(this.regionData[1].nGIS)+Number(this.regionData[1].nNo)) / 
+    
+    // console.log((Number(this.regionData[1].nCLSD)+Number(this.regionData[1].nGIS)+Number(this.regionData[1].nNo)));
+    var region = 'n1';
+    this.chartn1 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#842D73'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#842D73",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#842D73",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#842D73",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'n2';
+    this.chartn2 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 320,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#842D73'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#842D73",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#842D73",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#842D73",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'n3';
+    this.chartn3 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#842D73'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#842D73",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#842D73",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#842D73",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'ne1';
+    this.chartne1 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#EE316B'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#EE316B",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#EE316B",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#EE316B",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'ne2';
+    this.chartne2 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#EE316B'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#EE316B",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#EE316B",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#EE316B",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'ne3';
+    this.chartne3 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#EE316B'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#EE316B",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#EE316B",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#EE316B",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'c1';
+    this.chartc1 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#FFA109'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#FFA109",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#FFA109",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#FFA109",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'c2';
+    this.chartc2 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#FFA109'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#FFA109",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#FFA109",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#FFA109",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 'c3';
+    this.chartc3 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#FFA109'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#FFA109",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#FFA109",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#FFA109",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 's1';
+    this.charts1 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#7030A0'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#7030A0",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#7030A0",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#7030A0",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 's2';
+    this.charts2 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#7030A0'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#7030A0",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#7030A0",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#7030A0",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+
+    var region = 's3';
+    this.charts3 = {
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      chart: {
+        height: 310,
+        type: "radialBar",
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+      },
+      fill: {
+        colors: ['#7030A0'],
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: 0,
+          endAngle: 360,
+          hollow: {
+            margin: 0,
+            size: "70%",
+            background: "#FFFFFF",
+            image: undefined,
+            position: "front",
+            dropShadow: {
+              enabled: true,
+              top: 3,
+              left: 0,
+              blur: 4,
+              opacity: 0.24
+            }
+          },
+          track: {
+            background: "#F0EEED",
+            strokeWidth: "67%",
+            margin: 0, // margin is in pixels
+            dropShadow: {
+              enabled: true,
+              top: -3,
+              left: 0,
+              blur: 4,
+              opacity: 0.35
+            }
+          },
+
+          dataLabels: {
+            show: true,
+            name: {
+              offsetY: -20,
+              show: true,
+              color: "#7030A0",
+              fontSize: "30px",
+            },
+            total: {
+              show: true,
+              label: region.toUpperCase(),
+              color: "#7030A0",
+              fontSize: '30px',
+              formatter: function (val) {
+                // return val.config.series[0].toFixed(2).toString() + "%";
+                return val.config.series[0].toFixed(0).toString() + "%";
+              },
+              // formatter: function () {
+              //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+              //   return 249
+              // }
+            },
+            value: {
+              color: "#7030A0",
+              fontSize: "40px",
+              show: true
+            }
+          }
+        }
+      },
+      stroke: {
+        lineCap: "round"
+      },
+      labels: ["งานคงเหลือ"]
+
+    };
+  }
   getJobProgressPea2() {
 
     this.configService.postdata2('ldcad/rdLoad2.php', { peaCode: this.selPeapeaCode, option: this.option }).subscribe((data => {
@@ -586,7 +1711,7 @@ export class LVProComponent implements OnInit {
         var lastPea = '';
         var total = 0;
 
-       
+
 
 
         firstLoop = true;
@@ -633,7 +1758,6 @@ export class LVProComponent implements OnInit {
         kvaByPeaObj['gis'] = [];
         kvaByPeaObj['no'] = [];
         kvaByPeaObj['clsd'] = [];
-        console.log(data['data']);
         for (var i = 0; i < data['data'].length; i++) {
           if (kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]]) {
             kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nTR)]);
@@ -693,7 +1817,7 @@ export class LVProComponent implements OnInit {
         }
 
         for (var i = 0; i < peaInd.length; i++) {
- 
+
           if (this.option == '1' || this.option == '3' || this.option == '6') {
             if (VoltObj[peaInd[i]]) {
               Volt.push(VoltObj[peaInd[i]]);
@@ -1241,20 +2365,20 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-  //console.log(this.peaCode);
-  //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
-  //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
-  this.peaCode = "I00000";
-  if(this.peaCode.includes (GlobalConstants.regionLetter[GlobalConstants.region].trim())){
-    this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
-      //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
-      .subscribe(res => {
-        // this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort1;
-        this.dataSource1.data = res as trdata[];
-        this.dataSource1.paginator = this.paginator1;
-        this.dataSource1.sort = this.sort1;
-      })
+    //console.log(this.peaCode);
+    //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
+    //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
+    this.peaCode = "G00000";
+    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
+      this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
+        //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
+        .subscribe(res => {
+          // this.dataSource.paginator = this.paginator1;
+          // this.dataSource.sort = this.sort1;
+          this.dataSource1.data = res as trdata[];
+          this.dataSource1.paginator = this.paginator1;
+          this.dataSource1.sort = this.sort1;
+        })
     }
   }
   getTRmatch() {
@@ -1264,7 +2388,6 @@ export class LVProComponent implements OnInit {
         this.dataSource2.data = res as trmatch[];
         this.dataSource2.paginator = this.paginator2;
         this.dataSource2.sort = this.sort2;
-        console.log(this.dataSource2.data);
       })
 
 
@@ -1637,7 +2760,7 @@ export class LVProComponent implements OnInit {
   }
 
   selectStatus(event) {
-    // console.log(event);
+    console.log(event);
     this.configService.postdata2('wristatus.php', { TRNumber: event.value[1].PEA_TR, status: event.value[0] }).subscribe((data => {
       if (data['status'] == 1) {
         // console.log(data['data']);
@@ -1677,8 +2800,7 @@ export class LVProComponent implements OnInit {
     }));
   }
   reTr(wbsdata) {
-    console.log(wbsdata);
-    //console.log(wbsdata.wbs);
+
     this.configService.postdata2('ldcad/reTR.php', wbsdata).subscribe((data => {
       if (data['status'] == 1) {
         // this.getData();
@@ -1758,7 +2880,7 @@ export class DialogOverviewExampleDialog {
 
     // this.wbs["newVin"]=this.newVin;
     wbs["PEA_TR"] = this.data.trdata.PEA_TR;
-    wbs["aoj"] = this.data.trdata.aoj;
+    wbs["aoj"] = this.data.trdata.Aoj;
     wbs["RVoltage"] = this.RVoltage;
     wbs["RLoad"] = this.RLoad;
     wbs["trtab"] = this.trtab;

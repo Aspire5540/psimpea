@@ -3,8 +3,8 @@ export class GlobalConstants {
     // console.log(parts);
     // var subdomain = parts.shift();
     // console.log(subdomain);
-    // public static region: string = 'c3';
-    public static region: string = location.hostname.split('.').shift();
+    public static region: string = 'c1';
+    // public static region: string = location.hostname.split('.').shift();
     public static regionLetter = {'n1': 'A',
     'n2': 'B',
     'n3': 'C',
@@ -40,6 +40,6 @@ export class GlobalConstants {
     'c2': 'กฟก.2',
     'c3': 'กฟก.3',
     's1': 'กฟต.1',
-    's2': 'กฟต.1',
-    's3': 'กฟต.2'};
+    's2': 'กฟต.2',
+    's3': 'กฟต.3'};
 }
