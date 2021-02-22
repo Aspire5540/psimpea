@@ -10,7 +10,7 @@ export class FileuploadService {
   //SERVER_URL: string = "http://172.30.212.148/psisservice/";
   //SERVER_URL: string = "http://127.0.0.1/psisservice/";
  
-  region='n3';
+  //region='n3';
 
   constructor(private http: HttpClient) { }
 
