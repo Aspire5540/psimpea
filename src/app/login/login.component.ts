@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 //import { ILogin } from '../login';
 import { AuthService } from '../config/auth.service';
 import { ConfigService } from '../config/config.service';
-
+import { GlobalConstants } from '../common/global-constants';
 import {NgForm} from '@angular/forms';
 @Component({
   selector: 'app-login',
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   message: string;
   returnUrl: string;
   islogin : boolean;
- 
+  region =GlobalConstants.regionThai[GlobalConstants.region];
 
 
 
@@ -29,8 +29,8 @@ export class LoginComponent implements OnInit {
    
 
     //this.returnUrl = '/phasecheck';
-    // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/ldcad';
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/upload'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/ldcad';
+    // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/upload'
     this.authService.logout();
     this.configService.changeMessage();
   }

@@ -87,6 +87,9 @@ export class ConfigService {
     return this.http2.post(this.hostUrl+endpoint,JSON.stringify(params),this.options).pipe(map(res=>res.json()));
   }
   */
+ postdata (endpoint,params){
+  return this.http.post(this.hostUrl+endpoint,JSON.stringify(params));
+}
   postdata2 (endpoint,params){
     params["region"] = GlobalConstants.region;
     return this.http.post(this.hostUrl+endpoint,JSON.stringify(params));
