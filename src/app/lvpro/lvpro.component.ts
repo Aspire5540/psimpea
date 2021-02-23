@@ -129,7 +129,8 @@ export class LVProComponent implements OnInit {
   @ViewChild('paginator3', { static: true }) paginator3: MatPaginator;
   @ViewChild('sort3', { static: true }) sort3: MatSort;
 
-
+  @ViewChild('chartPEA', { static: true }) chartPEA: ChartComponent;
+  tab=0;
   condition = 0;
   peaCode = "";
   nDate = "15";
@@ -142,7 +143,7 @@ export class LVProComponent implements OnInit {
   // myDonutWBS5: Chart;
   // myDonutWBS6: Chart;
   chartResult: Chart;
-  chartPEA: Chart;
+  // chartPEA: Chart;
   chartMat: Chart;
   chartTR: Chart;
   updateDate: string;
@@ -261,9 +262,15 @@ export class LVProComponent implements OnInit {
     //this.peaNum = this.peaCode.substr(1, 5);
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
+  onGroupChange(val){
+    this.option2 = val;
+    this.getDataRegionByProblem();
+  }
+
   selectRegion(event) {
     this.regionOption=event.value[0];
-    this.getDataRegionByProblem();
+   
+    this.dashboradPEA();
   }
   openDialog(trdata): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
@@ -432,7 +439,7 @@ export class LVProComponent implements OnInit {
           this.peaname[element.peaCode] = element.peaName;
 
         });
-        this.callData();
+        // this.callData();
         this.currentPea = this.peaname[this.peaCode.substring(0, 6)];
         if (this.peaCode == "B00000") {
           this.currentMatherPea = this.peaname[this.peaCode.substring(0, 6)];
@@ -2448,10 +2455,7 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    //console.log(this.peaCode);
-    //console.log(this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()));
-    //console.log(GlobalConstants.regionLetter[GlobalConstants.region]);
-    this.peaCode = "D00000";
+    // this.peaCode = "D00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
@@ -2487,11 +2491,22 @@ export class LVProComponent implements OnInit {
 
 
   }
+  checkTab(){
+    if(this.tab==0){
+      return true;
+    }else{
+      return false;
+    }
+    
+  }
   onTabClick(event) {
-    if (event.index == 1) {
+    this.tab=event.index;
+    if(event.index==1){
+      this.getJobProgressPea2();
+    }else if (event.index == 2) {
       this.getMat("1");
       this.getMatReq();
-    } else if (event.index == 2) {
+    } else if (event.index == 3) {
       // this.http.get('http://n2-psim.pea.co.th/psdoc/',{responseType:'text'}).subscribe(res=>{
       //   this.KisshtHtml = this.sanitizer.bypassSecurityTrustHtml(res);
       // })
