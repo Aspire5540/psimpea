@@ -27,7 +27,6 @@ import {
   ApexPlotOptions,
   ApexTooltip,
   ApexFill,
-
 } from "ng-apexcharts";
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../format-datepicker';
@@ -36,16 +35,6 @@ import { GlobalConstants } from '../common/global-constants';
 
 
 
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  responsive: ApexResponsive[];
-  xaxis: ApexXAxis;
-  legend: ApexLegend;
-  fill: ApexFill;
-};
 
 export type ChartOptions2 = {
   series: ApexNonAxisChartSeries;
@@ -81,8 +70,7 @@ export type ChartOptions3 = {
   ]
 })
 export class LVProComponent implements OnInit {
-  @ViewChild("chart",{ static: true }) chart: ChartComponent;
-  
+
   public pClsChart: Partial<ChartOptions2>;
   public chartOptions1: Partial<ChartOptions2>;
   public chartn1: Partial<ChartOptions2>;
@@ -97,7 +85,7 @@ export class LVProComponent implements OnInit {
   public charts1: Partial<ChartOptions2>;
   public charts2: Partial<ChartOptions2>;
   public charts3: Partial<ChartOptions2>;
-  public chartPEA: Partial<ChartOptions>;
+
   // public chartOptions3: Partial<ChartOptions>;
 
   // myBarClsd: Chart;
@@ -141,7 +129,8 @@ export class LVProComponent implements OnInit {
   @ViewChild('paginator3', { static: true }) paginator3: MatPaginator;
   @ViewChild('sort3', { static: true }) sort3: MatSort;
 
-
+  @ViewChild('chartPEA', { static: true }) chartPEA: ChartComponent;
+  tab=0;
   condition = 0;
   peaCode = "";
   nDate = "15";
@@ -154,10 +143,11 @@ export class LVProComponent implements OnInit {
   // myDonutWBS5: Chart;
   // myDonutWBS6: Chart;
   chartResult: Chart;
-  chartResultPEA: Chart;
+  // chartPEA: Chart;
   chartMat: Chart;
   chartTR: Chart;
   updateDate: string;
+  regionOption=1;
   // PEA_TR0: number;
   // PEA_TR1: number;
   // PEA_TR2: number;
@@ -217,13 +207,12 @@ export class LVProComponent implements OnInit {
   ];
 
   regionSelect = [
-    //{value: 0,viewvalue: 'หม้อแปลงทั้งหมด'},
     { value: 1, viewvalue: 'ภาค 1' },
     { value: 2, viewvalue: 'ภาค 2' },
     { value: 3, viewvalue: 'ภาค 3' },
     { value: 4, viewvalue: 'ภาค 4' },
     { value: 5, viewvalue: 'ทุกเขต' },
-
+     { value: 6, viewvalue: 'กฟภ.' },
   ];
 
 
@@ -232,7 +221,7 @@ export class LVProComponent implements OnInit {
     this.getpeaList();
     this.getpeaList2();
     this.getDataRegion();
-   
+
   }
   // AfterViewInit(){
   //   this.getJobProgressPea2();
@@ -273,8 +262,15 @@ export class LVProComponent implements OnInit {
     //this.peaNum = this.peaCode.substr(1, 5);
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
-  selectRegion(){
+  onGroupChange(val){
+    this.option2 = val;
     this.getDataRegionByProblem();
+  }
+
+  selectRegion(event) {
+    this.regionOption=event.value[0];
+   
+    this.dashboradPEA();
   }
   openDialog(trdata): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
@@ -443,7 +439,7 @@ export class LVProComponent implements OnInit {
           this.peaname[element.peaCode] = element.peaName;
 
         });
-        this.callData();
+        // this.callData();
         this.currentPea = this.peaname[this.peaCode.substring(0, 6)];
         if (this.peaCode == "B00000") {
           this.currentMatherPea = this.peaname[this.peaCode.substring(0, 6)];
@@ -648,68 +644,161 @@ export class LVProComponent implements OnInit {
 
   }
   dashboradPEA() {
-    console.log("PEAdash");
+    
     var regions = Object.keys(GlobalConstants.regionLetter);
+    var regionsLabel=[];
     var inprogress = [];
     var jobDone = [];
     var jobRemain = [];
     var data = [];
-    for (var i = 0; i < regions.length; i++) {
-      data = this.problemPEA[regions[i]];
-      jobDone.push(Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100));
-      inprogress.push(Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
-      jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+    
+    if(this.regionOption==1){
+      regions=regions.slice(0,3);
+    }else if(this.regionOption==2){
+      regions=regions.slice(3,6);
+    }else if(this.regionOption==3){
+      regions=regions.slice(6,9);
+    }else if(this.regionOption==4){
+      regions=regions.slice(9,12);
     }
-    // console.log(regions, jobDone, inprogress, jobRemain);
-    this.chartPEA = {
-      series: [
-        {
-          name: "ยังไม่มีแผนงาน",
-          data: jobRemain
-        },
-        {
-          name: "ดำเนินการแล้วเสร็จ",
-          data: jobDone
-        },
-        {
-          name: "อยู่ระหว่างดำเนินการ",
-          data: inprogress
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: 700,
-        width:1000,
-        stacked: true,
-        stackType: "100%",
-      },
-      xaxis: {
-        categories: regions
-      },
-      fill: {
-        opacity: 1,
-        colors: ['#B05CBA', '#D9D9D9', '#ED639E'],
-      },
-      legend: {
-        position: "right",
-        offsetX: 0,
-        offsetY: 50,
-      },
-      dataLabels: {
-        style: {
-          colors: ['#F44336', '#E91E63', '#9C27B0']
-        }
+    console.log(this.regionOption,regions);
+    if(this.regionOption==6){
+      jobDone[0]=0;
+      inprogress[0]=0;
+      jobRemain[0]=0;
+      var totalTR=0;
+      for (var i = 0; i < regions.length; i++) {
+        
+        data = this.problemPEA[regions[i]];
+        jobDone[0]=jobDone[0]+Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
+        inprogress[0]=inprogress[0]+Number(data['nWBS']) - Number(data['nCLSD']);
+        jobRemain[0]=jobRemain[0]+Number(data['nTR'])-Number(data['nNo']) - Number(data['nGIS'])-Number(data['nWBS']);
+        totalTR=totalTR+Number(data['nTR']);
       }
-    };
-  
+      regionsLabel.push('กฟภ.');
+      jobDone[0]=Math.round(jobDone[0]/totalTR*100);
+      inprogress[0]=Math.round(inprogress[0]/totalTR*100);
+      jobRemain[0]=Math.round(jobRemain[0]/totalTR*100);
+    }else{
+      for (var i = 0; i < regions.length; i++) {
+        regionsLabel.push(regions[i].toUpperCase());
+        data = this.problemPEA[regions[i]];
+        jobDone.push(Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+        inprogress.push(Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+        // console.log((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100);
+        jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+      }
+      
+    }
+
+    // console.log('plotdata',regionsLabel, jobDone, inprogress, jobRemain);
+    
+    var chartData = {};
+      chartData = {
+        labels: regionsLabel,
+        segmentShowStroke: false,
+        datasets: [
+          {
+            label: 'ดำเนินการแล้วเสร็จ',
+            stack: 'Stack 1',
+            data: jobDone,
+            backgroundColor: '#B05CBA',
+          },
+          {
+            label: 'อยู่ระหว่างดำเนินการ',
+            stack: 'Stack 1',
+            data: inprogress,
+            backgroundColor: '#D9D9D9',
+          },
+          {
+            label: 'ยังไม่มีแผนงาน',
+            stack: 'Stack 1',
+            data: jobRemain,
+            backgroundColor: '#ED639E',
+          },
+        ]
+      };
+    
+
+    if (this.chartPEA) this.chartPEA.destroy();
+    this.chartPEA = new Chart('chartPEA', {
+      type: 'bar',
+      data: chartData,
+      options: {
+        indexAxis: 'y',
+        // Elements options apply to all of the options unless overridden in a dataset
+        // In this case, we are setting the border of each horizontal bar to be 2px wide
+        elements: {
+          bar: {
+            borderWidth: 2,
+          }
+        },
+        color: '#fff',
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          position: 'nearest',
+          mode: 'single',
+        },
+        legend: {
+          position: 'right',
+          labels: {
+            display: true,
+            defaultFontSize: 40,
+            fontColor: 'white'
+          }
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontSize: 14,
+              fontColor: "white",
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              fontSize: 14,
+              fontColor: "white",
+            }
+          }]
+        },
+        animation: {
+          onComplete: function () {
+            var ctx = this.chart.ctx;
+            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+            ctx.fillStyle = "white";
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'center';
+            // console.log(this.data.datasets);
+            this.data.datasets.forEach(function (dataset) {
+              for (var i = 0; i < dataset.data.length; i++) {
+                for (var key in dataset._meta) {
+                  var model = dataset._meta[key].data[i]._model;
+                  if(dataset.data[i]!=0){
+                  ctx.fillText(dataset.data[i], model.x-5, model.y);
+                }
+                }
+
+              }
+            });
+
+          }
+        },
+      }
+    });
+
+
+
+
   }
   getJobProgressPea() {
     // (Number(this.regionData[1].nCLSD)+Number(this.regionData[1].nGIS)+Number(this.regionData[1].nNo)) / 
-    
+
     // console.log((Number(this.regionData[1].nCLSD)+Number(this.regionData[1].nGIS)+Number(this.regionData[1].nNo)));
     var region = 'n1';
+    console.log('trall',this.trAllReg);
     this.chartn1 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -791,9 +880,9 @@ export class LVProComponent implements OnInit {
 
     var region = 'n2';
     this.chartn2 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
-        height: 320,
+        height: 310,
         type: "radialBar",
         stacked: true,
         toolbar: {
@@ -873,7 +962,7 @@ export class LVProComponent implements OnInit {
 
     var region = 'n3';
     this.chartn3 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -955,7 +1044,7 @@ export class LVProComponent implements OnInit {
 
     var region = 'ne1';
     this.chartne1 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1037,7 +1126,7 @@ export class LVProComponent implements OnInit {
 
     var region = 'ne2';
     this.chartne2 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1119,7 +1208,7 @@ export class LVProComponent implements OnInit {
 
     var region = 'ne3';
     this.chartne3 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1201,7 +1290,7 @@ export class LVProComponent implements OnInit {
 
     var region = 'c1';
     this.chartc1 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1283,7 +1372,7 @@ export class LVProComponent implements OnInit {
 
     var region = 'c2';
     this.chartc2 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1365,7 +1454,7 @@ export class LVProComponent implements OnInit {
 
     var region = 'c3';
     this.chartc3 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1447,7 +1536,7 @@ export class LVProComponent implements OnInit {
 
     var region = 's1';
     this.charts1 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1529,7 +1618,7 @@ export class LVProComponent implements OnInit {
 
     var region = 's2';
     this.charts2 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -1611,7 +1700,7 @@ export class LVProComponent implements OnInit {
 
     var region = 's3';
     this.charts3 = {
-      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) + Number(this.regionData[region].nGIS) + Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
+      series: [(Number(this.regionData[region].nTR) - Number(this.regionData[region].nCLSD) - Number(this.regionData[region].nGIS) - Number(this.regionData[region].nNo)) / Number(this.trAllReg[region]) * 100],
       chart: {
         height: 310,
         type: "radialBar",
@@ -2405,11 +2494,22 @@ export class LVProComponent implements OnInit {
 
 
   }
+  checkTab(){
+    if(this.tab==0){
+      return true;
+    }else{
+      return false;
+    }
+    
+  }
   onTabClick(event) {
-    if (event.index == 1) {
+    this.tab=event.index;
+    if(event.index==1){
+      this.getJobProgressPea2();
+    }else if (event.index == 2) {
       this.getMat("1");
       this.getMatReq();
-    } else if (event.index == 2) {
+    } else if (event.index == 3) {
       // this.http.get('http://n2-psim.pea.co.th/psdoc/',{responseType:'text'}).subscribe(res=>{
       //   this.KisshtHtml = this.sanitizer.bypassSecurityTrustHtml(res);
       // })
