@@ -94,7 +94,7 @@
     <div>
       <mat-card>
         <mat-card-header>
-          <mat-card-title style="color:white; font-size: 26px;">สถานะการณ์ดำเนินการแก้ไขปัญหา หม้อแปลงจำหน่ายไฟฟ้า สถานะวันที่
+          <mat-card-title style="color:white; font-size: 26px;">สถานการณ์ดำเนินการแก้ไขปัญหา หม้อแปลงจำหน่ายไฟฟ้า สถานะวันที่
             {{updateDate}}
           </mat-card-title>
         </mat-card-header>
@@ -212,7 +212,7 @@
     <!-----------------------------------หม้อแปลงคงคลัง matching------------------------------------------------>
     <mat-card class="example-card">
       <mat-card-header>
-        <mat-card-title style="color:white;">ความต้องการพัสดุ กฟน.2
+        <mat-card-title style="color:white;">ความต้องการพัสดุ {{regionThai}}
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -221,18 +221,27 @@
           <div class="col-md-12">
             <div class="col-md-12 d-flex justify-content-center">
               <mat-button-toggle-group style="border-radius: 20px;height: 80%;" value="1">
-                <mat-button-toggle (change)="getMat($event.value)" value="1">15 วัน</mat-button-toggle>
-                <mat-button-toggle (change)="getMat($event.value)" value="2">45 วัน</mat-button-toggle>
+                <mat-button-toggle (change)="getMat($event.value)" value="1" style="width: 300px;">15 วัน (Load>100 or V<200)</mat-button-toggle>
+                <mat-button-toggle (change)="getMat($event.value)" value="2"style="width: 300px;">45 วัน (Load 80-100 or V 200-210)</mat-button-toggle>
               </mat-button-toggle-group>
             </div>
-
+            <div class="col-md-3">
+              <mat-form-field>
+                <mat-label style="color:white;font-size: 16px;">เลือก BAT</mat-label>
+                <mat-select (selectionChange)="selectBAT($event)" style="color:white;font-size: 16px;">
+                  <mat-option class="not-empty-select" *ngFor="let bat of batSelect" [value]="[bat.value]">
+                    {{bat.viewvalue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
             <div class="row">
               <div class="col-md-6 col-sm-6 mt-3" style="height: 30pc;">
                 <div *ngIf="dayCheck()">
-                  <mat-label style="color: white;">จำนวนหม้อแปลงที่ต้องใช้ภายใน {{nDate}} วัน</mat-label>
+                  <mat-label style="color: white;font-size: 16px;">จำนวนหม้อแปลงที่ต้องใช้ภายใน {{nDate}} วัน (BAT {{batName}})</mat-label>
                 </div>
                 <div *ngIf="!dayCheck()">
-                  <mat-label style="color: white;">จำนวนหม้อแปลงที่ต้องใช้ภายใน {{nDate}} วัน ก่อน Matching
+                  <mat-label style="color: white;font-size: 16px;">จำนวนหม้อแปลงที่ต้องใช้ภายใน {{nDate}} วัน (BAT {{batName}}) ก่อน Matching
                   </mat-label>
                 </div>
                 <canvas id='chartMat'></canvas>
@@ -240,10 +249,10 @@
               <div class="col-md-6 col-sm-6 mt-3 float-right">
                 <div class="row">
                   <div *ngIf="dayCheck()">
-                    <mat-label style="color: white;">จำนวนหม้อแปลงที่มีโหลดเกิน 100%</mat-label>
+                    <mat-label style="color: white;font-size: 16px;">จำนวนหม้อแปลงที่มีโหลดเกิน 100%</mat-label>
                   </div>
                   <div *ngIf="!dayCheck()">
-                    <mat-label style="color: white;">จำนวนหม้อแปลงที่ต้องใช้ภายใน {{nDate}} วัน หลัง Matching
+                    <mat-label style="color: white;font-size: 16px;">จำนวนหม้อแปลงที่ต้องใช้ภายใน {{nDate}} วัน (BAT {{batName}}) หลัง Matching
                     </mat-label>
                   </div>
 

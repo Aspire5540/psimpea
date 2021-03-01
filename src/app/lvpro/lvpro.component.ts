@@ -151,6 +151,7 @@ export class LVProComponent implements OnInit {
   selPeapeaCode = 'B00000';
   selPeapeaCode2 = 'xx';
   region = 'xx';
+  regionThai=GlobalConstants.regionThai[GlobalConstants.region];
   selAoj = 'xx';
   currentMatherPea = "";
   currentPea = "";
@@ -170,6 +171,8 @@ export class LVProComponent implements OnInit {
   ];
   dataDashboard={};
   option2 = '1';
+  bat='3';
+  batName='N และ R';
   regionData = {};
   Conditions = [
  
@@ -196,7 +199,12 @@ export class LVProComponent implements OnInit {
     { value: 6, viewvalue: 'กฟภ.' },
   ];
 
+  batSelect = [
+    { value: 1, viewvalue: 'N' },
+    { value: 2, viewvalue: 'R' },
+    { value: 3, viewvalue: 'N+R' },
 
+  ];
 
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer, private router: Router, private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) {
     this.getpeaList();
@@ -247,7 +255,18 @@ export class LVProComponent implements OnInit {
     this.option2 = val;
     this.getDataRegionByProblem();
   }
+  selectBAT(event) {
+    if(event.value[0]==1){
+      this.batName='N';
+    }else if(event.value[0]==2){
+      this.batName='R';
+    }if(event.value[0]==3){
+      this.batName='N และ R';
+    }
+    this.bat = event.value[0];
 
+    this.getMat(this.choice);
+  }
   selectRegion(event) {
     this.regionOption = event.value[0];
 
@@ -2423,7 +2442,7 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    // this.peaCode = "I00000";
+    // this.peaCode = "C00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
@@ -2482,7 +2501,7 @@ export class LVProComponent implements OnInit {
   }
   getMat(choice) {
     this.choice = choice;
-    this.configService.postdata2('ldcad/rdMatSAP.php', {}).subscribe((data => {
+    this.configService.postdata2('ldcad/rdMatSAP.php', {bat:this.bat}).subscribe((data => {
       if (data['status'] == 1) {
         // console.log(data);
         var label = ["30 kVA", "50 kVA", "100  kVA", "160  kVA"];
