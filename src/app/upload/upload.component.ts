@@ -35,7 +35,7 @@ export class UploadComponent implements OnInit {
 
   ngOnInit() {
     // this.peaCode = localStorage.getItem('peaCode'); 
-    this.peaCode = 'J00000'; 
+    this.peaCode = 'B00000'; 
   }
   checkAutho() {
     this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";

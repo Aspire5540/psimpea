@@ -33,7 +33,7 @@ export class ConfigService {
     //GlobalConstants.region = "n2";
    }
    getData(endpoint){
-     return this.http.get(this.hostUrl+endpoint+"&region="+GlobalConstants.region);
+     return this.http.get(this.hostUrl+endpoint+"region="+GlobalConstants.region);
    }
    getWbs(endpoint): Observable<wbsdata[]> {
     return this.http.get<wbsdata[]>(this.hostUrl+endpoint+"&region="+GlobalConstants.region);

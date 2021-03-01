@@ -92,7 +92,7 @@ export class JobapproveComponent implements OnInit {
 
   }
   getTRList() {
-    this.configService.getData('ldcad/rdtr.php').subscribe(res => {
+    this.configService.getData('ldcad/rdtr.php?').subscribe(res => {
       this.trObj = {};
       res["data"].forEach(element => {
         this.trObj[element.PEA_TR] = { 'minV': element.minV, 'Load': element.PLoadTOT, 'Ub': element.Ub }

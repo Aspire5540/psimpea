@@ -97,7 +97,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
     
     this.getData();
     this.getAppData(['','']);
-    this.getJobProgress();
+    // this.getJobProgress();
     this.getFilter();
     this.dataSource.paginator = this.paginator;
     this.dataSource1.paginator = this.paginator1;
