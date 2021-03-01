@@ -4,17 +4,23 @@
     <h1 class="card-title">ไม่มีสิทธิ์ใช้งาน</h1> 
 
 </div>
-
+    
 <div class="row" *ngIf="checkAutho()">
-  <div class="col-6 grid-margin">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title style="color:rgb(0, 0, 0);">Update ผลการดำเนิงาน
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>  
+  <div class="col-12 grid-margin">
     <div class="card">
       <div class="card-body">     
-        <h1 class="card-title"> Upload File ZPSR048</h1>        
+        <h1 class="card-title">1. Upload File ZPSR048</h1>        
         <form class="form-sample" #f="ngForm" (ngSubmit)="onSubmit()">
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="input-lg" for="file">1.เลือกไฟล์ ZPSR048</label>
+                    <label class="input-lg" for="file">เลือกไฟล์ ZPSR048</label>
                     <input type="file"
                            id="file"
                            name="filename"
@@ -98,15 +104,15 @@
       </div>
     </div>
   </div> -->
-  <div class="col-6 grid-margin">
+  <div class="col-12 grid-margin">
     <div class="card">
       <div class="card-body">     
-        <h1 class="card-title"> Upload PM </h1>        
+        <h1 class="card-title">2. Upload PM </h1>        
         <form class="form-sample" #pm="ngForm" (ngSubmit)="uploadPM()">
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="input-lg" for="file">1.เลือกไฟล์ PM </label>
+                    <label class="input-lg" for="file">เลือกไฟล์ PM</label>
                     <input type="file"
                            id="file"
                            name="filename"
@@ -123,37 +129,20 @@
       </div>
     </div>
   </div>
+</mat-card-content>
+</mat-card>
+
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title style="color:black;">Update เพื่อขึ้นระบบใหม่
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>  
 
   <div class="col-6 grid-margin">
     <div class="card">
       <div class="card-body">     
-        <h1 class="card-title"> Upload LDCAD </h1>        
-        <form class="form-sample" #ldcad="ngForm" (ngSubmit)="uploadLDCAD()">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="input-lg" for="file">เลือกไฟล์ LDCAD.xlsx </label>
-                    <input type="file"
-                           id="file"
-                           name="filename"
-                           (change)="handleFileLDCAD($event)" ngModel required>
-                    <label class="input-lg"> {{uploadDocResponse2}} </label>                  
-                </div>
-            </div>
-          </div>
-            <div class="col-md-3">
-              <button type="submit" [disabled]="!ldcad.valid" class="btn btn-success">Submit</button>
-            </div>
-        
-         </form>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-6 grid-margin">
-    <div class="card">
-      <div class="card-body">     
-        <h1 class="card-title"> Upload PEANAME </h1>        
+        <h1 class="card-title"> 1. Upload PEANAME </h1>        
         <form class="form-sample" #peaname="ngForm" (ngSubmit)="uploadPEANAME()">
         <div class="row">
             <div class="col-md-12">
@@ -179,7 +168,7 @@
   <div class="col-6 grid-margin">
     <div class="card">
       <div class="card-body">     
-        <h1 class="card-title"> Upload PEANAME2 </h1>        
+        <h1 class="card-title"> 2. Upload PEANAME2 </h1>        
         <form class="form-sample" #peaname2="ngForm" (ngSubmit)="uploadPEANAME2()">
         <div class="row">
             <div class="col-md-12">
@@ -205,7 +194,42 @@
   <div class="col-6 grid-margin">
     <div class="card">
       <div class="card-body">     
-        <h1 class="card-title"> Upload mb52 </h1>        
+        <h1 class="card-title"> 3. Upload LDCAD </h1>        
+        <form class="form-sample" #ldcad="ngForm" (ngSubmit)="uploadLDCAD()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="input-lg" for="file">เลือกไฟล์ LDCAD.xlsx </label>
+                    <input type="file"
+                           id="file"
+                           name="filename"
+                           (change)="handleFileLDCAD($event)" ngModel required>
+                    <label class="input-lg"> {{uploadDocResponse2}} </label>                  
+                </div>
+            </div>
+          </div>
+            <div class="col-md-3">
+              <button type="submit" [disabled]="!ldcad.valid" class="btn btn-success">Submit</button>
+            </div>
+        
+         </form>
+      </div>
+    </div>
+  </div>
+
+</mat-card-content>
+</mat-card>
+
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title style="color:black;"> Update ความต้องการพัสดุ
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>  
+  <div class="col-6 grid-margin">
+    <div class="card">
+      <div class="card-body">     
+        <h1 class="card-title"> 1. Upload mb52 </h1>        
         <form class="form-sample" #mb52="ngForm" (ngSubmit)="uploadmb52()">
         <div class="row">
             <div class="col-md-12">
@@ -231,7 +255,7 @@
   <div class="col-6 grid-margin">
     <div class="card">
       <div class="card-body">     
-        <h1 class="card-title"> Upload WBS </h1>        
+        <h1 class="card-title"> 2. Upload WBS </h1>        
         <form class="form-sample" #cn52n="ngForm" (ngSubmit)="uploadcn52n()">
         <div class="row">
             <div class="col-md-12">
@@ -279,5 +303,7 @@
       </div>
     </div>
   </div>
+</mat-card-content>
+</mat-card>
 
 </div>
