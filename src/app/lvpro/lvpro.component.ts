@@ -2442,7 +2442,7 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    // this.peaCode = "C00000";
+    this.peaCode = "K00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
