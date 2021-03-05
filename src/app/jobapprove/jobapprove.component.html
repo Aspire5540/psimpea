@@ -1,9 +1,15 @@
-<div class="row" *ngIf="peaCode != 'B00000'">
+<!-- <div class="row" *ngIf="peaCode != 'B00000'">
   <h1 class="card-title">ไม่มีสิทธิ์ใช้งาน</h1>
+
+</div> -->
+<app-loader></app-loader>
+<div class="row" *ngIf="!checkAutho()">
+  <h1 class="card-title">ไม่มีสิทธิ์ใช้งาน</h1> 
 
 </div>
 
-<div *ngIf="peaCode == 'B00000'">
+<!-- <div *ngIf="peaCode == 'B00000'"> -->
+<div *ngIf="checkAutho()">
   <div class="row">
     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
       <div class="card">
@@ -327,7 +333,7 @@
               </mat-form-field>
             </div>
             <div class="col-md-6">
-              Dowload
+              Download
               <button (click)="exportAsXLSX2()"><i class="fa fa-file-excel-o"
                   style="font-size:20px;color:blue"></i></button>
             </div>

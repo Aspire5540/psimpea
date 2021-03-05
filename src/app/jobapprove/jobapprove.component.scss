@@ -78,6 +78,14 @@ tr.example-element-row:not(.example-expanded-row):active {
 .example-element-description-attribution {
   opacity: 0.5;
 }
-.mat-select-value-text {
-  color:black !important;
+
+:host ::ng-deep.mat-select-value-text {
+  color:rgb(0, 0, 0);
 }
+
+// .mat-select-value-text {
+//   color:black !important;
+// }
+// ::ng-deep .mat-select-value{    
+//   color: rgb(255, 255, 255)!important;  
+// }
