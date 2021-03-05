@@ -8,6 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { Chart } from 'chart.js';
 import { ConfirmationDialog } from '../sumtable/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import{ GlobalConstants } from '../common/global-constants';
 @Component({
   selector: 'app-jobapprove',
   templateUrl: './jobapprove.component.html',
@@ -58,6 +59,7 @@ export class JobapproveComponent implements OnInit {
     { value: '', viewValue: 'ทั้งหมด' },
 
   ];
+  autoPeaCod = '';
   selPea = '';
   totalWbs = 0;
   selBudjet = ['', ''];
@@ -89,6 +91,15 @@ export class JobapproveComponent implements OnInit {
     this.getJobProgressPea();
     this.getTRList();
 
+
+  }
+  checkAutho() {
+    this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";
+    if (this.peaCode == this.autoPeaCod) {
+      return true;
+    } else {
+      return false;
+    }
 
   }
   getTRList() {
