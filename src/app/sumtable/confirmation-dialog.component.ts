@@ -30,6 +30,8 @@ export class ConfirmationDialog {
   newIc:number;
   newLen:number;
   newNday:number;
+  fileDocname:string;
+  filename:string;
   constructor(private uploadService: FileuploadService,
     @Inject(MAT_DIALOG_DATA) private data: any,
     private dialogRef: MatDialogRef<ConfirmationDialog>) {
@@ -79,6 +81,8 @@ export class ConfirmationDialog {
     this.wbs["newIb"]=this.newIb;
     this.wbs["newIc"]=this.newIc;
     this.wbs["newLen"]=this.newLen;
+    this.wbs["filename"]=this.filename;
+    this.wbs["fileDocname"]=this.fileDocname;
 
     this.dialogRef.close(this.wbs);
   }
@@ -87,7 +91,7 @@ export class ConfirmationDialog {
 
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
-    formData.append('wbs', this.wbs["wbs"]);
+    formData.append('wbs', this.newWbs);
     this.uploadService.upload2(formData).subscribe(
       (res) => {
         this.uploadResponse = res.status;
@@ -104,7 +108,7 @@ export class ConfirmationDialog {
     //console.log(event);
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
-    formData.append('wbs', this.wbs["wbs"]);
+    formData.append('wbs', this.newWbs);
     console.log(formData);
     this.uploadService.uploadDoc2(formData).subscribe(
       (res) => {

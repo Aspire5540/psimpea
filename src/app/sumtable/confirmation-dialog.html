@@ -43,7 +43,7 @@
     <div class="col-md-12 row">
       <div class="form-group">
         <label class="input-lg" for="fileDocname">1.เลือกไฟล์อนุมัติประมาณการ</label>
-        <input type="file" id="fileDocname" name="fileDocname" (change)="handleFileDoc($event)" ngModel required>
+        <input type="file" id="fileDocname" [(ngModel)]="fileDocname" (change)="handleFileDoc($event)" ngModel required>
         <label class="input-lg"> {{uploadDocResponse}} </label>
 
       </div>
@@ -51,7 +51,7 @@
     <div class="col-md-12 row">
       <div class="form-group">
         <label class="input-lg" for="file">2.เลือกไฟล์แผนผัง</label>
-        <input type="file" id="file" name="filename" (change)="handleFileInput($event)" ngModel required>
+        <input type="file" id="file" [(ngModel)]="filename" (change)="handleFileInput($event)" ngModel required>
         <label class="input-lg"> {{uploadResponse}} </label>
 
       </div>

@@ -1,5 +1,11 @@
 <app-loader></app-loader>
-
+<div class="my-overlay" *ngIf="showOverlay">
+  <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+</div>
+<!-- <div *ngIf="showOverlay" class="overlay">
+  <mat-progress-spinner class="spinner" [color]="color" [mode]="mode" [value]="value">
+  </mat-progress-spinner>
+</div> -->
 
 <mat-tab-group [backgroundColor]="'primary'" [color]="'warn'" (selectedTabChange)="onTabClick($event)">
   <mat-tab label="Dashboard กฟภ.">
@@ -156,7 +162,7 @@
           </div>
         </div>
         <div class="col-md-12 d-flex justify-content-center" style="color: white;">
-          <mat-button-toggle-group style="border-radius: 20px;height: 80%;color: rgb(70, 124, 172);" value="2">
+          <mat-button-toggle-group style="border-radius: 20px;height: 80%;color: rgb(70, 124, 172);" value="7">
             <mat-button-toggle (change)="onValChange($event.value)" value="7" style="width: 300px;">แรงดันต่ำกว่า 200 V หรือ โหลดเกิน 100%</mat-button-toggle>
             <mat-button-toggle (change)="onValChange($event.value)" value="2">แรงดันต่ำกว่า 200 V</mat-button-toggle>
             <mat-button-toggle (change)="onValChange($event.value)" value="6">แรงดัน 200-210 V</mat-button-toggle>
@@ -221,8 +227,8 @@
           <div class="col-md-12">
             <div class="col-md-12 d-flex justify-content-center">
               <mat-button-toggle-group style="border-radius: 20px;height: 80%;" value="1">
-                <mat-button-toggle (change)="getMat($event.value)" value="1" style="width: 300px;">15 วัน (Load>100 or V<200)</mat-button-toggle>
-                <mat-button-toggle (change)="getMat($event.value)" value="2"style="width: 300px;">45 วัน (Load 80-100 or V 200-210)</mat-button-toggle>
+                <mat-button-toggle (change)="getMat($event.value)" value="1" style="width: 300px;">Load>100 or V<200</mat-button-toggle>
+                <mat-button-toggle (change)="getMat($event.value)" value="2"style="width: 300px;">Load 80-100</mat-button-toggle>
               </mat-button-toggle-group>
             </div>
             <div class="col-md-3">
@@ -257,10 +263,18 @@
                   </div>
 
                   <div class="col-md-12 col-sm-12" style="height: 30pc;">
+                    
                     <canvas id='chartTR'></canvas>
                   </div>
                 </div>
-                <div class="row mt-5">
+              </div>
+              <div class="col-md-6 col-sm-6 mt-5" style="height: 30pc;">
+                <mat-label style="color: white;">พัสดุที่ต้องการเพิ่มเติม</mat-label>
+                <canvas id='chartReqMat'></canvas>
+
+              </div>
+                <div class="col-md-6 col-sm-6 mt-5">
+                  <!-- <div class="col-md-6 col-sm-6 mt-3"> -->
                   <mat-label style="color: white;">โปรดระบุความต้องการพัสดุ</mat-label>
                   <form class="form-sample" #f="ngForm" (ngSubmit)="onSubmit()">
                     <div class="row">
@@ -338,12 +352,10 @@
                       <mat-paginator #paginator3 [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons>
                       </mat-paginator>
                     </div>
-
-
                   </form>
-
+                <!-- </div> -->
                 </div>
-              </div>
+              
             </div>
           </div>
 

@@ -16,22 +16,22 @@ export class FileuploadService {
 
   public upload(data) {
     let uploadURL = `${this.SERVER_URL}/upload.php`;
-  
+    data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   }
   public upload2(data) {
     let uploadURL = `${this.SERVER_URL}/upload2.php`;
-  
+    data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   }
   public uploadDoc(data) {
     let uploadURL = `${this.SERVER_URL}/uploadDoc.php`;
-    
+    data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   }
   public uploadDoc2(data) {
     let uploadURL = `${this.SERVER_URL}/uploadDoc2.php`;
-    
+    data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   }
   public uploadZap048(data) {

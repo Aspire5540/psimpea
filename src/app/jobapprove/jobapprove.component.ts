@@ -36,7 +36,7 @@ export class JobapproveComponent implements OnInit {
   nwbsApp = [];
   peaname = [];
   peaCode = "";
-  URL = "http://172.30.212.189/psisservice/uploads/";
+  URL = "http://172.30.212.189/psisservice/";
   //URL = "http://172.30.212.148/psisservice/uploads/";
   WorkCostPercentPea = [];
   matCostPercentPea = [];
@@ -74,7 +74,7 @@ export class JobapproveComponent implements OnInit {
 
   @ViewChild('paginator1', { static: false }) paginator1: MatPaginator;
   @ViewChild('sort1', { static: false }) sort1: MatSort;
-
+  region=GlobalConstants.region;
   constructor(private configService: ConfigService, private dialog: MatDialog) { }
   ngOnInit() {
 

@@ -9,7 +9,7 @@ import { Chart } from 'chart.js';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationDialog } from './confirmation-dialog.component';
-
+import { GlobalConstants } from '../common/global-constants';
 @Component({
   selector: 'app-sumtable',
   templateUrl: './sumtable.component.html',
@@ -67,7 +67,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
   ];
   selectAppChoice='';
   //file upload
-  URL = "http://172.30.212.189/psisservice/uploads/";
+  URL = "http://172.30.212.189/psisservice/";
   //URL = "http://172.30.212.148/psisservice/uploads/";
   //URL = "http://127.0.0.1/psisservice/uploads/";
   private file: File | null = null;
@@ -86,6 +86,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
   @ViewChild('paginator1', { static: true }) paginator1: MatPaginator;
   @ViewChild('sort', { static: true }) sort: MatSort;
   @ViewChild('sort1', { static: true }) sort1: MatSort;
+  region=GlobalConstants.region;
   //,public authService: AuthService,private http: HttpClient
   constructor(private configService: ConfigService, private uploadService: FileuploadService, private dialog: MatDialog) { }
   ngOnInit() {
@@ -475,6 +476,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
 
     dialogRef.afterClosed().subscribe((wbsdata) => {
       //console.log('Choice :' + this.choice);
+      console.log(wbsdata);
       if (wbsdata) {
         if (this.choice == 1) { this.delWbs(wbsdata); }
         if (this.choice == 2) {this.renameWbs(wbsdata);}

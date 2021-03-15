@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ConfigService } from '../config/config.service';
-import { Router } from '@angular/router';
+import { Router,Event as RouterEvent,
+  NavigationStart,
+  NavigationEnd,
+  NavigationCancel,
+  NavigationError } from '@angular/router';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { trdata, meterdata, meterdata2, matreq, trmatch } from '../model/user.model';
 import { AuthService } from '../config/auth.service';
@@ -70,7 +74,7 @@ export type ChartOptions3 = {
   ]
 })
 export class LVProComponent implements OnInit {
-
+  public showOverlay = true;
   public pClsChart: Partial<ChartOptions2>;
   public chartOptions1: Partial<ChartOptions2>;
   public chartn1: Partial<ChartOptions2>;
@@ -139,6 +143,7 @@ export class LVProComponent implements OnInit {
   chartResult: Chart;
   chartMat: Chart;
   chartTR: Chart;
+  chartReqMat: Chart;
   updateDate: string;
   regionOption = 1;
   meterdata = [];
@@ -205,8 +210,11 @@ export class LVProComponent implements OnInit {
     { value: 3, viewvalue: 'N+R' },
 
   ];
-
+  
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer, private router: Router, private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) {
+    router.events.subscribe((event: RouterEvent) => {
+      this.navigationInterceptor(event)
+    })
     this.getpeaList();
     this.getpeaList2();
     this.getDataRegion();
@@ -250,6 +258,23 @@ export class LVProComponent implements OnInit {
     // this.peaCode = 'B0110101';
     //this.peaNum = this.peaCode.substr(1, 5);
     this.selPeapeaCode = this.peaCode.substr(0, 4);
+  }
+  navigationInterceptor(event: RouterEvent): void {
+    console.log("showoverlay");
+    if (event instanceof NavigationStart) {
+      this.showOverlay = true;
+    }
+    // if (event instanceof NavigationEnd) {
+    //   this.showOverlay = false;
+    // }
+
+    // // Set loading state to false in both of the below events to hide the spinner in case a request fails
+    // if (event instanceof NavigationCancel) {
+    //   this.showOverlay = false;
+    // }
+    // if (event instanceof NavigationError) {
+    //   this.showOverlay = false;
+    // }
   }
   onGroupChange(val) {
     this.option2 = val;
@@ -2427,7 +2452,7 @@ export class LVProComponent implements OnInit {
             }
           }
         });
-
+        this.showOverlay = false;
       } else {
         alert(data['data']);
       }
@@ -2442,7 +2467,7 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    this.peaCode = "K00000";
+    // this.peaCode = "K00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
@@ -2511,6 +2536,9 @@ export class LVProComponent implements OnInit {
         var TRStock = [0, 0, 0, 0];
         var TRStock2 = [0, 0, 0, 0];
         var TR45match = [0, 0, 0, 0];
+        var matReq=[];
+        var matReqStock=[];
+        var matReqLabel=[];
         data['matSAP15'].forEach(element => {
           if (trSize.indexOf(element.kva) > -1) {
             TR15[trSize.indexOf(element.kva)] = Number(element.nMat);
@@ -2544,21 +2572,115 @@ export class LVProComponent implements OnInit {
         // var TRStock2 = [TRStock[0] - TR15[0], TRStock[1] - TR15[1], TRStock[2] - TR15[2], TRStock[3] - TR15[3]];
         data['req'].forEach(element => {
           if (element.nDay == "15" && choice == "1") {
-            label.push(element.matNameShort);
-            TR15.push(Number(element.nMat));
-            TRStock.push(Number(element.stock));
+            matReqLabel.push(element.matNameShort);
+            matReq.push(Number(element.nMat));
+            matReqStock.push(Number(element.stock));
 
           }
           if (element.nDay == "45" && choice != "1") {
-            label.push(element.matNameShort);
-            TR45.push(Number(element.nMat));
-            TRStock2.push(Number(element.stock));
+            matReqLabel.push(element.matNameShort);
+            matReq.push(Number(element.nMat));
+            matReqStock.push(Number(element.stock));
+          }
+
+        });
+
+        var chartData = {
+          labels: matReqLabel,
+          datasets: [
+            {
+              label: 'พัสดุที่ต้องการใช้งาน',
+              data: matReq,
+              backgroundColor: '#F0BC46',
+            },
+            {
+              label: 'พัสดุคงคลัง',
+              data: matReqStock,
+              backgroundColor: '#F08646',
+            }
+          ]
+        };
+
+        if (this.chartReqMat) this.chartReqMat.destroy();
+        this.chartReqMat = new Chart('chartReqMat', {
+          type: 'horizontalBar',
+          data: chartData,
+          options: {
+            indexAxis: 'y',
+            // Elements options apply to all of the options unless overridden in a dataset
+            // In this case, we are setting the border of each horizontal bar to be 2px wide
+            elements: {
+              bar: {
+                borderWidth: 2,
+              }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              position: 'bottom',
+              display: true,
+              defaultFontSize: 30,
+              labels: {
+                display: true,
+                defaultFontSize: 30,
+                fontColor: 'white'
+              }
+            },
+            scales: {
+              xAxes: [{
+                ticks: {
+                  fontSize: 14,
+                  fontColor: "white",
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  fontSize: 14,
+                  fontColor: "white",
+                }
+              }]
+            },
+            animation: {
+              onComplete: function () {
+                var ctx = this.chart.ctx;
+                ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+                ctx.fillStyle = "white";
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'center';
+                // console.log(this.data.datasets[1].data[0])
+                var mat = [];
+                this.data.datasets.forEach(function (dataset,) {
+
+                  for (var i = 0; i < dataset.data.length; i++) {
+                    for (var key in dataset._meta) {
+                      var model = dataset._meta[key].data[i]._model;
+
+                      if (dataset.label.includes("พัสดุที่ต้องการใช้งาน")) {
+                        mat.push(dataset.data[i]);
+                        ctx.fillText(dataset.data[i], model.x + 10, model.y);
+                        // console.log(mat)
+                      } else {
+                        if (dataset.data[i] - mat[i] > 0) {
+                          ctx.fillText(dataset.data[i], model.x + 10, model.y);
+                        } else {
+                          ctx.fillText(dataset.data[i] + " ,ขาด " + (mat[i] - dataset.data[i]), model.x + 10, model.y);
+                        }
+                      }
+
+
+                    }
+
+                  }
+                });
+
+              }
+            }
           }
 
         });
         if (choice == "1") {
           this.nDate = "15";
-          var chartData = {
+          chartData = {
             labels: label,
             datasets: [
               {
@@ -2575,7 +2697,7 @@ export class LVProComponent implements OnInit {
           };
         } else {
           this.nDate = "45";
-          var chartData = {
+          chartData = {
             labels: label,
             datasets: [
               {
@@ -2672,7 +2794,7 @@ export class LVProComponent implements OnInit {
         });
         this.getMatReq();
         if (choice != "1") {
-          var chartData = {
+          chartData = {
             labels: label,
             datasets: [
               {

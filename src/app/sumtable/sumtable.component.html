@@ -409,13 +409,13 @@
             <ng-container matColumnDef="wbs">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> wbs </th>
               <td class="table-lg" mat-cell *matCellDef="let wbsdata"> <a target="_blank" rel="noopener noreferrer"
-                  href={{URL+wbsdata.filename}}> {{wbsdata.wbs}} </a></td>
+                  href='{{URL}}/download_file.php?filename={{wbsdata.filename}}&region={{region}}'> {{wbsdata.wbs}} </a></td>
             </ng-container>
 
             <ng-container matColumnDef="jobName">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชื่องาน </th>
               <td class="table-lg" mat-cell *matCellDef="let wbsdata"><a target="_blank" rel="noopener noreferrer"
-                  href={{URL+wbsdata.fileDocname}}> {{wbsdata.jobName}} </a></td>
+                  href='{{URL}}/download_file.php?filename={{wbsdata.fileDocname}}&region={{region}}'> {{wbsdata.jobName}} </a></td>
             </ng-container>
 
             <ng-container matColumnDef="causeName">
@@ -555,12 +555,14 @@
 
             <ng-container matColumnDef="wbs">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> wbs </th>
-              <td class="table-lg" mat-cell *matCellDef="let appJob"> {{appJob.wbs}}</td>
+              <td class="table-lg" mat-cell *matCellDef="let appJob"> <a target="_blank" rel="noopener noreferrer"
+                href='{{URL}}/download_file.php?filename={{appJob.filename}}&region={{region}}'>{{appJob.wbs}}</a></td>
             </ng-container>
 
             <ng-container matColumnDef="jobName">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชื่องาน </th>
-              <td class="table-lg" mat-cell *matCellDef="let appJob">{{appJob.jobName}}</td>
+              <td class="table-lg" mat-cell *matCellDef="let appJob"><a target="_blank" rel="noopener noreferrer"
+                href='{{URL}}/download_file.php?filename={{appJob.fileDocname}}&region={{region}}'>{{appJob.jobName}}</a></td>
             </ng-container>
 
             <ng-container matColumnDef="mv">
