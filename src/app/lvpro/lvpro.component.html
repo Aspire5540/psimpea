@@ -164,15 +164,18 @@
         <div class="col-md-12 d-flex justify-content-center" style="color: white;">
           <mat-button-toggle-group style="border-radius: 20px;height: 80%;color: rgb(70, 124, 172);" value="7">
             <mat-button-toggle (change)="onValChange($event.value)" value="7" style="width: 300px;">แรงดันต่ำกว่า 200 V หรือ โหลดเกิน 100%</mat-button-toggle>
-            <mat-button-toggle (change)="onValChange($event.value)" value="2">แรงดันต่ำกว่า 200 V</mat-button-toggle>
-            <mat-button-toggle (change)="onValChange($event.value)" value="6">แรงดัน 200-210 V</mat-button-toggle>
             <mat-button-toggle (change)="onValChange($event.value)" value="1">โหลด 80-100%</mat-button-toggle>
-            <!-- <mat-button-toggle (change)="onValChange($event.value)" value="7">โหลด 80-90%</mat-button-toggle> -->
-            <mat-button-toggle (change)="onValChange($event.value)" value="5">โหลดเกิน 100%</mat-button-toggle>
-            <mat-button-toggle (change)="onValChange($event.value)" value="4">โหลดต่ำกว่า 30%</mat-button-toggle>
-            <mat-button-toggle (change)="onValChange($event.value)" value="3">%UB เกิน 25%</mat-button-toggle>
             <mat-button-toggle (change)="onValChange($event.value)" value="8">%UB เกิน 50%</mat-button-toggle>
-            <!-- <mat-button-toggle (change)="onValChange($event.value)" value="3">%UB เกิน 50%</mat-button-toggle> -->
+            
+            <!-- <mat-button-toggle (change)="onValChange($event.value)" value="2">แรงดันต่ำกว่า 200 V</mat-button-toggle>
+            <mat-button-toggle (change)="onValChange($event.value)" value="6">แรงดัน 200-210 V</mat-button-toggle>
+            
+           
+            <mat-button-toggle (change)="onValChange($event.value)" value="5">โหลดเกิน 100%</mat-button-toggle> -->
+            <mat-button-toggle (change)="onValChange($event.value)" value="4">โหลดต่ำกว่า 30%</mat-button-toggle>
+           
+           
+           
           </mat-button-toggle-group>
 
         </div>
@@ -195,7 +198,10 @@
                     <div class="fluid-container">
                       <h3 class="font-weight-medium text-right mb-0 wrfont">ตรวจสอบแล้ว {{TrTotal | number}} เครื่อง
                         <BR>
-                        ปิดงานแล้ว {{TrTotalClsd}} เครื่อง
+                          ปิดงานแล้ว {{TrTotalClsd}} เครื่อง
+                        <BR>
+                          <h4>(ไม่พบปัญหา {{TrNo}} เครื่อง <BR> แก้ไข GIS {{TrGIS}}  เครื่อง
+                            <BR>  เปิดงาน/ปิดงาน PM PS {{TrClsd}}/{{TrWBS}} เครื่อง)</h4>
                       </h3>
                     </div>
                   </div>
@@ -619,9 +625,9 @@
               </div>
               <table class="mat-elevation-z8" style="background-color:royalblue" mat-table matSort #sort1="matSort"
                 [dataSource]="dataSource1">
-                <ng-container matColumnDef="aoj">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> AOJ </th>
-                  <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.Aoj}}</td>
+                <ng-container matColumnDef="PEANAME">
+                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> กฟฟ. </th>
+                  <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.PEANAME}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="PEA_TR">
@@ -722,7 +728,6 @@
                   <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> วันเริ่มต้น </th>
                   <td class="table-lg" mat-cell *matCellDef="let trdata">
                     <mat-form-field appearance="fill" style="width: 140px;height: 10px;">
-                      <!-- <mat-label>Custom calendar header</mat-label> -->
                       <input matInput [matDatepicker]="picker" [value]="setTime(trdata.rundate)"
                         (dateChange)="onDateChange(trdata.PEA_TR,$event)">
                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>

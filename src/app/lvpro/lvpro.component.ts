@@ -96,8 +96,8 @@ export class LVProComponent implements OnInit {
   // BarMat: Chart;
   testArry = { '100': 20 };
   trAllReg: any;
-  option = "2";
-  displayedColumns1 = ['aoj', 'PEA_TR', 'kva', 'Location', 'PLoadTOT', 'minV', 'Ub', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'rundate', 'expDate', 'workstatus'];
+  option = "7";
+  displayedColumns1 = ['PEANAME', 'PEA_TR', 'kva', 'Location', 'PLoadTOT', 'minV', 'Ub', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'rundate', 'expDate', 'workstatus'];
 
   displayedColumns2 = ['PEA_TR',
     'PEANAME',
@@ -160,9 +160,13 @@ export class LVProComponent implements OnInit {
   selAoj = 'xx';
   currentMatherPea = "";
   currentPea = "";
+  TrGIS=0;
+  TrNo=0;
   TrTotal = 0;
   TrPlnTal = 0;
+  TrClsd=0;
   TrTotalClsd = 0;
+  TrWBS=0;
   Statuss = [
     { value: '-' },
     { value: 'อยู่ระหว่างตรวจสอบ' },
@@ -699,26 +703,28 @@ export class LVProComponent implements OnInit {
 
         data = this.problemPEA[regions[i]];
         jobDone[0] = jobDone[0] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
-        inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD']);
-        jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS']);
+        inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD'])+Number(data['nSerway']) + Number(data['nEst']);
+        // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
         totalTR = totalTR + Number(data['nTR']);
       }
       regionsLabel.push('กฟภ.');
-      jobDone[0] = Math.round(jobDone[0] / totalTR * 100);
       jobDoneList[0]=jobDone[0];
-      inprogress[0] = Math.round(inprogress[0] / totalTR * 100);
+      jobDone[0] = (jobDone[0] / totalTR * 100).toFixed(2);
       inprogressList[0]=inprogress[0];
-      jobRemain[0] = Math.round(jobRemain[0] / totalTR * 100);
-      jobRemainList[0]=jobRemain[0];
+      inprogress[0] = (inprogress[0] / totalTR * 100).toFixed(2);
+      jobRemainList[0]=totalTR-jobDoneList[0]-inprogressList[0];
+      jobRemain[0] = ( jobRemainList[0] / totalTR * 100).toFixed(2);
+      
     } else {
       for (var i = 0; i < regions.length; i++) {
         regionsLabel.push(regions[i].toUpperCase());
         data = this.problemPEA[regions[i]];
-        jobDone.push(Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+        jobDone.push(((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100).toFixed(2));
         jobDoneList.push(Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']));
-        inprogress.push(Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
-        inprogressList.push(Number(data['nWBS']) - Number(data['nCLSD']));
-        jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100));
+        inprogress.push(((Number(data['nWBS']) - Number(data['nCLSD'])+Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100).toFixed(2));
+        inprogressList.push(Number(data['nWBS']) - Number(data['nCLSD'])+Number(data['nSerway']) + Number(data['nEst']));
+        // jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100)-Math.round((Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100));
+        jobRemain.push((100-jobDone[i]-inprogress[i]).toFixed(2));
         jobRemainList.push(data['nTR']-jobDoneList[i]-inprogressList[i]);
       }
 
@@ -1813,8 +1819,9 @@ export class LVProComponent implements OnInit {
         var firstLoop = true;
         var lastPea = '';
         var total = 0;
-
-
+        this.TrGIS=0;
+        this.TrNo=0;
+        this.TrClsd=0;
 
 
         firstLoop = true;
@@ -1933,7 +1940,11 @@ export class LVProComponent implements OnInit {
           }
         }
         // });
-
+        // var sum = GIS.reduce((sum, p) => sum + p);
+        this.TrGIS=GIS.reduce((a, b) => a + b, 0);
+        this.TrNo=No.reduce((a, b) => a + b, 0);
+        this.TrClsd=CLSD.reduce((a, b) => a + b, 0);
+        this.TrWBS=kva.reduce((a, b) => a + b, 0);
         //this.kvaTotal=505;
         //APEX CHART
         this.chartOptions1 = {
@@ -2467,7 +2478,7 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    // this.peaCode = "K00000";
+    // this.peaCode = "I00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
