@@ -186,15 +186,15 @@ export class LVProComponent implements OnInit {
   Conditions = [
  
     { value: 13, viewvalue: 'V <200 or Load>100' },
-    { value: 12, viewvalue: 'V <200 or Load>100 or %UB>50%' },
-    { value: 2, viewvalue: 'แรงดัน<200 Volt' },
-    { value: 7, viewvalue: 'แรงดัน 200-210 Volt' },
-    { value: 1, viewvalue: 'โหลด>100%' },
+    { value: 12, viewvalue: 'V <200 or Load>80 or %UB>50%' },
+    // { value: 2, viewvalue: 'แรงดัน<200 Volt' },
+    // { value: 7, viewvalue: 'แรงดัน 200-210 Volt' },
+    // { value: 1, viewvalue: 'โหลด>100%' },
     { value: 9, viewvalue: 'โหลด 90-100%' },
     { value: 8, viewvalue: 'โหลด 80-90%' },
-    { value: 4, viewvalue: 'โหลด<30%' },
     { value: 11, viewvalue: '%UB>50%' },
-    { value: 10, viewvalue: '%UB 25-50%' },
+    { value: 4, viewvalue: 'โหลด<30%' },
+    // { value: 10, viewvalue: '%UB 25-50%' },
     { value: 6, viewvalue: 'ทั้งหมด' },
 
   ];
@@ -2478,7 +2478,7 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    // this.peaCode = "I00000";
+    // this.peaCode = "K00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
