@@ -450,7 +450,9 @@ export class LVProComponent implements OnInit {
   checkAoj(Aoj) {
     if (Aoj.substring(2, 5) == this.peaCode.substring(1, 4) && this.peaCode.slice(-1) == "1") {
       return true;
-    } else if (this.peaCode.substr(1, 3).includes("000")) {
+    }  else if (this.peaCode.includes("Z00000")) {
+      return false;
+    }else if (this.peaCode.substr(1, 3).includes("000")) {
       return true;
     } else if (Aoj.substring(2, 7) == this.peaCode.substring(1, 6)) {
       return true;
@@ -2478,8 +2480,8 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    // this.peaCode = "K00000";
-    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim())) {
+    // this.peaCode = "Z00000";
+    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode=='Z00000') {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
         .subscribe(res => {
