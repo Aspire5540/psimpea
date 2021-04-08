@@ -143,12 +143,13 @@
         <mat-card-title style="color:white;">Dashboard การปรับปรุงหม้อแปลงและระบบจำหน่ายแรงต่ำ จาก LDCad สถานะวันที่
           {{updateDate}}
         </mat-card-title>
+
       </mat-card-header>
       <mat-card-content>
 
         <div class="row">
 
-          <div class="col-md-12">
+          <div class="col-md-11">
             <mat-form-field>
               <mat-label style="color:white;">กฟฟ. </mat-label>
               <mat-select (selectionChange)="selectPea($event)">
@@ -159,6 +160,11 @@
               </mat-select>
             </mat-form-field>
 
+          </div>
+          <div class="col-md-1">
+            <a target="_blank"
+              href='http://psim.pea.co.th/psisservice/ldcad/exportresult.php?option={{option}}&region={{currentReggion}}'><i
+                class="fa fa-file-excel-o" style="font-size:40px;color:white;"></i></a>
           </div>
         </div>
         <div class="col-md-12 d-flex justify-content-center" style="color: white;">

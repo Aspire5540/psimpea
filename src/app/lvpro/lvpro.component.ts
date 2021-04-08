@@ -156,6 +156,7 @@ export class LVProComponent implements OnInit {
   selPeapeaCode = 'B00000';
   selPeapeaCode2 = 'xx';
   region = 'xx';
+  currentReggion=GlobalConstants.region;
   regionThai=GlobalConstants.regionThai[GlobalConstants.region];
   selAoj = 'xx';
   currentMatherPea = "";
@@ -2480,7 +2481,7 @@ export class LVProComponent implements OnInit {
     //this.getRemianData();
   }
   public getTrData = () => {
-    // this.peaCode = "Z00000";
+    // this.peaCode = "G00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode=='Z00000') {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
