@@ -81,6 +81,7 @@ export class JobapproveComponent implements OnInit {
     //this.getData(this.selPea,this.selBudjet);
     //this.rdsumcost();
     this.peaCode = localStorage.getItem('peaCode');
+    // this.peaCode='Z00000'
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource1.paginator = this.paginator1;
@@ -97,6 +98,8 @@ export class JobapproveComponent implements OnInit {
     this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";
     if (this.peaCode == this.autoPeaCod) {
       return true;
+    }else if(this.peaCode =='Z00000'){
+      return true
     } else {
       return false;
     }

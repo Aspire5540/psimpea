@@ -26,7 +26,9 @@ export class SumtableComponent implements OnInit {
   causeNames = [];
   solveMets = [];
   userPeaCode=localStorage.getItem('peaCode');
-  //userPeaCode='B01101';
+  
+  // peaCode=localStorage.getItem('peaCode');
+  peaCode='Z00000';
   nwbsPTDD: number;
   workCostPerPTDD: number;
   nwbsMR: number;
@@ -90,6 +92,11 @@ solveMetsIm = ['ตัดจ่ายใหม่',
   //,public authService: AuthService,private http: HttpClient
   constructor(private configService: ConfigService, private uploadService: FileuploadService, private dialog: MatDialog) { }
   ngOnInit() {
+    // for test
+    if(this.peaCode=='Z00000'){
+      this.peaCode='B00000';
+    }
+   //------------------------------
     if (this.userPeaCode.slice(-1)=='1' || this.userPeaCode.slice(-1)=='0'){
       this.userPeaCode=this.userPeaCode.substr(0,4);
     }else{
@@ -114,7 +121,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
   this.configService.exportAsExcelFile(this.dataSource.data, 'งานที่ขออนุมัติ');
 }
   getData = () => {
-    this.configService.getWbs('rdimjob.php?peaCode=' + localStorage.getItem('peaCode')+'&filter1='+this.filter[0]+'&filter2='+this.filter[1]+'&status='+this.selectAppChoice)
+    this.configService.getWbs('rdimjob.php?peaCode=' + this.peaCode+'&filter1='+this.filter[0]+'&filter2='+this.filter[1]+'&status='+this.selectAppChoice)
       .subscribe(res => {
         this.dataSource.data = res as wbsdata[];
       })
@@ -140,7 +147,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
     }))
   }
   getAppData = (filter) => {
-    this.configService.getAppJob('rdAppJob.php?peaCode=' + localStorage.getItem('peaCode')+'&filter1='+filter[0]+'&filter2='+filter[1])
+    this.configService.getAppJob('rdAppJob.php?peaCode=' + this.peaCode+'&filter1='+filter[0]+'&filter2='+filter[1])
       .subscribe(res => {
         this.dataSource1.data = res as appJob[];
       })
@@ -158,7 +165,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
 
     this.wdata = this.registerForm.value;
     this.wdata["user"] = localStorage.getItem('name');
-    this.wdata["peaCode"] = localStorage.getItem('peaCode');
+    this.wdata["peaCode"] = this.peaCode;
     //console.log(this.wdata);
 
 
