@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ConfigService } from '../config/config.service';
-import { Router,Event as RouterEvent,
+import {
+  Router, Event as RouterEvent,
   NavigationStart,
   NavigationEnd,
   NavigationCancel,
-  NavigationError } from '@angular/router';
+  NavigationError
+} from '@angular/router';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { trdata, meterdata, meterdata2, matreq, trmatch } from '../model/user.model';
 import { AuthService } from '../config/auth.service';
@@ -73,7 +75,7 @@ export type ChartOptions3 = {
     { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
   ]
 })
-export class LVProComponent implements OnInit {
+export class LVProComponent implements OnInit,AfterViewInit {
   public showOverlay = true;
   public pClsChart: Partial<ChartOptions2>;
   public chartOptions1: Partial<ChartOptions2>;
@@ -110,6 +112,9 @@ export class LVProComponent implements OnInit {
     'distance',
     'map'];
   problemPEA = [];
+  problemPEA1 = [];
+  problemPEA2 = [];
+  problemPEA3 = [];
   displayedColumns3 = ['matCode', 'matName', 'nMat', 'peaName'];
   // public dataSource = new MatTableDataSource<trdata>();
   // public dataSource = new MatTableDataSource<trdata>();
@@ -134,6 +139,7 @@ export class LVProComponent implements OnInit {
   @ViewChild('sort3', { static: true }) sort3: MatSort;
 
   @ViewChild('chartPEA', { static: true }) chartPEA: ChartComponent;
+  @ViewChild('chartPEA2', { static: true }) chartPEA2: ChartComponent;
   tab = 0;
   condition = 0;
   peaCode = "";
@@ -156,18 +162,21 @@ export class LVProComponent implements OnInit {
   selPeapeaCode = 'B00000';
   selPeapeaCode2 = 'xx';
   region = 'xx';
-  currentReggion=GlobalConstants.region;
-  regionThai=GlobalConstants.regionThai[GlobalConstants.region];
+  currentReggion = GlobalConstants.region;
+  regionThai = GlobalConstants.regionThai[GlobalConstants.region];
   selAoj = 'xx';
   currentMatherPea = "";
   currentPea = "";
-  TrGIS=0;
-  TrNo=0;
+  TrGIS = 0;
+  TrNo = 0;
   TrTotal = 0;
   TrPlnTal = 0;
-  TrClsd=0;
+  TrClsd = 0;
   TrTotalClsd = 0;
-  TrWBS=0;
+  TrTotalProblem=0;
+  TrTotalPln=0;
+  TrTotalDone=0;
+  TrWBS = 0;
   Statuss = [
     { value: '-' },
     { value: 'อยู่ระหว่างตรวจสอบ' },
@@ -179,23 +188,23 @@ export class LVProComponent implements OnInit {
     { value: 'ไม่พบปัญหา' },
     { value: 'อื่นๆ โปรดระบุ' },
   ];
-  dataDashboard={};
-  option2 = '1';
-  bat='3';
-  batName='N และ R';
+  dataDashboard = {};
+
+  bat = '3';
+  batName = 'N และ R';
   regionData = {};
   Conditions = [
- 
+
     { value: 13, viewvalue: 'V <200 or Load>100' },
-    { value: 12, viewvalue: 'V <200 or Load>80 or %UB>50%' },
+    
     // { value: 2, viewvalue: 'แรงดัน<200 Volt' },
     // { value: 7, viewvalue: 'แรงดัน 200-210 Volt' },
     // { value: 1, viewvalue: 'โหลด>100%' },
-    { value: 9, viewvalue: 'โหลด 90-100%' },
-    { value: 8, viewvalue: 'โหลด 80-90%' },
-    { value: 11, viewvalue: '%UB>50%' },
+    { value: 9, viewvalue: 'โหลด 80-100%' },
+    // { value: 8, viewvalue: 'โหลด 80-90%' },
+    { value: 11, viewvalue: '%UB>50% (%Load 50-80)' },
     { value: 4, viewvalue: 'โหลด<30%' },
-    // { value: 10, viewvalue: '%UB 25-50%' },
+    { value: 12, viewvalue: 'V <200 or Load>80 or %UB>50%' },
     { value: 6, viewvalue: 'ทั้งหมด' },
 
   ];
@@ -215,7 +224,7 @@ export class LVProComponent implements OnInit {
     { value: 3, viewvalue: 'N+R' },
 
   ];
-  
+
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer, private router: Router, private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) {
     router.events.subscribe((event: RouterEvent) => {
       this.navigationInterceptor(event)
@@ -223,7 +232,10 @@ export class LVProComponent implements OnInit {
     this.getpeaList();
     this.getpeaList2();
     this.getDataRegion();
-
+    // this.getDataRegionByProblem2();
+  }
+  ngAfterViewInit(): void {
+    this.dashboradPEA2();
   }
   // AfterViewInit(){
   //   this.getJobProgressPea2();
@@ -231,37 +243,11 @@ export class LVProComponent implements OnInit {
 
   ngOnInit() {
     this.getDataRegionByProblem();
-    // var parts = location.hostname.split('.');
-    // console.log(parts);
-    // var subdomain = parts.shift();
-    // console.log(subdomain);
-    //this.peaCode = localStorage.getItem('peaCode');
-    // this.getTrData();
-    // this.getStatus();
-    // this.getMat("1");
+    // this.getDataRegionByProblem2();
     this.getinfo();
-    //this.getTRmatch();
     this.getJobProgressPea2();
-
-
-    // console.log("url:", this.router.url);
-
-    // this.getMatReq();
-    //this.getMeterData();
-
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource1.paginator = this.paginator1;
-    // this.dataSource2.paginator = this.paginator2;
-    // this.dataSource3.paginator = this.paginator3;
-    // this.dataSource.sort = this.sort;
-    // this.dataSource1.sort = this.sort1;
-    // this.dataSource2.sort = this.sort2;
-    // this.dataSource3.sort = this.sort3;
-    // this.dataSource.paginator = this.paginator1;
-    // this.dataSource.sort = this.sort1;
+    
     this.peaCode = localStorage.getItem('peaCode');
-    // this.peaCode = 'B0110101';
-    //this.peaNum = this.peaCode.substr(1, 5);
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
   navigationInterceptor(event: RouterEvent): void {
@@ -282,16 +268,22 @@ export class LVProComponent implements OnInit {
     // }
   }
   onGroupChange(val) {
-    this.option2 = val;
-    this.getDataRegionByProblem();
+    if(val=='1'){
+      this.problemPEA=this.problemPEA1;
+    }else if(val=='2'){
+      this.problemPEA=this.problemPEA2;
+    } else if(val=='3'){
+      this.problemPEA=this.problemPEA3;
+    }
+    this.dashboradPEA();
   }
   selectBAT(event) {
-    if(event.value[0]==1){
-      this.batName='N';
-    }else if(event.value[0]==2){
-      this.batName='R';
-    }if(event.value[0]==3){
-      this.batName='N และ R';
+    if (event.value[0] == 1) {
+      this.batName = 'N';
+    } else if (event.value[0] == 2) {
+      this.batName = 'R';
+    } if (event.value[0] == 3) {
+      this.batName = 'N และ R';
     }
     this.bat = event.value[0];
 
@@ -301,6 +293,7 @@ export class LVProComponent implements OnInit {
     this.regionOption = event.value[0];
 
     this.dashboradPEA();
+   
   }
   openDialog(trdata): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
@@ -451,9 +444,9 @@ export class LVProComponent implements OnInit {
   checkAoj(Aoj) {
     if (Aoj.substring(2, 5) == this.peaCode.substring(1, 4) && this.peaCode.slice(-1) == "1") {
       return true;
-    }  else if (this.peaCode.includes("Z00000")) {
+    } else if (this.peaCode.includes("Z00000")) {
       return false;
-    }else if (this.peaCode.substr(1, 3).includes("000")) {
+    } else if (this.peaCode.substr(1, 3).includes("000")) {
       return true;
     } else if (Aoj.substring(2, 7) == this.peaCode.substring(1, 6)) {
       return true;
@@ -641,10 +634,10 @@ export class LVProComponent implements OnInit {
       this.configService.postdata('ldcad/rdProblemAll.php', { region: region }).subscribe((data => {
         if (data['status'] == 1) {
           this.regionData[region] = data["data"][0];
-          this.dataDashboard[region]=(Number( data["data"][0].nTR) - Number( data["data"][0].nCLSD) - Number( data["data"][0].nGIS) - Number( data["data"][0].nNo));
+          this.dataDashboard[region] = (Number(data["data"][0].nTR) - Number(data["data"][0].nCLSD) - Number(data["data"][0].nGIS) - Number(data["data"][0].nNo));
           dataCnt++;
           if (dataCnt == 12) {
-            console.log(this.dataDashboard,'this.dataDashboard');
+            console.log(this.dataDashboard, 'this.dataDashboard');
             this.getJobProgressPea();
           }
 
@@ -656,17 +649,21 @@ export class LVProComponent implements OnInit {
     });
 
   }
-  getDataRegionByProblem() {
+  getDataRegionByProblem2() {
     var dataCnt = 0;
-    this.problemPEA = [];
+    this.problemPEA1 = [];
+    this.problemPEA2 = [];
+    this.problemPEA3 = [];
     var regions = Object.keys(GlobalConstants.regionLetter);
     regions.forEach(region => {
-      this.configService.postdata('ldcad/rdLoadRegion.php', { region: region, option: this.option2 }).subscribe((data => {
+      this.configService.postdata('ldcad/rdLoadRegion2.php', { region: region }).subscribe((data => {
         if (data['status'] == 1) {
-          this.problemPEA[region] = data["data"][0];
+          this.problemPEA1[region] = data["data1"][0];
+          this.problemPEA2[region] = data["data2"][0];
+          this.problemPEA3[region] = data["data3"][0];
           dataCnt++;
           if (dataCnt == 12) {
-            this.dashboradPEA();
+            // this.dashboradPEA2();
           }
 
         } else {
@@ -676,6 +673,218 @@ export class LVProComponent implements OnInit {
       }));
     });
 
+  }
+  dashboradPEA2() {
+    // console.log("dashboradPEA2");
+    var regions = Object.keys(GlobalConstants.regionLetter);
+    var regionsLabel = [];
+    var data = [];
+    var inprogressList = [];
+    var jobDoneList = [];
+    var jobRemainList = [];
+
+    var inprogress = [];
+    var jobDone = [];
+    var jobRemain = [];
+    jobDone[0] = 0;
+    inprogress[0] = 0;
+    jobRemain[0] = 0;
+    jobDone[1] = 0;
+    inprogress[1] = 0;
+    jobRemain[1] = 0;
+    jobDone[2] = 0;
+    inprogress[2] = 0;
+    jobRemain[2] = 0;
+    this.TrTotalProblem=0;
+    this.TrTotalPln=0;
+    this.TrTotalDone=0;
+    var totalTR = 0;
+    for (var i = 0; i < regions.length; i++) {
+
+      data = this.problemPEA1[regions[i]];
+      jobDone[0] = jobDone[0] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
+      inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
+      // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
+      totalTR = totalTR + Number(data['nTR']);
+    }
+    regionsLabel.push('แรงดันตก และ Loading>100% ภายในไตรมาส 1 ปี 64');
+    jobDoneList[0] = jobDone[0];
+    this.TrTotalDone=this.TrTotalDone+jobDone[0];
+    jobDone[0] = (jobDone[0] / totalTR * 100).toFixed(2);
+    inprogressList[0] = inprogress[0];
+    this.TrTotalPln=this.TrTotalPln+inprogress[0];
+    inprogress[0] = (inprogress[0] / totalTR * 100).toFixed(2);
+    jobRemainList[0] = totalTR - jobDoneList[0] - inprogressList[0];
+    jobRemain[0] = (jobRemainList[0] / totalTR * 100).toFixed(2);
+    this.TrTotalProblem=this.TrTotalProblem+totalTR;
+    
+
+    var totalTR = 0;
+    for (var i = 0; i < regions.length; i++) {
+
+      data = this.problemPEA2[regions[i]];
+      jobDone[1] = jobDone[1] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
+      inprogress[1] = inprogress[1] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
+      // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
+      totalTR = totalTR + Number(data['nTR']);
+    }
+    regionsLabel.push('Loading 80-100% ภายในไตรมาส 2 ปี 64');
+    jobDoneList[1] = jobDone[1];
+    this.TrTotalDone=this.TrTotalDone+jobDone[1];
+    jobDone[1] = (jobDone[1] / totalTR * 100).toFixed(2);
+    inprogressList[1] = inprogress[1];
+    this.TrTotalPln=this.TrTotalPln+inprogress[2];
+    inprogress[1] = (inprogress[1] / totalTR * 100).toFixed(2);
+    jobRemainList[1] = totalTR - jobDoneList[1] - inprogressList[1];
+    jobRemain[1] = (jobRemainList[1] / totalTR * 100).toFixed(2);
+    this.TrTotalProblem=this.TrTotalProblem+totalTR;
+    var totalTR = 0;
+    for (var i = 0; i < regions.length; i++) {
+
+      data = this.problemPEA3[regions[i]];
+      jobDone[2] = jobDone[2] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
+      inprogress[2] = inprogress[2] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
+      // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
+      totalTR = totalTR + Number(data['nTR']);
+    }
+    regionsLabel.push('Unbalance >50 % ภายในไตรมาส 3 ปี 64');
+    jobDoneList[2] = jobDone[2];
+    this.TrTotalDone=this.TrTotalDone+jobDone[2];
+    jobDone[2] = (jobDone[2] / totalTR * 100).toFixed(2);
+    inprogressList[2] = inprogress[2];
+    this.TrTotalPln=this.TrTotalPln+inprogress[2];
+    inprogress[2] = (inprogress[2] / totalTR * 100).toFixed(2);
+    jobRemainList[2] = totalTR - jobDoneList[2] - inprogressList[2];
+    jobRemain[2] = (jobRemainList[2] / totalTR * 100).toFixed(2);
+    this.TrTotalProblem=this.TrTotalProblem+totalTR;
+    // console.log('plotdata',regionsLabel, jobDone, inprogress, jobRemain);
+
+    var chartData = {};
+    chartData = {
+      labels: regionsLabel,
+      // segmentShowStroke: false,
+      datasets: [
+        {
+          label: 'ดำเนินการแล้วเสร็จ',
+          stack: 'Stack 1',
+          data: jobDone,
+          backgroundColor: '#B05CBA',
+        },
+        {
+          label: 'อยู่ระหว่างดำเนินการ',
+          stack: 'Stack 1',
+          data: inprogress,
+          backgroundColor: '#D9D9D9',
+        },
+        {
+          label: 'ยังไม่มีแผนงาน',
+          stack: 'Stack 1',
+          data: jobRemain,
+          backgroundColor: '#ED639E',
+        },
+      ]
+    };
+
+
+    if (this.chartPEA2) this.chartPEA2.destroy();
+    this.chartPEA2 = new Chart('chartPEA2', {
+      type: 'bar',
+      data: chartData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          position: 'nearest',
+          mode: 'single',
+          callbacks: {
+            label: function (tooltipItem, data, jobDoneArg = jobDoneList, inprogressArg = inprogressList, jobRemainArg = jobRemainList) {
+              if (tooltipItem.datasetIndex == 0) {
+                return jobDoneArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+              } else if (tooltipItem.datasetIndex == 1) {
+                return inprogressArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+              } else if (tooltipItem.datasetIndex == 2) {
+                return jobRemainArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+              }
+            }
+          },
+        },
+        legend: {
+          position: 'right',
+          labels: {
+            display: true,
+            fontSize: 16,
+            fontColor: 'white'
+          }
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontSize: 16,
+              fontColor: "white",
+            }
+          }],
+          yAxes: [{
+            gridLines: { color: "white", },
+            ticks: {
+              fontSize: 16,
+              fontColor: "white",
+              callback: function (value, index, values) {
+                return value + '%';
+              }
+            },
+          }]
+        },
+      }
+    });
+
+
+
+
+  }
+  getDataRegionByProblem() {
+    var dataCnt = 0;
+    this.problemPEA = [];
+    this.problemPEA1 = [];
+    this.problemPEA2 = [];
+    this.problemPEA3 = [];
+    var regions = Object.keys(GlobalConstants.regionLetter);
+    regions.forEach(region => {
+      this.configService.postdata('ldcad/rdLoadRegion.php', { region: region, option: "1" }).subscribe((data => {
+        if (data['status'] == 1) {
+          this.problemPEA1[region] = data["data"][0];
+          dataCnt++;
+          if (dataCnt == 12) {
+            this.problemPEA=this.problemPEA1;
+          }
+
+        } else {
+          alert(data['data']);
+        }
+
+      }));
+    });
+    regions.forEach(region => {
+      this.configService.postdata('ldcad/rdLoadRegion.php', { region: region, option: "2" }).subscribe((data => {
+        if (data['status'] == 1) {
+          this.problemPEA2[region] = data["data"][0];
+
+        } else {
+          alert(data['data']);
+        }
+
+      }));
+    });   regions.forEach(region => {
+      this.configService.postdata('ldcad/rdLoadRegion.php', { region: region, option: "3" }).subscribe((data => {
+        if (data['status'] == 1) {
+          this.problemPEA3[region] = data["data"][0];
+
+        } else {
+          alert(data['data']);
+        }
+
+      }));
+    });
+    
   }
   dashboradPEA() {
 
@@ -706,29 +915,29 @@ export class LVProComponent implements OnInit {
 
         data = this.problemPEA[regions[i]];
         jobDone[0] = jobDone[0] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
-        inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD'])+Number(data['nSerway']) + Number(data['nEst']);
+        inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
         // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
         totalTR = totalTR + Number(data['nTR']);
       }
       regionsLabel.push('กฟภ.');
-      jobDoneList[0]=jobDone[0];
+      jobDoneList[0] = jobDone[0];
       jobDone[0] = (jobDone[0] / totalTR * 100).toFixed(2);
-      inprogressList[0]=inprogress[0];
+      inprogressList[0] = inprogress[0];
       inprogress[0] = (inprogress[0] / totalTR * 100).toFixed(2);
-      jobRemainList[0]=totalTR-jobDoneList[0]-inprogressList[0];
-      jobRemain[0] = ( jobRemainList[0] / totalTR * 100).toFixed(2);
-      
+      jobRemainList[0] = totalTR - jobDoneList[0] - inprogressList[0];
+      jobRemain[0] = (jobRemainList[0] / totalTR * 100).toFixed(2);
+
     } else {
       for (var i = 0; i < regions.length; i++) {
         regionsLabel.push(regions[i].toUpperCase());
         data = this.problemPEA[regions[i]];
         jobDone.push(((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100).toFixed(2));
         jobDoneList.push(Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']));
-        inprogress.push(((Number(data['nWBS']) - Number(data['nCLSD'])+Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100).toFixed(2));
-        inprogressList.push(Number(data['nWBS']) - Number(data['nCLSD'])+Number(data['nSerway']) + Number(data['nEst']));
+        inprogress.push(((Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100).toFixed(2));
+        inprogressList.push(Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']));
         // jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100)-Math.round((Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100));
-        jobRemain.push((100-jobDone[i]-inprogress[i]).toFixed(2));
-        jobRemainList.push(data['nTR']-jobDoneList[i]-inprogressList[i]);
+        jobRemain.push((100 - jobDone[i] - inprogress[i]).toFixed(2));
+        jobRemainList.push(data['nTR'] - jobDoneList[i] - inprogressList[i]);
       }
 
     }
@@ -773,14 +982,14 @@ export class LVProComponent implements OnInit {
           position: 'nearest',
           mode: 'single',
           callbacks: {
-            label: function (tooltipItem, data, jobDoneArg = jobDoneList,inprogressArg = inprogressList,jobRemainArg = jobRemainList) {
-              if(tooltipItem.datasetIndex==0){
-                  return jobDoneArg[tooltipItem.index]+' เครื่อง, '+tooltipItem.value+'%'
-              }else if(tooltipItem.datasetIndex==1){
-                return inprogressArg[tooltipItem.index]+' เครื่อง, '+tooltipItem.value+'%'
-            }else if(tooltipItem.datasetIndex==2){
-              return jobRemainArg[tooltipItem.index]+' เครื่อง, '+tooltipItem.value+'%'
-          }
+            label: function (tooltipItem, data, jobDoneArg = jobDoneList, inprogressArg = inprogressList, jobRemainArg = jobRemainList) {
+              if (tooltipItem.datasetIndex == 0) {
+                return jobDoneArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+              } else if (tooltipItem.datasetIndex == 1) {
+                return inprogressArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+              } else if (tooltipItem.datasetIndex == 2) {
+                return jobRemainArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+              }
             }
           },
         },
@@ -802,7 +1011,7 @@ export class LVProComponent implements OnInit {
           yAxes: [{
             gridLines: { color: "white", },
             ticks: {
-              fontSize: 16,     
+              fontSize: 16,
               fontColor: "white",
               callback: function (value, index, values) {
                 return value + '%';
@@ -873,7 +1082,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#842D73",
               fontSize: '16px',
               formatter: function (val) {
@@ -955,7 +1164,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#842D73",
               fontSize: '16px',
               formatter: function (val) {
@@ -1037,7 +1246,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#842D73",
               fontSize: '16px',
               formatter: function (val) {
@@ -1119,7 +1328,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#EE316B",
               fontSize: '16px',
               formatter: function (val) {
@@ -1201,7 +1410,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#EE316B",
               fontSize: '16px',
               formatter: function (val) {
@@ -1283,7 +1492,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#EE316B",
               fontSize: '16px',
               formatter: function (val) {
@@ -1365,7 +1574,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#FFA109",
               fontSize: '16px',
               formatter: function (val) {
@@ -1447,7 +1656,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#FFA109",
               fontSize: '16px',
               formatter: function (val) {
@@ -1529,7 +1738,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#FFA109",
               fontSize: '16px',
               formatter: function (val) {
@@ -1611,7 +1820,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#7030A0",
               fontSize: '16px',
               formatter: function (val) {
@@ -1693,7 +1902,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#7030A0",
               fontSize: '16px',
               formatter: function (val) {
@@ -1775,7 +1984,7 @@ export class LVProComponent implements OnInit {
             },
             total: {
               show: true,
-              label: Math.round(this.dataDashboard[region]/1000)+'k/'+Math.round(Number(this.trAllReg[region])/1000)+'k',
+              label: Math.round(this.dataDashboard[region] / 1000) + 'k/' + Math.round(Number(this.trAllReg[region]) / 1000) + 'k',
               color: "#7030A0",
               fontSize: '16px',
               formatter: function (val) {
@@ -1822,9 +2031,9 @@ export class LVProComponent implements OnInit {
         var firstLoop = true;
         var lastPea = '';
         var total = 0;
-        this.TrGIS=0;
-        this.TrNo=0;
-        this.TrClsd=0;
+        this.TrGIS = 0;
+        this.TrNo = 0;
+        this.TrClsd = 0;
 
 
         firstLoop = true;
@@ -1944,10 +2153,10 @@ export class LVProComponent implements OnInit {
         }
         // });
         // var sum = GIS.reduce((sum, p) => sum + p);
-        this.TrGIS=GIS.reduce((a, b) => a + b, 0);
-        this.TrNo=No.reduce((a, b) => a + b, 0);
-        this.TrClsd=CLSD.reduce((a, b) => a + b, 0);
-        this.TrWBS=kva.reduce((a, b) => a + b, 0);
+        this.TrGIS = GIS.reduce((a, b) => a + b, 0);
+        this.TrNo = No.reduce((a, b) => a + b, 0);
+        this.TrClsd = CLSD.reduce((a, b) => a + b, 0);
+        this.TrWBS = kva.reduce((a, b) => a + b, 0);
         //this.kvaTotal=505;
         //APEX CHART
         this.chartOptions1 = {
@@ -2482,7 +2691,7 @@ export class LVProComponent implements OnInit {
   }
   public getTrData = () => {
     // this.peaCode = "G00000";
-    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode=='Z00000') {
+    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode == 'Z00000') {
       this.configService.getTr('TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
         .subscribe(res => {
@@ -2540,7 +2749,7 @@ export class LVProComponent implements OnInit {
   }
   getMat(choice) {
     this.choice = choice;
-    this.configService.postdata2('ldcad/rdMatSAP.php', {bat:this.bat}).subscribe((data => {
+    this.configService.postdata2('ldcad/rdMatSAP.php', { bat: this.bat }).subscribe((data => {
       if (data['status'] == 1) {
         // console.log(data);
         var label = ["30 kVA", "50 kVA", "100  kVA", "160  kVA"];
@@ -2550,9 +2759,9 @@ export class LVProComponent implements OnInit {
         var TRStock = [0, 0, 0, 0];
         var TRStock2 = [0, 0, 0, 0];
         var TR45match = [0, 0, 0, 0];
-        var matReq=[];
-        var matReqStock=[];
-        var matReqLabel=[];
+        var matReq = [];
+        var matReqStock = [];
+        var matReqLabel = [];
         data['matSAP15'].forEach(element => {
           if (trSize.indexOf(element.kva) > -1) {
             TR15[trSize.indexOf(element.kva)] = Number(element.nMat);
