@@ -747,7 +747,7 @@ export class LVProComponent implements OnInit,AfterViewInit {
       // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
       totalTR = totalTR + Number(data['nTR']);
     }
-    regionsLabel.push('Unbalance >50 % ภายในไตรมาส 3 ปี 64');
+    regionsLabel.push('Unbalance >50 % ภายในไตรมาส 4 ปี 64');
     jobDoneList[2] = jobDone[2];
     this.TrTotalDone=this.TrTotalDone+jobDone[2];
     jobDone[2] = (jobDone[2] / totalTR * 100).toFixed(2);
