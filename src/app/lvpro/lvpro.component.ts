@@ -733,7 +733,7 @@ export class LVProComponent implements OnInit,AfterViewInit {
     this.TrTotalDone=this.TrTotalDone+jobDone[1];
     jobDone[1] = (jobDone[1] / totalTR * 100).toFixed(2);
     inprogressList[1] = inprogress[1];
-    this.TrTotalPln=this.TrTotalPln+inprogress[2];
+    this.TrTotalPln=this.TrTotalPln+inprogress[1];
     inprogress[1] = (inprogress[1] / totalTR * 100).toFixed(2);
     jobRemainList[1] = totalTR - jobDoneList[1] - inprogressList[1];
     jobRemain[1] = (jobRemainList[1] / totalTR * 100).toFixed(2);
