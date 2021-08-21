@@ -187,6 +187,7 @@ export class LVProComponent implements OnInit,AfterViewInit {
     { value: 'แก้ไขข้อมูล GIS แล้ว' },
     { value: 'ไม่พบปัญหา' },
     { value: 'อื่นๆ โปรดระบุ' },
+    { value: 'แก้ไขปัญหาแล้ว' },
   ];
   dataDashboard = {};
 
@@ -637,7 +638,7 @@ export class LVProComponent implements OnInit,AfterViewInit {
           this.dataDashboard[region] = (Number(data["data"][0].nTR) - Number(data["data"][0].nCLSD) - Number(data["data"][0].nGIS) - Number(data["data"][0].nNo));
           dataCnt++;
           if (dataCnt == 12) {
-            console.log(this.dataDashboard, 'this.dataDashboard');
+            // console.log(this.dataDashboard, 'this.dataDashboard');
             this.getJobProgressPea();
           }
 
@@ -943,7 +944,9 @@ export class LVProComponent implements OnInit,AfterViewInit {
     }
 
     // console.log('plotdata',regionsLabel, jobDone, inprogress, jobRemain);
-
+    // jobDone[1]=35.52;
+    // inprogress[1]=21.87;
+    // jobRemain[1]=42.61;
     var chartData = {};
     chartData = {
       labels: regionsLabel,
@@ -2013,7 +2016,7 @@ export class LVProComponent implements OnInit,AfterViewInit {
   }
   getJobProgressPea2() {
 
-    this.configService.postdata2('ldcad/rdLoad2.php', { peaCode: this.selPeapeaCode, option: this.option }).subscribe((data => {
+    this.configService.postdata2('ldcad/rdLoad3.php', { peaCode: this.selPeapeaCode, option: this.option }).subscribe((data => {
       if (data['status'] == 1) {
 
         var Pea = [];
