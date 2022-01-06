@@ -21,8 +21,10 @@ import {SumtableComponent} from './sumtable/sumtable.component';
 import {LoginComponent} from './login/login.component';
 import {AuthGuard} from './auth.guard'
 import {UploadComponent} from'./upload/upload.component';
+import {UploadopsaComponent} from'./uploadopsa/uploadopsa.component';
 import {JobapproveComponent} from './jobapprove/jobapprove.component';
 import {LVProComponent} from'./lvpro/lvpro.component';
+import {OPSAComponent} from'./opsa/opsa.component';
 import {PsimdashboardComponent} from './psimdashboard/psimdashboard.component';
 import {PhasechkComponent} from './phasechk/phasechk.component';
 import {RoicComponent} from './roic/roic.component';
@@ -49,8 +51,10 @@ const routes: Routes = [
   { path: 'jobreq', component: SumtableComponent,canActivate:[AuthGuard]},
   { path: 'login', component: LoginComponent },
   { path: 'upload', component: UploadComponent },
+  { path: 'uploadopsa', component: UploadopsaComponent },
   { path: 'jobapprove', component: JobapproveComponent,canActivate:[AuthGuard] },
   { path: 'ldcad', component: LVProComponent,canActivate:[AuthGuard]},
+  { path: 'opsa', component: OPSAComponent,canActivate:[AuthGuard]},
   { path: 'psim', component: PsimdashboardComponent,canActivate:[AuthGuard] },
   { path: 'phasecheck', component: PhasechkComponent,canActivate:[AuthGuard] },
   { path: 'roic', component: RoicComponent,canActivate:[AuthGuard] },

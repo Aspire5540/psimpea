@@ -81,8 +81,10 @@ import {
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard';
 import { UploadComponent } from './upload/upload.component';
+import { UploadopsaComponent } from './uploadopsa/uploadopsa.component';
 import { JobapproveComponent } from './jobapprove/jobapprove.component';
 import { LVProComponent,DialogOverviewExampleDialog } from './lvpro/lvpro.component';
+import { OPSAComponent,DialogOverviewExampleDialog1 } from './opsa/opsa.component';
 import { PsimdashboardComponent } from './psimdashboard/psimdashboard.component';
 import { PhasechkComponent } from './phasechk/phasechk.component';
 import { RoicComponent } from './roic/roic.component';
@@ -121,8 +123,10 @@ import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
     SumtableComponent,
     LoginComponent,
     UploadComponent,
+    UploadopsaComponent,
     JobapproveComponent,
     LVProComponent,
+    OPSAComponent,
     PsimdashboardComponent,
     PhasechkComponent,
     RoicComponent,
@@ -131,6 +135,7 @@ import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
     EzxComponent,
     ConfirmdlgComponent,
     DialogOverviewExampleDialog,
+    DialogOverviewExampleDialog1,
     
   ],
   imports: [
@@ -186,7 +191,7 @@ import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
     //HttpModule,
     NgApexchartsModule,
   ],
-  entryComponents: [ConfirmationDialog,ConfirmdlgComponent,DialogOverviewExampleDialog],
+  entryComponents: [ConfirmationDialog,ConfirmdlgComponent,DialogOverviewExampleDialog,DialogOverviewExampleDialog1],
   providers: [ConfigService,
     AuthGuard,
     FileuploadService,

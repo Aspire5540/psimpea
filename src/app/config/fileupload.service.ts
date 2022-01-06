@@ -39,8 +39,19 @@ export class FileuploadService {
     data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   } 
+  public uploadZap048OPSA(data) {
+    let uploadURL = `${this.SERVER_URL}/opsa/uploadZap048.php`; 
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  } 
   public uploadLDCAD(data) {
     let uploadURL = `${this.SERVER_URL}/uploadLDCAD.php`; 
+    // console.log(data.append('region',this.region));
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  } 
+  public uploadOPSA(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadOPSA.php`; 
     // console.log(data.append('region',this.region));
     data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
@@ -57,6 +68,11 @@ export class FileuploadService {
   }
   public uploadPM(data) {
     let uploadURL = `${this.SERVER_URL}/uploadPM.php`; 
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  }
+  public uploadPMOPSA(data) {
+    let uploadURL = `${this.SERVER_URL}/opsa/uploadPM.php`; 
     data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   }
