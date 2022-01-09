@@ -54,12 +54,14 @@ causeNamesIm = ['แรงดันตก',
 'แรงดันตกและโหลดเกินพิกัด',
 'งานเสริมความมั่นคง',
 ];
-solveMetsIm = ['ตัดจ่ายใหม่',
+solveMetsIm = ['เพิ่มเฟสแรงสูง',
+'เพิ่มขนาดสายแรงสูง',
+'ตัดจ่ายใหม่',
 'แยกจ่ายหม้อแปลง',
 'เพิ่มขนาดหม้อแปลง',
 'ปรับปรุง 1 เฟส 2 สาย เป็น 3 สาย',
 'ปรับปรุงหม้อแปลง 1 เฟส เป็น 3 เฟส',
-'เพิ่มขนาดสาย',
+'เพิ่มขนาดสายแรงต่ำ',
 'ติดตั้ง/สับเปลี่ยนวัสดุ']
   appStatus=[
     {value: 0, viewValue: 'ยังไม่อนุมัติ'},
@@ -77,6 +79,7 @@ solveMetsIm = ['ตัดจ่ายใหม่',
   userId: number = 1;
   uploadResponse = '';
   uploadDocResponse = '';
+  autoPeaCod = '';
   //dataSource = new UserDataSource(this.userService);
   public dataSource = new MatTableDataSource<wbsdata>();
   public dataSource1 = new MatTableDataSource<appJob>();
@@ -113,6 +116,16 @@ solveMetsIm = ['ตัดจ่ายใหม่',
     this.dataSource.sort = this.sort;
     this.dataSource1.sort = this.sort1;
     //console.log(this.id);
+  }
+  checkAutho() {
+    // return true;
+    this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";
+    if (this.peaCode == this.autoPeaCod) {
+      return true;
+    } else {
+      return false;
+    }
+
   }
   exportAsXLSX():void {
     this.configService.exportAsExcelFile(this.dataSource1.data, 'งานที่อนุมัติ');
@@ -221,7 +234,6 @@ solveMetsIm = ['ตัดจ่ายใหม่',
 
 
   chgProject() {
-
     if (this.registerForm.value["projectType"] == "movePole") {
       this.projects = ['I-62-B.MR',
         'I-59-B.41',
@@ -249,13 +261,15 @@ solveMetsIm = ['ตัดจ่ายใหม่',
         'แรงดันตกและโหลดเกินพิกัด',
         'งานเสริมความมั่นคง',
       ];
-      this.solveMets = ['ตัดจ่ายใหม่',
-        'แยกจ่ายหม้อแปลง',
-        'เพิ่มขนาดหม้อแปลง',
-        'ปรับปรุง 1 เฟส 2 สาย เป็น 3 สาย',
-        'ปรับปรุงหม้อแปลง 1 เฟส เป็น 3 เฟส',
-        'เพิ่มขนาดสาย',
-        'ติดตั้ง/สับเปลี่ยนวัสดุ']
+      this.solveMets = ['เพิ่มเฟสแรงสูง',
+      'เพิ่มขนาดสายแรงสูง',
+      'ตัดจ่ายใหม่',
+      'แยกจ่ายหม้อแปลง',
+      'เพิ่มขนาดหม้อแปลง',
+      'ปรับปรุง 1 เฟส 2 สาย เป็น 3 สาย',
+      'ปรับปรุงหม้อแปลง 1 เฟส เป็น 3 เฟส',
+      'เพิ่มขนาดสายแรงต่ำ',
+      'ติดตั้ง/สับเปลี่ยนวัสดุ']
       this.show = true;
 
     }

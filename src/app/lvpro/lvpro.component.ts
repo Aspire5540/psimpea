@@ -944,9 +944,9 @@ export class LVProComponent implements OnInit,AfterViewInit {
     }
 
     // console.log('plotdata',regionsLabel, jobDone, inprogress, jobRemain);
-    // jobDone[1]=35.52;
-    // inprogress[1]=21.87;
-    // jobRemain[1]=42.61;
+    // jobDone[1]=98.34;
+    // inprogress[1]=1.66;
+    // jobRemain[1]=0;
     var chartData = {};
     chartData = {
       labels: regionsLabel,
