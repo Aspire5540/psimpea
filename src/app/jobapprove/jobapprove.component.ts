@@ -449,6 +449,7 @@ export class JobapproveComponent implements OnInit {
         this.rdsumcost();
         this.getJobProgressPea();
         this.registerForm.resetForm();
+        this.getAppData(this.selBudjet);
         alert("บันทึกแล้วเสร็จ");
       } else {
         alert(data['data']);

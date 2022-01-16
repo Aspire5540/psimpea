@@ -298,7 +298,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
   }
   openDialog(trdata): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog1, {
-      width: '300px',
+      width: '800px',
       data: { trdata }
     });
 
@@ -3287,25 +3287,76 @@ export class OPSAComponent implements OnInit,AfterViewInit {
 export class DialogOverviewExampleDialog1 {
   RVoltage: number;
   RLoad: number;
+  realUb:number
   trtab: string;
-  vin: number;
-  realIa: number;
-  realIb: number;
-  realIc: number;
-  realUb: number;
+
+  realVminA1: number;
+  realVminB1: number;
+  realVminC1: number;
+  realVminA2: number;
+  realVminB2: number;
+  realVminC2: number;
+  realVminA3: number;
+  realVminB3: number;
+  realVminC3: number;
+  realVminA4: number;
+  realVminB4: number;
+  realVminC4: number;
+
+  realVinA1:number;
+  realVinB1:number;
+  realVinC1:number;
+  realVinA2:number;
+  realVinB2:number;
+  realVinC2:number;
+  realVinA3:number;
+  realVinB3:number;
+  realVinC3:number;
+  realVinA4:number;
+  realVinB4:number;
+  realVinC4:number;
+
+
+  realIa1: number;
+  realIb1: number;
+  realIc1: number;
+  realIa2: number;
+  realIb2: number;
+  realIc2: number;
+  realIa3: number;
+  realIb3: number;
+  realIc3: number;
+  realIa4: number;
+  realIb4: number;
+  realIc4: number;
+
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog1>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     if (data) {
-      console.log(data);
+      // console.log(data);
+      
       this.RVoltage = data.trdata.RVoltage;
       this.RLoad = data.trdata.RLoad;
       this.trtab = data.trdata.trtab;
-      this.realIa = data.trdata.realIa;
-      this.realIb = data.trdata.realIb;
-      this.realIc = data.trdata.realIc;
-      this.realUb = data.trdata.realUb;
-      this.vin = data.trdata.vin;
+      this.realIa1 = data.trdata.realIa;
+      this.realIb1 = data.trdata.realIb;
+      this.realIc1 = data.trdata.realIc;
+
+      this.realIa2 = data.trdata.realIa;
+      this.realIb2 = data.trdata.realIb;
+      this.realIc2 = data.trdata.realIc;
+      
+      this.realIa3 = data.trdata.realIa;
+      this.realIb3 = data.trdata.realIb;
+      this.realIc3 = data.trdata.realIc;
+
+      this.realIa4 = data.trdata.realIa;
+      this.realIb4 = data.trdata.realIb;
+      this.realIc4 = data.trdata.realIc;
+
+      this.realUb = 0;
+      // this.realVin = data.trdata.realVin;
     }
 
 
@@ -3321,11 +3372,20 @@ export class DialogOverviewExampleDialog1 {
     wbs["RVoltage"] = this.RVoltage;
     wbs["RLoad"] = this.RLoad;
     wbs["trtab"] = this.trtab;
-    wbs["realIa"] = this.realIa;
-    wbs["realIb"] = this.realIb;
-    wbs["realIc"] = this.realIc;
+    wbs["realIa1"] = this.realIa1;
+    wbs["realIb1"] = this.realIb1;
+    wbs["realIc1"] = this.realIc1;
+    wbs["realIa2"] = this.realIa2;
+    wbs["realIb2"] = this.realIb2;
+    wbs["realIc2"] = this.realIc2;
+    wbs["realIa3"] = this.realIa3;
+    wbs["realIb3"] = this.realIb3;
+    wbs["realIc3"] = this.realIc3; 
+    wbs["realIa4"] = this.realIa4;
+    wbs["realIb4"] = this.realIb4;
+    wbs["realIc4"] = this.realIc4;
     wbs["realUb"] = this.realUb;
-    wbs["vin"] = this.vin;
+    wbs["realVin"] = this.realVinA1;
     this.dialogRef.close(wbs);
   }
 

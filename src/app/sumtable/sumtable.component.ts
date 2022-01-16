@@ -27,8 +27,8 @@ export class SumtableComponent implements OnInit {
   solveMets = [];
   userPeaCode=localStorage.getItem('peaCode');
   
-  // peaCode=localStorage.getItem('peaCode');
-  peaCode='Z00000';
+  peaCode=localStorage.getItem('peaCode');
+  
   nwbsPTDD: number;
   workCostPerPTDD: number;
   nwbsMR: number;
@@ -96,10 +96,14 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
   constructor(private configService: ConfigService, private uploadService: FileuploadService, private dialog: MatDialog) { }
   ngOnInit() {
     // for test
+    // console.log(this.peaCode)
+    
     if(this.peaCode=='Z00000'){
       this.peaCode='B00000';
     }
    //------------------------------
+   this.peaCode = localStorage.getItem('peaCode');
+  //  this.peaCode='I00000';
     if (this.userPeaCode.slice(-1)=='1' || this.userPeaCode.slice(-1)=='0'){
       this.userPeaCode=this.userPeaCode.substr(0,4);
     }else{
@@ -116,6 +120,14 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
     this.dataSource.sort = this.sort;
     this.dataSource1.sort = this.sort1;
     //console.log(this.id);
+  }
+  checkReg(){
+    if (this.userPeaCode.slice(0,1)=='I'){
+      return false;
+    }else{
+      return true;
+    }
+    
   }
   checkAutho() {
     // return true;
@@ -455,7 +467,7 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
   }
 
   trChange(value) {
-    this.configService.postdata2('rdtr.php', { PEA_TR: value }).subscribe((data => {
+    this.configService.postdata2('opsa/rdtropsa.php', { PEA_TR: value }).subscribe((data => {
       if (data['status'] == 1) {
         if (data['data']) {
           this.trLoad = data['data'].PLoadTOT;
