@@ -149,9 +149,10 @@
 
             <div class="col-md-9 d-flex justify-content-left mt-5" style="color: white;">
               <mat-button-toggle-group style="border-radius: 30px;height: 100%;color: rgb(70, 124, 172);" value="1">
-                <mat-button-toggle (change)="onGroupChange($event.value)" style="width: 300px;" value="1">Voltage <200 or %Loading > 100 </mat-button-toggle>
-                <mat-button-toggle (change)="onGroupChange($event.value)" value="2" style="width: 300px;">Loading 80-100%</mat-button-toggle>
-                <mat-button-toggle (change)="onGroupChange($event.value)" value="3" style="width: 300px;">Unbalance > 50% (%Loading 50-80)</mat-button-toggle>
+                <mat-button-toggle (change)="onGroupChange($event.value)" style="width: 300px;" value="1">วัดโหลด/จัดทำแผน</mat-button-toggle>
+                <mat-button-toggle (change)="onGroupChange($event.value)" value="2" style="width: 300px;">ปรับปรุงแล้วในปี 64</mat-button-toggle>
+                <mat-button-toggle (change)="onGroupChange($event.value)" value="3" style="width: 300px;">ผลการรันผิดปกติ</mat-button-toggle>
+          
                 <!-- <mat-button-toggle (change)="onValChange($event.value)" value="3">%UB เกิน 50%</mat-button-toggle> -->
               </mat-button-toggle-group>
             </div>
@@ -188,11 +189,10 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-
           </div>
           <div class="col-md-1">
             <a target="_blank"
-              href='http://psim.pea.co.th/psisservice/ldcad/exportresult.php?option={{option}}&region={{currentReggion}}'><i
+              href='http://psim.pea.co.th/psisservice/opsa/exportresult.php?option={{option}}&region={{currentReggion}}'><i
                 class="fa fa-file-excel-o" style="font-size:40px;color:white;"></i></a>
           </div>
         </div>
@@ -727,7 +727,7 @@
                 <ng-container matColumnDef="loadMea">
                   <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> ผลวัดโหลด </th>
                   <td class="table-lg" mat-cell *matCellDef="let trdata"> <button mat-raised-button
-                      (click)="openDialog(trdata)" class="btn btn-success">TR</button> </td>
+                      (click)="getTRload(trdata)" class="btn btn-success">TR</button> </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Status">
@@ -791,6 +791,11 @@
 
                 </ng-container>
 
+                <ng-container matColumnDef="plancat">
+                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> แผนงาน </th>
+                  <td class="table-lg" mat-cell *matCellDef="let trdata"> {{trdata.plancat}}
+                  </td>
+                </ng-container>
                 <!-- <ng-container matColumnDef="PEA_Meter">
               <th class="table-lg" mat-header-cell *matHeaderCellDef> </th>
               <td class="table-lg" mat-cell *matCellDef="let trdata"> <div class="text-success"><button type="button" class="btn btn-danger btn-fw btn-sm" (click)="getMtData(trdata.PEA_TR)">แสดงมิเตอร์</button></div></td>

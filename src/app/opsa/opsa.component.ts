@@ -38,6 +38,8 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../format-datepicker';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GlobalConstants } from '../common/global-constants';
+// import { ConsoleReporter } from 'jasmine';
+// import { Console } from 'console';
 
 
 
@@ -75,7 +77,7 @@ export type ChartOptions3 = {
     { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
   ]
 })
-export class OPSAComponent implements OnInit,AfterViewInit {
+export class OPSAComponent implements OnInit, AfterViewInit {
   public showOverlay = true;
   public pClsChart: Partial<ChartOptions2>;
   public chartOptions1: Partial<ChartOptions2>;
@@ -99,7 +101,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
   testArry = { '100': 20 };
   trAllReg: any;
   option = "7";
-  displayedColumns1 = ['PEANAME', 'PEA_TR', 'kva', 'Location', 'PLoadTOT', 'minV', 'Ub', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea'];
+  displayedColumns1 = ['PEANAME', 'PEA_TR', 'kva', 'Location', 'PLoadTOT', 'minV', 'Ub', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea','plancat'];
 
   displayedColumns2 = ['PEA_TR',
     'PEANAME',
@@ -168,20 +170,26 @@ export class OPSAComponent implements OnInit,AfterViewInit {
   currentMatherPea = "";
   currentPea = "";
   TrGIS = 0;
+  TrGIS2 = 0;
   TrNo = 0;
   TrTotal = 0;
   TrPlnTal = 0;
   TrClsd = 0;
   TrTotalClsd = 0;
-  TrTotalProblem=0;
-  TrTotalPln=0;
-  TrTotalDone=0;
+  TrTotalProblem = 0;
+  TrTotalPln = 0;
+  TrTotalDone = 0;
   TrWBS = 0;
+  groupselect=0;
   Statuss = [
-    { value: '-' },
+    { value: 'จัดทำแผนงานแล้ว' },
     { value: 'อยู่ระหว่างตรวจสอบ' },
+    { value: 'ใช้หม้อแปลงในการปรับปรุง' },
+    { value: 'ไม่ใช้หม้อแปลงในการปรับปรุง' },
     { value: 'อยู่ระหว่างสำรวจประมาณการ' },
+    { value: 'อนุมัติงานแล้ว' },
     { value: 'อยู่ระหว่างก่อสร้าง' },
+    { value: 'ขาดแคลนพัสดุ' },
     { value: 'ก่อสร้างแล้วเสร็จ' },
     { value: 'อยู่ระหว่างแก้ไขข้อมูล GIS' },
     { value: 'แก้ไขข้อมูล GIS แล้ว' },
@@ -197,7 +205,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
   Conditions = [
 
     { value: 13, viewvalue: 'V <200 or Load>100' },
-    
+
     // { value: 2, viewvalue: 'แรงดัน<200 Volt' },
     // { value: 7, viewvalue: 'แรงดัน 200-210 Volt' },
     // { value: 1, viewvalue: 'โหลด>100%' },
@@ -247,7 +255,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     // this.getDataRegionByProblem2();
     this.getinfo();
     this.getJobProgressPea2();
-    
+
     this.peaCode = localStorage.getItem('peaCode');
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
@@ -269,12 +277,14 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     // }
   }
   onGroupChange(val) {
-    if(val=='1'){
-      this.problemPEA=this.problemPEA1;
-    }else if(val=='2'){
-      this.problemPEA=this.problemPEA2;
-    } else if(val=='3'){
-      this.problemPEA=this.problemPEA3;
+    if (val == '1') {
+      this.groupselect=0;
+    } else if (val == '2') {
+      this.groupselect=1;
+    } else if (val == '3') {
+      this.groupselect=2;
+    }else if (val == '4') {
+      this.groupselect=3;
     }
     this.dashboradPEA();
   }
@@ -294,9 +304,24 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     this.regionOption = event.value[0];
 
     this.dashboradPEA();
-   
+
+  }
+  getTRload(trdata) {
+    this.configService.postdata2('opsa/gettrload.php', { PEA_TR: trdata.PEA_TR }).subscribe((data => {
+      if (data['status'] == 1) {
+        var data = data['data'];
+        this.openDialog(data);
+        //--------------------------------
+        //this.roicdate="31 พ.ค. 2563";
+      } else {
+        alert(data['data']);
+      }
+
+    }));
+
   }
   openDialog(trdata): void {
+
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog1, {
       width: '800px',
       data: { trdata }
@@ -304,6 +329,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
 
     dialogRef.afterClosed().subscribe(wbsdata => {
       if (wbsdata) {
+        console.log(wbsdata);
         if (this.checkAoj(wbsdata.aoj)) {
           this.reTr(wbsdata);
         } else {
@@ -323,7 +349,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     }
   }
   getinfo() {
-    this.configService.postdata2('roic/rdInfo.php', { data: 'roicdate' }).subscribe((data => {
+    this.configService.postdata2('opsa/rdInfo.php', { data: 'roicdate' }).subscribe((data => {
       if (data['status'] == 1) {
         this.updateDate = data['data'][0].info;
         //--------------------------------
@@ -376,7 +402,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     }))
   }
   checkSelect(selected) {
-
+    return 0;
     if (selected != undefined) {
       // console.log(selected);
       if (selected.includes("อื่นๆ")) {
@@ -457,7 +483,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
 
   }
   getpeaList() {
-    this.configService.postdata2('rdpeaall2.php', {}).subscribe((data => {
+    this.configService.postdata2('opsa/rdpeaall2.php', {}).subscribe((data => {
 
 
       if (data["status"] == 1) {
@@ -482,7 +508,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
 
   }
   getpeaList2() {
-    this.configService.postdata2('roic/rdpeaall.php', {}).subscribe((data => {
+    this.configService.postdata2('opsa/rdpeaall.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         //console.log(data['data']);
         this.peaname2 = data['data'];
@@ -632,7 +658,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     }));
     this.regionData = [];
     regions.forEach(region => {
-      this.configService.postdata('opsa/rdProblemAll.php', { region: region }).subscribe((data => {
+      this.configService.postdata('opsa/rdProblemAll3.php', { region: region }).subscribe((data => {
         if (data['status'] == 1) {
           this.regionData[region] = data["data"][0];
           this.dataDashboard[region] = (Number(data["data"][0].nTR) - Number(data["data"][0].nCLSD) - Number(data["data"][0].nGIS) - Number(data["data"][0].nNo));
@@ -679,13 +705,16 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     // console.log("dashboradPEA2");
     var regions = Object.keys(GlobalConstants.regionLetter);
     var regionsLabel = [];
+    var jobPln=[]
+    var jobDone = [];
+
     var data = [];
     var inprogressList = [];
     var jobDoneList = [];
     var jobRemainList = [];
 
     var inprogress = [];
-    var jobDone = [];
+    
     var jobRemain = [];
     jobDone[0] = 0;
     inprogress[0] = 0;
@@ -696,93 +725,44 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     jobDone[2] = 0;
     inprogress[2] = 0;
     jobRemain[2] = 0;
-    this.TrTotalProblem=0;
-    this.TrTotalPln=0;
-    this.TrTotalDone=0;
+    this.TrTotalProblem = 0;
+    this.TrTotalPln = 0;
+    this.TrTotalDone = 0;
     var totalTR = 0;
-    for (var i = 0; i < regions.length; i++) {
+    // for (var i = 0; i < regions.length; i++) {
 
-      data = this.problemPEA1[regions[i]];
-      jobDone[0] = jobDone[0] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
-      inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
-      // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
-      totalTR = totalTR + Number(data['nTR']);
+    //   data = this.problemPEA1[regions[i]];
+    //   console.log(data);
+    //   jobDone[0] = jobDone[0] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
+    //   inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
+    //   // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
+    //   totalTR = totalTR + Number(data['nTR']);
+    // }
+    for (var i = 0; i < 3; i++){
+      jobDone[i]=Math.round(this.problemPEA[i]['nCLSD']/this.problemPEA[i]['nTR']*100);
+      jobPln[i]=Math.round(this.problemPEA[i]['nPlan']/this.problemPEA[i]['nTR']*100);
+      this.TrTotalDone = this.TrTotalDone + this.problemPEA[i]['nCLSD'];
+      this.TrTotalPln = this.TrTotalPln + this.problemPEA[i]['nPlan'];
+      this.TrTotalProblem = this.TrTotalProblem + this.problemPEA[i]['nTR'];
     }
-    regionsLabel.push('แรงดันตก และ Loading>100% ภายในไตรมาส 1 ปี 64');
-    jobDoneList[0] = jobDone[0];
-    this.TrTotalDone=this.TrTotalDone+jobDone[0];
-    jobDone[0] = (jobDone[0] / totalTR * 100).toFixed(2);
-    inprogressList[0] = inprogress[0];
-    this.TrTotalPln=this.TrTotalPln+inprogress[0];
-    inprogress[0] = (inprogress[0] / totalTR * 100).toFixed(2);
-    jobRemainList[0] = totalTR - jobDoneList[0] - inprogressList[0];
-    jobRemain[0] = (jobRemainList[0] / totalTR * 100).toFixed(2);
-    this.TrTotalProblem=this.TrTotalProblem+totalTR;
     
-
-    var totalTR = 0;
-    for (var i = 0; i < regions.length; i++) {
-
-      data = this.problemPEA2[regions[i]];
-      jobDone[1] = jobDone[1] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
-      inprogress[1] = inprogress[1] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
-      // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
-      totalTR = totalTR + Number(data['nTR']);
-    }
-    regionsLabel.push('Loading 80-100% ภายในไตรมาส 2 ปี 64');
-    jobDoneList[1] = jobDone[1];
-    this.TrTotalDone=this.TrTotalDone+jobDone[1];
-    jobDone[1] = (jobDone[1] / totalTR * 100).toFixed(2);
-    inprogressList[1] = inprogress[1];
-    this.TrTotalPln=this.TrTotalPln+inprogress[1];
-    inprogress[1] = (inprogress[1] / totalTR * 100).toFixed(2);
-    jobRemainList[1] = totalTR - jobDoneList[1] - inprogressList[1];
-    jobRemain[1] = (jobRemainList[1] / totalTR * 100).toFixed(2);
-    this.TrTotalProblem=this.TrTotalProblem+totalTR;
-    var totalTR = 0;
-    for (var i = 0; i < regions.length; i++) {
-
-      data = this.problemPEA3[regions[i]];
-      jobDone[2] = jobDone[2] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
-      inprogress[2] = inprogress[2] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
-      // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
-      totalTR = totalTR + Number(data['nTR']);
-    }
-    regionsLabel.push('Unbalance >50 % ภายในไตรมาส 4 ปี 64');
-    jobDoneList[2] = jobDone[2];
-    this.TrTotalDone=this.TrTotalDone+jobDone[2];
-    jobDone[2] = (jobDone[2] / totalTR * 100).toFixed(2);
-    inprogressList[2] = inprogress[2];
-    this.TrTotalPln=this.TrTotalPln+inprogress[2];
-    inprogress[2] = (inprogress[2] / totalTR * 100).toFixed(2);
-    jobRemainList[2] = totalTR - jobDoneList[2] - inprogressList[2];
-    jobRemain[2] = (jobRemainList[2] / totalTR * 100).toFixed(2);
-    this.TrTotalProblem=this.TrTotalProblem+totalTR;
-    // console.log('plotdata',regionsLabel, jobDone, inprogress, jobRemain);
-
+    regionsLabel=['วัดโหลด/จัดทำแผน','ปรับปรุงแล้วในปี 64','ผลการรันผิดปกติ'];
+   
     var chartData = {};
     chartData = {
       labels: regionsLabel,
       // segmentShowStroke: false,
       datasets: [
         {
-          label: 'ดำเนินการแล้วเสร็จ',
-          stack: 'Stack 1',
-          data: jobDone,
+          label: 'จัดทำแผนงานแล้ว',
+          data: jobPln,
           backgroundColor: '#B05CBA',
         },
         {
-          label: 'อยู่ระหว่างดำเนินการ',
-          stack: 'Stack 1',
-          data: inprogress,
+          label: 'ปรับปรุงแล้วเสร็จ',
+          data: jobDone,
           backgroundColor: '#D9D9D9',
-        },
-        {
-          label: 'ยังไม่มีแผนงาน',
-          stack: 'Stack 1',
-          data: jobRemain,
-          backgroundColor: '#ED639E',
-        },
+        }
       ]
     };
 
@@ -797,17 +777,17 @@ export class OPSAComponent implements OnInit,AfterViewInit {
         tooltips: {
           position: 'nearest',
           mode: 'single',
-          callbacks: {
-            label: function (tooltipItem, data, jobDoneArg = jobDoneList, inprogressArg = inprogressList, jobRemainArg = jobRemainList) {
-              if (tooltipItem.datasetIndex == 0) {
-                return jobDoneArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
-              } else if (tooltipItem.datasetIndex == 1) {
-                return inprogressArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
-              } else if (tooltipItem.datasetIndex == 2) {
-                return jobRemainArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
-              }
-            }
-          },
+          // callbacks: {
+          //   label: function (tooltipItem, data, jobDoneArg = jobDoneList, inprogressArg = inprogressList, jobRemainArg = jobRemainList) {
+          //     if (tooltipItem.datasetIndex == 0) {
+          //       return jobDoneArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+          //     } else if (tooltipItem.datasetIndex == 1) {
+          //       return inprogressArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+          //     } else if (tooltipItem.datasetIndex == 2) {
+          //       return jobRemainArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
+          //     }
+          //   }
+          // },
         },
         legend: {
           position: 'right',
@@ -844,18 +824,62 @@ export class OPSAComponent implements OnInit,AfterViewInit {
   }
   getDataRegionByProblem() {
     var dataCnt = 0;
-    this.problemPEA = [];
+    this.problemPEA = [
+      {
+      plancat: "1.วัดโหลดจัดทำแผน",
+      nTR: 0,
+      nPlan: 0,
+      nCLSD: 0
+      },
+      {
+      plancat: "2.ชี้เป้าซ้ำ",
+      nTR: 0,
+      nPlan: 0,
+      nCLSD: 0
+      },
+      {
+      plancat: "3.ผลรันผิดปกติ",
+      nTR: 0,
+      nPlan: 0,
+      nCLSD: 0
+      }
+      ];
     this.problemPEA1 = [];
     this.problemPEA2 = [];
     this.problemPEA3 = [];
     var regions = Object.keys(GlobalConstants.regionLetter);
     regions.forEach(region => {
-      this.configService.postdata('opsa/rdLoadRegion.php', { region: region, option: "1" }).subscribe((data => {
+      this.configService.postdata('opsa/rdLoadRegion3.php', { region: region}).subscribe((data => {
         if (data['status'] == 1) {
-          this.problemPEA1[region] = data["data"][0];
+          // this.problemPEA1[region]=data["data"];
+          this.problemPEA1[region]=[];
+            data["data"].forEach(element => {
+              // this.problemPEA1[region].push(element);
+            if(element['plancat']=='1.วัดโหลดจัดทำแผน'){
+              this.problemPEA1[region][0]= element;
+              this.problemPEA[0]['nTR']=this.problemPEA[0]['nTR']+Number(element['nTR']);
+              this.problemPEA[0]['nPlan']=this.problemPEA[0]['nPlan']+Number(element['nPlan']);
+              this.problemPEA[0]['nCLSD']=this.problemPEA[0]['nCLSD']+Number(element['nCLSD']);
+            }else if(element['plancat']=='2.ชี้เป้าซ้ำ'){
+              this.problemPEA1[region][1]= element;
+              this.problemPEA[1]['nTR']=this.problemPEA[1]['nTR']+Number(element['nTR']);
+              this.problemPEA[1]['nPlan']=this.problemPEA[1]['nPlan']+Number(element['nPlan']);
+              this.problemPEA[1]['nCLSD']=this.problemPEA[1]['nCLSD']+Number(element['nCLSD']);
+            }else if(element['plancat']=='3.ผลรันผิดปกติ'){
+              this.problemPEA1[region][2]= element;
+              this.problemPEA[2]['nTR']=this.problemPEA[2]['nTR']+Number(element['nTR']);
+              this.problemPEA[2]['nPlan']=this.problemPEA[2]['nPlan']+Number(element['nPlan']);
+              this.problemPEA[2]['nCLSD']=this.problemPEA[2]['nCLSD']+Number(element['nCLSD']);
+            }
+          });
+          
           dataCnt++;
           if (dataCnt == 12) {
-            this.problemPEA=this.problemPEA1;
+            
+            console.log(this.problemPEA);
+            console.log(this.problemPEA1);
+            
+            // this.problemPEA = this.problemPEA1;
           }
 
         } else {
@@ -864,28 +888,28 @@ export class OPSAComponent implements OnInit,AfterViewInit {
 
       }));
     });
-    regions.forEach(region => {
-      this.configService.postdata('opsa/rdLoadRegion.php', { region: region, option: "2" }).subscribe((data => {
-        if (data['status'] == 1) {
-          this.problemPEA2[region] = data["data"][0];
+    // regions.forEach(region => {
+    //   this.configService.postdata('opsa/rdLoadRegion.php', { region: region, option: "2" }).subscribe((data => {
+    //     if (data['status'] == 1) {
+    //       this.problemPEA2[region] = data["data"][0];
 
-        } else {
-          alert(data['data']);
-        }
+    //     } else {
+    //       alert(data['data']);
+    //     }
 
-      }));
-    });   regions.forEach(region => {
-      this.configService.postdata('opsa/rdLoadRegion.php', { region: region, option: "3" }).subscribe((data => {
-        if (data['status'] == 1) {
-          this.problemPEA3[region] = data["data"][0];
+    //   }));
+    // }); regions.forEach(region => {
+    //   this.configService.postdata('opsa/rdLoadRegion.php', { region: region, option: "3" }).subscribe((data => {
+    //     if (data['status'] == 1) {
+    //       this.problemPEA3[region] = data["data"][0];
 
-        } else {
-          alert(data['data']);
-        }
+    //     } else {
+    //       alert(data['data']);
+    //     }
 
-      }));
-    });
-    
+    //   }));
+    // });
+
   }
   dashboradPEA() {
 
@@ -893,11 +917,9 @@ export class OPSAComponent implements OnInit,AfterViewInit {
     var regionsLabel = [];
     var inprogress = [];
     var jobDone = [];
-    var jobRemain = [];
-    var data = [];
     var inprogressList = [];
     var jobDoneList = [];
-    var jobRemainList = [];
+
     if (this.regionOption == 1) {
       regions = regions.slice(0, 3);
     } else if (this.regionOption == 2) {
@@ -908,37 +930,48 @@ export class OPSAComponent implements OnInit,AfterViewInit {
       regions = regions.slice(9, 12);
     }
     if (this.regionOption == 6) {
-      jobDone[0] = 0;
-      inprogress[0] = 0;
-      jobRemain[0] = 0;
-      var totalTR = 0;
-      for (var i = 0; i < regions.length; i++) {
+      if (this.groupselect<3){
+      jobDone[0] = this.problemPEA[this.groupselect]['nCLSD'];
+      inprogress[0] = this.problemPEA[this.groupselect]['nPlan'];
 
-        data = this.problemPEA[regions[i]];
-        jobDone[0] = jobDone[0] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
-        inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
-        // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
-        totalTR = totalTR + Number(data['nTR']);
-      }
+      var totalTR = this.problemPEA[this.groupselect]['nTR'];
+    }
+      // for (var i = 0; i < regions.length; i++) {
+
+
+      //   // jobDone[i]=Math.round(this.problemPEA[i]['nCLSD']/this.problemPEA[i]['nTR']*100);
+      //   // jobPln[i]=Math.round(this.problemPEA[i]['nPlan']/this.problemPEA[i]['nTR']*100);
+      //   // this.TrTotalDone = this.TrTotalDone + this.problemPEA[i]['nCLSD'];
+      //   // this.TrTotalPln = this.TrTotalPln + this.problemPEA[i]['nPlan'];
+      //   // this.TrTotalProblem = this.TrTotalProblem + this.problemPEA[i]['nTR'];
+
+
+      //   data = this.problemPEA[regions[i]];
+      //   jobDone[0] = jobDone[0] + Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']);
+      //   inprogress[0] = inprogress[0] + Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']);
+      //   // jobRemain[0] = jobRemain[0] + Number(data['nTR']) - Number(data['nNo']) - Number(data['nGIS']) - Number(data['nWBS'])-Number(data['nSerway']) - Number(data['nEst']);
+      //   totalTR = totalTR + Number(data['nTR']);
+      // }
       regionsLabel.push('กฟภ.');
       jobDoneList[0] = jobDone[0];
       jobDone[0] = (jobDone[0] / totalTR * 100).toFixed(2);
       inprogressList[0] = inprogress[0];
       inprogress[0] = (inprogress[0] / totalTR * 100).toFixed(2);
-      jobRemainList[0] = totalTR - jobDoneList[0] - inprogressList[0];
-      jobRemain[0] = (jobRemainList[0] / totalTR * 100).toFixed(2);
+      // jobRemainList[0] = totalTR - jobDoneList[0] - inprogressList[0];
+      // jobRemain[0] = (jobRemainList[0] / totalTR * 100).toFixed(2);
 
     } else {
       for (var i = 0; i < regions.length; i++) {
         regionsLabel.push(regions[i].toUpperCase());
-        data = this.problemPEA[regions[i]];
-        jobDone.push(((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100).toFixed(2));
-        jobDoneList.push(Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD']));
-        inprogress.push(((Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100).toFixed(2));
-        inprogressList.push(Number(data['nWBS']) - Number(data['nCLSD']) + Number(data['nSerway']) + Number(data['nEst']));
+
+        jobDone.push((this.problemPEA1[regions[i]][this.groupselect]['nCLSD'] / this.problemPEA1[regions[i]][this.groupselect]['nTR'] * 100).toFixed(2));
+        jobDoneList.push(this.problemPEA1[regions[i]][this.groupselect]['nCLSD']);
+        inprogress.push((this.problemPEA1[regions[i]][this.groupselect]['nPlan'] / this.problemPEA1[regions[i]][this.groupselect]['nTR'] * 100).toFixed(2));
+        inprogressList.push(this.problemPEA1[regions[i]][this.groupselect]['nPlan']);
+        console.log(jobDone,inprogress);
         // jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100)-Math.round((Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100));
-        jobRemain.push((100 - jobDone[i] - inprogress[i]).toFixed(2));
-        jobRemainList.push(data['nTR'] - jobDoneList[i] - inprogressList[i]);
+        // jobRemain.push((100 - jobDone[i] - inprogress[i]).toFixed(2));
+        // jobRemainList.push(data['nTR'] - jobDoneList[i] - inprogressList[i]);
       }
 
     }
@@ -953,22 +986,14 @@ export class OPSAComponent implements OnInit,AfterViewInit {
       // segmentShowStroke: false,
       datasets: [
         {
-          label: 'ดำเนินการแล้วเสร็จ',
-          stack: 'Stack 1',
-          data: jobDone,
+          label: 'จัดทำแผนงานแล้ว',
+          data: inprogress,
           backgroundColor: '#B05CBA',
         },
         {
-          label: 'อยู่ระหว่างดำเนินการ',
-          stack: 'Stack 1',
-          data: inprogress,
+          label: 'ปรับปรุงแล้วเสร็จ',
+          data: jobDone,
           backgroundColor: '#D9D9D9',
-        },
-        {
-          label: 'ยังไม่มีแผนงาน',
-          stack: 'Stack 1',
-          data: jobRemain,
-          backgroundColor: '#ED639E',
         },
       ]
     };
@@ -985,14 +1010,12 @@ export class OPSAComponent implements OnInit,AfterViewInit {
           position: 'nearest',
           mode: 'single',
           callbacks: {
-            label: function (tooltipItem, data, jobDoneArg = jobDoneList, inprogressArg = inprogressList, jobRemainArg = jobRemainList) {
-              if (tooltipItem.datasetIndex == 0) {
+            label: function (tooltipItem, data, jobDoneArg = jobDoneList, inprogressArg = inprogressList) {
+              if (tooltipItem.datasetIndex == 1) {
                 return jobDoneArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
-              } else if (tooltipItem.datasetIndex == 1) {
+              } else if (tooltipItem.datasetIndex == 0) {
                 return inprogressArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
-              } else if (tooltipItem.datasetIndex == 2) {
-                return jobRemainArg[tooltipItem.index] + ' เครื่อง, ' + tooltipItem.value + '%'
-              }
+              } 
             }
           },
         },
@@ -2022,6 +2045,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
         var Pea = [];
         var kva = [];
         var GIS = [];
+        var GIS2 = [];
         var CLSD = [];
         var No = [];
         var Volt = [];
@@ -2035,6 +2059,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
         var lastPea = '';
         var total = 0;
         this.TrGIS = 0;
+        this.TrGIS2 = 0;
         this.TrNo = 0;
         this.TrClsd = 0;
 
@@ -2073,6 +2098,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
         var totalTR = 0;
         var totalWBS = 0;
         var totalGIS = 0;
+        var totalGIS2 = 0;
         var totalNO = 0;
         var totalCLSD = 0;
         var peaInd = [];
@@ -2081,6 +2107,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
         kvaByPeaObj['plan'] = [];
         kvaByPeaObj['wbs'] = [];
         kvaByPeaObj['gis'] = [];
+        kvaByPeaObj['gis2'] = [];
         kvaByPeaObj['no'] = [];
         kvaByPeaObj['clsd'] = [];
         for (var i = 0; i < data['data'].length; i++) {
@@ -2088,6 +2115,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
             kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nTR)]);
             kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nWBS)]);
             kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nGIS)]);
+            kvaByPeaObj['gis2'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nGIS2)]);
             kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nNo)]);
             kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nCLSD)]);
           } else {
@@ -2097,13 +2125,15 @@ export class OPSAComponent implements OnInit,AfterViewInit {
             kvaByPeaObj['wbs'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nWBS)]);
             kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
             kvaByPeaObj['gis'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nGIS)]);
+            kvaByPeaObj['gis2'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['gis2'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nGIS2)]);
             kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
             kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nNo)]);
             kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
             kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nCLSD)]);
 
           }
-
+          
           // console.log(data['data'][i],data['data'][i].Pea!=lastPea && !firstLoop);
           if (data['data'][i].Pea != lastPea && !firstLoop) {
             Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i - 1].Pea]);
@@ -2111,25 +2141,30 @@ export class OPSAComponent implements OnInit,AfterViewInit {
             kvaPln.push(totalTR);
             kva.push(totalWBS);
             GIS.push(totalGIS);
+            GIS2.push(totalGIS2);
             No.push(totalNO);
             CLSD.push(totalCLSD);
             totalTR = Number(data['data'][i].nTR);
             totalWBS = Number(data['data'][i].nWBS);
             totalGIS = Number(data['data'][i].nGIS);
+            totalGIS2 = Number(data['data'][i].nGIS2);
             totalNO = Number(data['data'][i].nNo);
             totalCLSD = Number(data['data'][i].nCLSD);
           } else {
             totalTR = totalTR + Number(data['data'][i].nTR);
             totalWBS = totalWBS + Number(data['data'][i].nWBS);
             totalGIS = totalGIS + Number(data['data'][i].nGIS);
+            totalGIS2 = totalGIS2 + Number(data['data'][i].nGIS2);
             totalNO = totalNO + Number(data['data'][i].nNo);
             totalCLSD = totalCLSD + Number(data['data'][i].nCLSD);
           }
+          
           if (i == data['data'].length - 1) {
             Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]);
             kvaPln.push(totalTR);
             kva.push(totalWBS);
             GIS.push(totalGIS);
+            GIS2.push(totalGIS2);
             No.push(totalNO);
             CLSD.push(totalCLSD);
             peaInd.push(data['data'][i].Pea);
@@ -2137,7 +2172,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
           this.TrPlnTal = this.TrPlnTal + Number(data['data'][i].nTR);
           lastPea = data['data'][i].Pea;
           firstLoop = false;
-          this.TrTotal = this.TrTotal + Number(data['data'][i].nWBS) + Number(data['data'][i].nGIS) + Number(data['data'][i].nNo);
+          this.TrTotal = this.TrTotal + Number(data['data'][i].nWBS) + Number(data['data'][i].nGIS2) + Number(data['data'][i].nNo);
           this.TrTotalClsd = this.TrTotalClsd + Number(data['data'][i].nCLSD) + Number(data['data'][i].nGIS) + Number(data['data'][i].nNo);
         }
 
@@ -2155,8 +2190,10 @@ export class OPSAComponent implements OnInit,AfterViewInit {
           }
         }
         // });
+        console.log(GIS,GIS2);
         // var sum = GIS.reduce((sum, p) => sum + p);
         this.TrGIS = GIS.reduce((a, b) => a + b, 0);
+        this.TrGIS2 = GIS2.reduce((a, b) => a + b, 0);
         this.TrNo = No.reduce((a, b) => a + b, 0);
         this.TrClsd = CLSD.reduce((a, b) => a + b, 0);
         this.TrWBS = kva.reduce((a, b) => a + b, 0);
@@ -2279,7 +2316,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
               {
                 label: 'แก้ไข GIS',
                 stack: 'Stack 2',
-                data: GIS,
+                data: GIS2,
                 backgroundColor: '#ffd166',
               },
               {
@@ -2488,7 +2525,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
               callbacks: {
                 label: function (tooltipItem, data, myData = kvaByPeaObj) {
                   // console.log(myData[tooltipItem.label],tooltipItem);
-
+                  // console.log(data);
                   var ind = tooltipItem.datasetIndex;
                   var arryLabel = [];
                   var kvaObj = [];
@@ -2541,8 +2578,20 @@ export class OPSAComponent implements OnInit,AfterViewInit {
                       });
                     }
                   }
-                  if (ind == 1 || ind == 2 || ind == 4 || ind == 5) {
+                  if (ind == 1 || ind == 2) {
+
                     arryLabel.push(data.datasets[1].label + " : " + data.datasets[1].data[tooltipItem.index] + " เครื่อง , " + data.datasets[2].label + " : " + data.datasets[2].data[tooltipItem.index] + "เครื่อง");
+                    kvaObj.forEach(element => {
+                      if (element[1] > 0 || element[2] > 0) {
+                        arryLabel.push(element[0] + ' kVA ' + element[1] + "," + element[2] + ' เครื่อง')
+                      }
+                    });
+
+
+                    return arryLabel;
+                  } else if ( ind == 4  || ind == 5) {
+                    
+                    arryLabel.push(data.datasets[4].label + " : " + data.datasets[4].data[tooltipItem.index] + " เครื่อง , " + data.datasets[5].label + " : " + data.datasets[5].data[tooltipItem.index] + "เครื่อง");
                     kvaObj.forEach(element => {
                       if (element[1] > 0 || element[2] > 0) {
                         arryLabel.push(element[0] + ' kVA ' + element[1] + "," + element[2] + ' เครื่อง')
@@ -2694,7 +2743,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
   }
   public getTrData = () => {
     // this.peaCode = "G00000";
-    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode == 'Z00000') {
+    if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode == 'Z00000' || this.peaCode == 'B00000') {
       this.configService.getTr('opsa/TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
         .subscribe(res => {
@@ -3238,7 +3287,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
   }
   reTr(wbsdata) {
 
-    this.configService.postdata2('opsa/reTR.php', wbsdata).subscribe((data => {
+    this.configService.postdata2('opsa/reTR2.php', wbsdata).subscribe((data => {
       if (data['status'] == 1) {
         // this.getData();
         this.getTrData();
@@ -3287,7 +3336,7 @@ export class OPSAComponent implements OnInit,AfterViewInit {
 export class DialogOverviewExampleDialog1 {
   RVoltage: number;
   RLoad: number;
-  realUb:number
+  realUb: number
   trtab: string;
 
   realVminA1: number;
@@ -3303,18 +3352,18 @@ export class DialogOverviewExampleDialog1 {
   realVminB4: number;
   realVminC4: number;
 
-  realVinA1:number;
-  realVinB1:number;
-  realVinC1:number;
-  realVinA2:number;
-  realVinB2:number;
-  realVinC2:number;
-  realVinA3:number;
-  realVinB3:number;
-  realVinC3:number;
-  realVinA4:number;
-  realVinB4:number;
-  realVinC4:number;
+  realVinA1: number;
+  realVinB1: number;
+  realVinC1: number;
+  realVinA2: number;
+  realVinB2: number;
+  realVinC2: number;
+  realVinA3: number;
+  realVinB3: number;
+  realVinC3: number;
+  realVinA4: number;
+  realVinB4: number;
+  realVinC4: number;
 
 
   realIa1: number;
@@ -3329,47 +3378,265 @@ export class DialogOverviewExampleDialog1 {
   realIa4: number;
   realIb4: number;
   realIc4: number;
+  meaDate: string;
+  meaTime: string;
+  modeselect = '';
+  Conditions = [
 
+    { value: 'ABC' },
+
+    // { value: 2, viewvalue: 'แรงดัน<200 Volt' },
+    // { value: 7, viewvalue: 'แรงดัน 200-210 Volt' },
+    // { value: 1, viewvalue: 'โหลด>100%' },
+    { value: 'AB' },
+    // { value: 8, viewvalue: 'โหลด 80-90%' },
+    { value: 'BC' },
+    { value: 'CA' },
+    { value: 'A' },
+    { value: 'B' },
+    { value: 'C' },
+
+  ];
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog1>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+
     if (data) {
-      // console.log(data);
-      
+      this.meaDate = data.trdata.meaDate;
+      this.meaTime = data.trdata.meaTime;
+      this.modeselect = data.trdata.modeselect || '';
+
       this.RVoltage = data.trdata.RVoltage;
       this.RLoad = data.trdata.RLoad;
       this.trtab = data.trdata.trtab;
-      this.realIa1 = data.trdata.realIa;
-      this.realIb1 = data.trdata.realIb;
-      this.realIc1 = data.trdata.realIc;
 
-      this.realIa2 = data.trdata.realIa;
-      this.realIb2 = data.trdata.realIb;
-      this.realIc2 = data.trdata.realIc;
-      
-      this.realIa3 = data.trdata.realIa;
-      this.realIb3 = data.trdata.realIb;
-      this.realIc3 = data.trdata.realIc;
+      this.realIa1 = data.trdata.realIa1 || 0;
+      this.realIb1 = data.trdata.realIb1 || 0;
+      // this.realIa1=0;
+      // this.realIb1=0;
+      this.realIc1 = data.trdata.realIc1 || 0;
 
-      this.realIa4 = data.trdata.realIa;
-      this.realIb4 = data.trdata.realIb;
-      this.realIc4 = data.trdata.realIc;
+      this.realIa2 = data.trdata.realIa2 || 0;
+      this.realIb2 = data.trdata.realIb2 || 0;
+      this.realIc2 = data.trdata.realIc2 || 0;
 
-      this.realUb = 0;
+      this.realIa3 = data.trdata.realIa3 || 0;
+      this.realIb3 = data.trdata.realIb3 || 0;
+      this.realIc3 = data.trdata.realIc3 || 0;
+
+      this.realIa4 = data.trdata.realIa4 || 0;
+      this.realIb4 = data.trdata.realIb4 || 0;
+      this.realIc4 = data.trdata.realIc4 || 0;
+
+      this.realVminA1 = data.trdata.realVminA1 || 0;
+      this.realVminB1 = data.trdata.realVminB1 || 0;
+      this.realVminC1 = data.trdata.realVminC1 || 0;
+
+      this.realVminA2 = data.trdata.realVminA2 || 0;
+      this.realVminB2 = data.trdata.realVminB2 || 0;
+      this.realVminC2 = data.trdata.realVminC2 || 0;
+
+      this.realVminA3 = data.trdata.realVminA3 || 0;
+      this.realVminB3 = data.trdata.realVminB3 || 0;
+      this.realVminC3 = data.trdata.realVminC3 || 0;
+
+      this.realVminA4 = data.trdata.realVminA4 || 0;
+      this.realVminB4 = data.trdata.realVminB4 || 0;
+      this.realVminC4 = data.trdata.realVminC4 || 0;
+
+      this.realVinA1 = data.trdata.realVinA1 || 0;
+      this.realVinB1 = data.trdata.realVinB1 || 0;
+      this.realVinC1 = data.trdata.realVinC1 || 0;
+
+      this.realVinA2 = data.trdata.realVinA2 || 0;
+      this.realVinB2 = data.trdata.realVinB2 || 0;
+      this.realVinC2 = data.trdata.realVinC2 || 0;
+
+      this.realVinA3 = data.trdata.realVinA3 || 0;
+      this.realVinB3 = data.trdata.realVinB3 || 0;
+      this.realVinC3 = data.trdata.realVinC3 || 0;
+
+      this.realVinA4 = data.trdata.realVinA4 || 0;
+      this.realVinB4 = data.trdata.realVinB4 || 0;
+      this.realVinC4 = data.trdata.realVinC4 || 0;
+
+      this.realUb = data.trdata.realUb || 0;
       // this.realVin = data.trdata.realVin;
+      this.calload();
     }
 
 
   }
+  calload(): void {
+    var nphase = this.modeselect.length;
+    var kvaF1 = Number(this.realIa1) * Number(this.realVinA1) + Number(this.realIb1) * Number(this.realVinB1) + Number(this.realIc1) * Number(this.realVinC1);
+    var kvaF2 = Number(this.realIa2) * Number(this.realVinA2) + Number(this.realIb2) * Number(this.realVinB2) + Number(this.realIc2) * Number(this.realVinC2);
+    var kvaF3 = Number(this.realIa3) * Number(this.realVinA3) + Number(this.realIb3) * Number(this.realVinB3) + Number(this.realIc3) * Number(this.realVinC3);
+    var kvaF4 = Number(this.realIa4) * Number(this.realVinA4) + Number(this.realIb4) * Number(this.realVinB4) + Number(this.realIc4) * Number(this.realVinC4);
+    this.RLoad = Math.round((kvaF1 + kvaF2 + kvaF3 + kvaF4) / (10 * Number(this.data.trdata.kva)));
 
+    var Ia = Number(this.realIa1) + Number(this.realIa2) + Number(this.realIa3) + Number(this.realIa4);
+    var Ib = Number(this.realIb1) + Number(this.realIb2) + Number(this.realIb3) + Number(this.realIb4);
+    var Ic = Number(this.realIc1) + Number(this.realIc2) + Number(this.realIc3) + Number(this.realIc4);
 
+    if (Iavg == 0) {
+      this.realUb = 0;
+    } else if (nphase == 3) {
+      var Iavg = (Ia + Ib + Ic) / nphase;
+      var Imax = Math.max(Math.abs(Ia - Iavg), Math.abs(Ib - Iavg), Math.abs(Ic - Iavg));
+      this.realUb = Math.round(Imax / Iavg * 100);
+    } else if (nphase == 2) {
+      if (this.modeselect == 'AB') {
+        var Iavg = (Ia + Ib) / nphase;
+        var Imax = Math.max(Math.abs(Ia - Iavg), Math.abs(Ib - Iavg));
+      } else if (this.modeselect == 'BC') {
+        var Iavg = (Ib + Ic) / nphase;
+        var Imax = Math.max(Math.abs(Ib - Iavg), Math.abs(Ic - Iavg));
+      } else if (this.modeselect == 'CA') {
+        var Iavg = (Ia + Ic) / nphase;
+        var Imax = Math.max(Math.abs(Ia - Iavg), Math.abs(Ic - Iavg));
+      }
+      this.realUb = Math.round(Imax / Iavg * 100);
+    } else {
+      this.realUb = 0;
+    }
+    var minVF1 = 999;
+    var minVF2 = 999;
+    var minVF3 = 999;
+    var minVF4 = 999;
+
+    if (kvaF1 != 0) {
+      if (nphase == 3) {
+          minVF1=Math.min(Number(this.realVminA1),Number(this.realVminB1),Number(this.realVminC1));
+      } else if (nphase == 2) {
+        if (this.modeselect == 'AB') {
+          minVF1=Math.min(Number(this.realVminA1),Number(this.realVminB1));
+        } else if (this.modeselect == 'BC') {
+          minVF1=Math.min(Number(this.realVminB1),Number(this.realVminC1));
+        } else if (this.modeselect == 'CA') {
+          minVF1=Math.min(Number(this.realVminA1),Number(this.realVminC1));
+        }
+      } else {
+        if (this.modeselect == 'A') {
+          minVF1=Math.min(Number(this.realVminA1));
+        } else if (this.modeselect == 'B') {
+          minVF1=Math.min(Number(this.realVminB1));
+        } else if (this.modeselect == 'C') {
+          minVF1=Math.min(Number(this.realVminC1));
+        }
+      }
+    }
+    if (kvaF2 != 0) {
+      if (nphase == 3) {
+          minVF2=Math.min(Number(this.realVminA2),Number(this.realVminB2),Number(this.realVminC2));
+      } else if (nphase == 2) {
+        if (this.modeselect == 'AB') {
+          minVF2=Math.min(Number(this.realVminA2),Number(this.realVminB2));
+        } else if (this.modeselect == 'BC') {
+          minVF2=Math.min(Number(this.realVminB2),Number(this.realVminC2));
+        } else if (this.modeselect == 'CA') {
+          minVF2=Math.min(Number(this.realVminA2),Number(this.realVminC2));
+        }
+      } else {
+        if (this.modeselect == 'A') {
+          minVF2=Math.min(Number(this.realVminA2));
+        } else if (this.modeselect == 'B') {
+          minVF2=Math.min(Number(this.realVminB2));
+        } else if (this.modeselect == 'C') {
+          minVF2=Math.min(Number(this.realVminC2));
+        }
+      }
+    }
+    if (kvaF3 != 0) {
+      if (nphase == 3) {
+          minVF3=Math.min(Number(this.realVminA3),Number(this.realVminB3),Number(this.realVminC3));
+      } else if (nphase == 2) {
+        if (this.modeselect == 'AB') {
+          minVF3=Math.min(Number(this.realVminA3),Number(this.realVminB3));
+        } else if (this.modeselect == 'BC') {
+          minVF3=Math.min(Number(this.realVminB3),Number(this.realVminC3));
+        } else if (this.modeselect == 'CA') {
+          minVF3=Math.min(Number(this.realVminA3),Number(this.realVminC3));
+        }
+      } else {
+        if (this.modeselect == 'A') {
+          minVF3=Math.min(Number(this.realVminA3));
+        } else if (this.modeselect == 'B') {
+          minVF3=Math.min(Number(this.realVminB3));
+        } else if (this.modeselect == 'C') {
+          minVF3=Math.min(Number(this.realVminC3));
+        }
+      }
+    }if (kvaF4 != 0) {
+      if (nphase == 3) {
+          minVF4=Math.min(Number(this.realVminA4),Number(this.realVminB4),Number(this.realVminC4));
+      } else if (nphase == 2) {
+        if (this.modeselect == 'AB') {
+          minVF4=Math.min(Number(this.realVminA4),Number(this.realVminB4));
+        } else if (this.modeselect == 'BC') {
+          minVF4=Math.min(Number(this.realVminB4),Number(this.realVminC4));
+        } else if (this.modeselect == 'CA') {
+          minVF4=Math.min(Number(this.realVminA4),Number(this.realVminC4));
+        }
+      } else {
+        if (this.modeselect == 'A') {
+          minVF4=Math.min(Number(this.realVminA4));
+        } else if (this.modeselect == 'B') {
+          minVF4=Math.min(Number(this.realVminB4));
+        } else if (this.modeselect == 'C') {
+          minVF4=Math.min(Number(this.realVminC4));
+        }
+      }
+    }
+    this.RVoltage = Math.min(minVF1,minVF2,minVF3,minVF4);
+  }
+  selectCondition(event): void {
+    this.modeselect = event.value[0];
+    this.calload();
+  }
   onConfirmClick(): void {
     var wbs = {};
 
     // this.wbs["newVin"]=this.newVin;
     wbs["PEA_TR"] = this.data.trdata.PEA_TR;
-    wbs["aoj"] = this.data.trdata.Aoj;
+    wbs["aoj"] = this.data.trdata.aoj;
+    wbs["meaDate"] = this.meaDate;
+    wbs["meaTime"] = this.meaTime;
     wbs["RVoltage"] = this.RVoltage;
+    wbs["modeselect"] = this.modeselect;
+
+    wbs["realVminA1"] = this.realVminA1;
+    wbs["realVminB1"] = this.realVminB1;
+    wbs["realVminC1"] = this.realVminC1;
+
+    wbs["realVminA2"] = this.realVminA2;
+    wbs["realVminB2"] = this.realVminB2;
+    wbs["realVminC2"] = this.realVminC2;
+
+    wbs["realVminA3"] = this.realVminA3;
+    wbs["realVminB3"] = this.realVminB3;
+    wbs["realVminC3"] = this.realVminC3;
+
+    wbs["realVminA4"] = this.realVminA4;
+    wbs["realVminB4"] = this.realVminB4;
+    wbs["realVminC4"] = this.realVminC4;
+
+    wbs["realVinA1"] = this.realVinA1;
+    wbs["realVinB1"] = this.realVinB1;
+    wbs["realVinC1"] = this.realVinC1;
+
+    wbs["realVinA2"] = this.realVinA2;
+    wbs["realVinB2"] = this.realVinB2;
+    wbs["realVinC2"] = this.realVinC2;
+
+    wbs["realVinA3"] = this.realVinA3;
+    wbs["realVinB3"] = this.realVinB3;
+    wbs["realVinC3"] = this.realVinC3;
+
+    wbs["realVinA4"] = this.realVinA4;
+    wbs["realVinB4"] = this.realVinB4;
+    wbs["realVinC4"] = this.realVinC4;
+
     wbs["RLoad"] = this.RLoad;
     wbs["trtab"] = this.trtab;
     wbs["realIa1"] = this.realIa1;
@@ -3380,7 +3647,7 @@ export class DialogOverviewExampleDialog1 {
     wbs["realIc2"] = this.realIc2;
     wbs["realIa3"] = this.realIa3;
     wbs["realIb3"] = this.realIb3;
-    wbs["realIc3"] = this.realIc3; 
+    wbs["realIc3"] = this.realIc3;
     wbs["realIa4"] = this.realIa4;
     wbs["realIb4"] = this.realIb4;
     wbs["realIc4"] = this.realIc4;

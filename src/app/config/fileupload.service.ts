@@ -29,6 +29,11 @@ export class FileuploadService {
     data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   }
+  public uploadFac(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadFac.php`;
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  }
   public uploadDoc2(data) {
     let uploadURL = `${this.SERVER_URL}/uploadDoc2.php`;
     data.append('region',GlobalConstants.region);

@@ -226,6 +226,8 @@
                 </div>
               </div>
             </div>
+
+
           </div>
           <!-----------------------------END------------------------------------------------>
 
@@ -258,6 +260,16 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-3">
+              <div class="form-group row">
+                <label class="col-sm-6 col-form-label  input-lg">ใบสั่ง PM</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control  input-lg" name="pm" placeholder="หมายเลขใบสั่ง PM" ngModel>
+                </div>
+              </div>
+            </div>
+
+
           </div>
           <!-----------------------------END------------------------------------------------>
           <div *ngIf="show" class="mb-3">
@@ -357,17 +369,24 @@
                     <label class="input-lg" for="file">2.เลือกไฟล์แผนผัง</label>
                     <input type="file" id="file" name="filename" (change)="handleFileInput($event)" ngModel required>
                     <label class="input-lg"> {{uploadResponse}} </label>
-
+                  </div>
+                </div>
+                <div *ngIf="show" class="row">
+                  <div class="col-md-12 row">
+                    <div class="form-group" *ngIf="chgWbs">
+                      <label class="input-lg" for="file">3.ผลการรัน OPSAonGIS</label>
+                      <input type="file" id="file" name="fileOPSA" (change)="handleFileOPSA($event)" ngModel>
+                      <label class="input-lg"> {{uploadOPSAResponse}} </label>
+                    </div>
                   </div>
                 </div>
               </div>
-            
+
               <div *ngIf="!checkReg()">
                 <div class="col-md-12 row">
                   <div class="form-group" *ngIf="chgWbs">
                     <label class="input-lg" for="fileDocname">1.เลือกไฟล์อนุมัติประมาณการ</label>
-                    <input type="file" id="fileDocname" name="fileDocname" (change)="handleFileDoc($event)" ngModel
-                      >
+                    <input type="file" id="fileDocname" name="fileDocname" (change)="handleFileDoc($event)" ngModel>
                     <label class="input-lg"> {{uploadDocResponse}} </label>
 
                   </div>
@@ -435,6 +454,16 @@
         </div>
         <div class="table-responsive">
           <table class="mat-elevation-z8" mat-table matSort #sort="matSort" [dataSource]="dataSource">
+
+            <ng-container matColumnDef="fac">
+              <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+              <td class="table-lg" mat-cell *matCellDef="let wbsdata">
+                <div *ngIf="checkOPSA(wbsdata.opsafile)">
+                  <button class="btn" mat-raised-button><a target="_blank" rel="noopener noreferrer"
+                    href='{{URL}}/download_file.php?filename={{wbsdata.opsafile}}&region={{region}}'>OP</a></button>
+                </div>
+              </td>
+            </ng-container>
 
             <ng-container matColumnDef="wbs">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> wbs </th>
@@ -588,7 +617,7 @@
             <ng-container matColumnDef="wbs">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> wbs </th>
               <td class="table-lg" mat-cell *matCellDef="let appJob"> <a target="_blank" rel="noopener noreferrer"
-                  href='{{URL}}/download_file.php?filename={{appJob.filename}}&region={{region}}'>{{appJob.wbs}}</a>
+                  href='{{URL}}/download_file.php?filename={{appJob.fileopsa}}&region={{region}}'>{{appJob.wbs}}</a>
               </td>
             </ng-container>
 

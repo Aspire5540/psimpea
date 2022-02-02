@@ -79,12 +79,13 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
   userId: number = 1;
   uploadResponse = '';
   uploadDocResponse = '';
+  uploadOPSAResponse='';
   autoPeaCod = '';
   //dataSource = new UserDataSource(this.userService);
   public dataSource = new MatTableDataSource<wbsdata>();
   public dataSource1 = new MatTableDataSource<appJob>();
   //displayedColumns = ['name', 'email', 'phone', 'company'];
-  displayedColumns = ['wbs', 'jobName', 'causeName', 'solveMet', 'note', 'status','rename','reTr', 'del'];
+  displayedColumns = ['fac','wbs', 'jobName', 'causeName', 'solveMet', 'note', 'status','rename','reTr', 'del'];
   displayedColumns1 = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'totalcost', 'matCostInPln', 'workCostPln', 'appNo','appDoc'];
   notes = ['1.งานร้องเรียน', '2.PM/PS', '3.งานเร่งด่วน', '4.งานปกติ']
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
@@ -333,6 +334,31 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
         //console.log(err);
       }
     );
+  }
+
+  handleFileOPSA(event) {
+    //console.log(event.target.files[0]);
+
+    const formData = new FormData();
+    formData.append('avatar', event.target.files[0]);
+    formData.append('wbs', this.registerForm.value["wbs"]);
+    this.uploadService.uploadFac(formData).subscribe(
+      (res) => {
+        this.uploadOPSAResponse = res.status;
+        //console.log(res);
+      },
+      (err) => {
+        //console.log(err);
+      }
+    );
+  }
+  checkOPSA(filename){
+    if (filename){
+      if(filename.length>0){return true}else{return false}
+    }else{
+      return false
+    }
+    
   }
   wbsChange() {
     this.chgWbs = 1;

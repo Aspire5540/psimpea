@@ -30,6 +30,7 @@ export class ConfirmationDialog {
   newIc:number;
   newLen:number;
   newNday:number;
+  newPm:string;
   fileDocname:string;
   filename:string;
   constructor(private uploadService: FileuploadService,
@@ -46,7 +47,7 @@ export class ConfirmationDialog {
     this.newLv=data.wbs.lv;
     this.newTr=data.wbs.tr;
     this.newNday=data.wbs.nday;
-
+    this.newPm=data.wbs.pm;
     this.newPeaTr=data.wbs.peatr;
     this.newKva=data.wbs.kva;
     this.newVin=data.wbs.vin;
@@ -70,7 +71,7 @@ export class ConfirmationDialog {
     this.wbs["newLv"]=this.newLv;
     this.wbs["newTr"]=this.newTr;
     this.wbs["newNday"]=this.newNday;
-
+    this.wbs["newPm"]=this.newPm;
     this.wbs["newPeaTr"]=this.newPeaTr;
     this.wbs["newKva"]=this.newKva;
     this.wbs["newVin"]=this.newVin;
