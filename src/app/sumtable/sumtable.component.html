@@ -486,13 +486,13 @@
                   <mat-label>{{wbsdata.causeName}}</mat-label>
                   <mat-select (selectionChange)="selectStatus1($event)">
                     <div
-                      *ngIf="(wbsdata['projectType'] == 'impPro' && wbsdata['peaCode'] == userPeaCode) || userPeaCode=='B000'">
+                      *ngIf="(wbsdata['projectType'] == 'impPro' && wbsdata['peaCode'] == userPeaCode) || checkAutho()">
                       <mat-option *ngFor="let causeName of causeNamesIm" [value]="[causeName,wbsdata.wbs]">
                         {{causeName}}
                       </mat-option>
                     </div>
                     <div
-                      *ngIf="(wbsdata['projectType'] == 'movePole' && wbsdata['peaCode'] == userPeaCode) || userPeaCode=='B000'">
+                      *ngIf="(wbsdata['projectType'] == 'movePole' && wbsdata['peaCode'] == userPeaCode) || checkAutho()">
                       <mat-option *ngFor="let causeName of causeNamesPole" [value]="[causeName,wbsdata.wbs]">
                         {{causeName}}
                       </mat-option>
@@ -509,7 +509,7 @@
                   <mat-label>{{wbsdata.solveMet}}</mat-label>
                   <mat-select (selectionChange)="selectStatus2($event)">
                     <div
-                      *ngIf="(wbsdata['projectType'] == 'impPro' && wbsdata['peaCode'] == userPeaCode) || userPeaCode=='B000'">
+                      *ngIf="(wbsdata['projectType'] == 'impPro' && wbsdata['peaCode'] == userPeaCode) || checkAutho()">
                       <mat-option *ngFor="let solveMet of solveMetsIm" [value]="[solveMet,wbsdata.wbs]">
                         {{solveMet}}
                       </mat-option>
@@ -526,7 +526,7 @@
                   <mat-label>{{wbsdata.note}}</mat-label>
                   <mat-select (selectionChange)="selectStatus3($event)">
                     <div
-                      *ngIf="(wbsdata['projectType'] == 'impPro' && wbsdata['peaCode'] == userPeaCode) || userPeaCode=='B000'">
+                      *ngIf="(wbsdata['projectType'] == 'impPro' && wbsdata['peaCode'] == userPeaCode) || checkAutho()">
                       <mat-option *ngFor="let note of notes" [value]="[note,wbsdata.wbs]">
                         {{note}}
                       </mat-option>
@@ -547,7 +547,7 @@
             <ng-container matColumnDef="del">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
               <td class="table-lg" mat-cell *matCellDef="let wbsdata">
-                <div *ngIf="(wbsdata['status'] != 1 && wbsdata['peaCode'] == userPeaCode) || userPeaCode=='B000'">
+                <div *ngIf="(wbsdata['status'] != 1 && wbsdata['peaCode'] == userPeaCode) || checkAutho()">
                   <button class="btn btn-danger" mat-raised-button (click)="openDialog(wbsdata,1)">ลบ</button>
                 </div>
               </td>
@@ -556,7 +556,7 @@
             <ng-container matColumnDef="rename">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
               <td class="table-lg" mat-cell *matCellDef="let wbsdata">
-                <div *ngIf="(wbsdata['status'] != 1 && wbsdata['peaCode'] == userPeaCode) || userPeaCode=='B000'">
+                <div *ngIf="(wbsdata['status'] != 1 && wbsdata['peaCode'] == userPeaCode) || checkAutho()">
                   <button class="btn btn-primary" mat-raised-button (click)="openDialog(wbsdata,2)">WBS</button>
                 </div>
               </td>
@@ -564,7 +564,7 @@
             <ng-container matColumnDef="reTr">
               <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
               <td class="table-lg" mat-cell *matCellDef="let wbsdata">
-                <div *ngIf="(wbsdata['status'] != 1 && wbsdata['peaCode'] == userPeaCode) || userPeaCode=='B000'">
+                <div *ngIf="(wbsdata['status'] != 1 && wbsdata['peaCode'] == userPeaCode) || checkAutho()">
                   <button class="btn btn-primary" mat-raised-button (click)="openDialog(wbsdata,3)">TR</button>
                 </div>
               </td>

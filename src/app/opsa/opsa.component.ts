@@ -3365,6 +3365,9 @@ export class DialogOverviewExampleDialog1 {
   realVinB4: number;
   realVinC4: number;
 
+  realIa: number;
+  realIb: number;
+  realIc: number;
 
   realIa1: number;
   realIb1: number;
@@ -3478,6 +3481,9 @@ export class DialogOverviewExampleDialog1 {
     var Ia = Number(this.realIa1) + Number(this.realIa2) + Number(this.realIa3) + Number(this.realIa4);
     var Ib = Number(this.realIb1) + Number(this.realIb2) + Number(this.realIb3) + Number(this.realIb4);
     var Ic = Number(this.realIc1) + Number(this.realIc2) + Number(this.realIc3) + Number(this.realIc4);
+    this.realIa=Ia;
+    this.realIb=Ib;
+    this.realIc=Ic;
 
     if (Iavg == 0) {
       this.realUb = 0;
@@ -3500,95 +3506,14 @@ export class DialogOverviewExampleDialog1 {
     } else {
       this.realUb = 0;
     }
-    var minVF1 = 999;
-    var minVF2 = 999;
-    var minVF3 = 999;
-    var minVF4 = 999;
-
-    if (kvaF1 != 0) {
-      if (nphase == 3) {
-          minVF1=Math.min(Number(this.realVminA1),Number(this.realVminB1),Number(this.realVminC1));
-      } else if (nphase == 2) {
-        if (this.modeselect == 'AB') {
-          minVF1=Math.min(Number(this.realVminA1),Number(this.realVminB1));
-        } else if (this.modeselect == 'BC') {
-          minVF1=Math.min(Number(this.realVminB1),Number(this.realVminC1));
-        } else if (this.modeselect == 'CA') {
-          minVF1=Math.min(Number(this.realVminA1),Number(this.realVminC1));
-        }
-      } else {
-        if (this.modeselect == 'A') {
-          minVF1=Math.min(Number(this.realVminA1));
-        } else if (this.modeselect == 'B') {
-          minVF1=Math.min(Number(this.realVminB1));
-        } else if (this.modeselect == 'C') {
-          minVF1=Math.min(Number(this.realVminC1));
-        }
-      }
+    var vArr=[this.realVminA1,this.realVminA2,this.realVminA3,this.realVminA4,this.realVminB1,this.realVminB2,this.realVminB3,this.realVminB4,this.realVminC1,this.realVminC2,this.realVminC3,this.realVminC4].filter(v => v > 0);
+    
+    if (vArr.length>0){
+      this.RVoltage = Math.min(...vArr);
+    }else{
+      this.RVoltage=0;
     }
-    if (kvaF2 != 0) {
-      if (nphase == 3) {
-          minVF2=Math.min(Number(this.realVminA2),Number(this.realVminB2),Number(this.realVminC2));
-      } else if (nphase == 2) {
-        if (this.modeselect == 'AB') {
-          minVF2=Math.min(Number(this.realVminA2),Number(this.realVminB2));
-        } else if (this.modeselect == 'BC') {
-          minVF2=Math.min(Number(this.realVminB2),Number(this.realVminC2));
-        } else if (this.modeselect == 'CA') {
-          minVF2=Math.min(Number(this.realVminA2),Number(this.realVminC2));
-        }
-      } else {
-        if (this.modeselect == 'A') {
-          minVF2=Math.min(Number(this.realVminA2));
-        } else if (this.modeselect == 'B') {
-          minVF2=Math.min(Number(this.realVminB2));
-        } else if (this.modeselect == 'C') {
-          minVF2=Math.min(Number(this.realVminC2));
-        }
-      }
-    }
-    if (kvaF3 != 0) {
-      if (nphase == 3) {
-          minVF3=Math.min(Number(this.realVminA3),Number(this.realVminB3),Number(this.realVminC3));
-      } else if (nphase == 2) {
-        if (this.modeselect == 'AB') {
-          minVF3=Math.min(Number(this.realVminA3),Number(this.realVminB3));
-        } else if (this.modeselect == 'BC') {
-          minVF3=Math.min(Number(this.realVminB3),Number(this.realVminC3));
-        } else if (this.modeselect == 'CA') {
-          minVF3=Math.min(Number(this.realVminA3),Number(this.realVminC3));
-        }
-      } else {
-        if (this.modeselect == 'A') {
-          minVF3=Math.min(Number(this.realVminA3));
-        } else if (this.modeselect == 'B') {
-          minVF3=Math.min(Number(this.realVminB3));
-        } else if (this.modeselect == 'C') {
-          minVF3=Math.min(Number(this.realVminC3));
-        }
-      }
-    }if (kvaF4 != 0) {
-      if (nphase == 3) {
-          minVF4=Math.min(Number(this.realVminA4),Number(this.realVminB4),Number(this.realVminC4));
-      } else if (nphase == 2) {
-        if (this.modeselect == 'AB') {
-          minVF4=Math.min(Number(this.realVminA4),Number(this.realVminB4));
-        } else if (this.modeselect == 'BC') {
-          minVF4=Math.min(Number(this.realVminB4),Number(this.realVminC4));
-        } else if (this.modeselect == 'CA') {
-          minVF4=Math.min(Number(this.realVminA4),Number(this.realVminC4));
-        }
-      } else {
-        if (this.modeselect == 'A') {
-          minVF4=Math.min(Number(this.realVminA4));
-        } else if (this.modeselect == 'B') {
-          minVF4=Math.min(Number(this.realVminB4));
-        } else if (this.modeselect == 'C') {
-          minVF4=Math.min(Number(this.realVminC4));
-        }
-      }
-    }
-    this.RVoltage = Math.min(minVF1,minVF2,minVF3,minVF4);
+    
   }
   selectCondition(event): void {
     this.modeselect = event.value[0];
@@ -3639,6 +3564,9 @@ export class DialogOverviewExampleDialog1 {
 
     wbs["RLoad"] = this.RLoad;
     wbs["trtab"] = this.trtab;
+    wbs["realIa"] = this.realIa;
+    wbs["realIb"] = this.realIb;
+    wbs["realIc"] = this.realIc;
     wbs["realIa1"] = this.realIa1;
     wbs["realIb1"] = this.realIb1;
     wbs["realIc1"] = this.realIc1;

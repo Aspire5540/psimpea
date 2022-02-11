@@ -12,6 +12,7 @@ export class ConfirmationDialog {
   cancelButtonText = "ยกเลิก"
   uploadResponse = '';
   uploadDocResponse = '';
+  uploadOPSAResponse='';
   wbs:string;
   choice:number;
   newWbs:string;
@@ -31,8 +32,9 @@ export class ConfirmationDialog {
   newLen:number;
   newNday:number;
   newPm:string;
-  fileDocname:string;
-  filename:string;
+  uploadFileDocname='';
+  uploadFilename='';
+  uploadFileOpsa='';
   constructor(private uploadService: FileuploadService,
     @Inject(MAT_DIALOG_DATA) private data: any,
     private dialogRef: MatDialogRef<ConfirmationDialog>) {
@@ -82,19 +84,21 @@ export class ConfirmationDialog {
     this.wbs["newIb"]=this.newIb;
     this.wbs["newIc"]=this.newIc;
     this.wbs["newLen"]=this.newLen;
-    this.wbs["filename"]=this.filename;
-    this.wbs["fileDocname"]=this.fileDocname;
+    this.wbs["filename"]=this.uploadFilename;
+    this.wbs["fileDocname"]=this.uploadFileDocname;
+    this.wbs["opsafile"]=this.uploadFileOpsa;
 
     this.dialogRef.close(this.wbs);
   }
   handleFileInput(event) {
     //console.log(event.target.files[0]);
-
+    this.uploadFilename=event.target.files[0]["name"];
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
     formData.append('wbs', this.newWbs);
     this.uploadService.upload2(formData).subscribe(
       (res) => {
+        // this.uploadFilename=true;
         this.uploadResponse = res.status;
         //console.log(res);
       },
@@ -105,19 +109,36 @@ export class ConfirmationDialog {
   }
 
   handleFileDoc(event) {
-    //console.log(event.target.files[0]);
-    //console.log(event);
+    // console.log(event.target.files[0]["name"]);
+    this.uploadFileDocname=event.target.files[0]["name"];
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
     formData.append('wbs', this.newWbs);
     console.log(formData);
     this.uploadService.uploadDoc2(formData).subscribe(
       (res) => {
+        // this.uploadFileDocname=true;
         this.uploadDocResponse = res.status;
-        console.log(res);
       },
       (err) => {
         console.log(err);
+      }
+    );
+  }
+  handleFileOPSA(event) {
+    //console.log(event.target.files[0]);
+    this.uploadFileOpsa=event.target.files[0]["name"];
+    const formData = new FormData();
+    formData.append('avatar', event.target.files[0]);
+    formData.append('wbs', this.newWbs);
+    this.uploadService.uploadFac(formData).subscribe(
+      (res) => {
+        // this.uploadFileOpsa=true;
+        this.uploadOPSAResponse = res.status;
+        //console.log(res);
+      },
+      (err) => {
+        //console.log(err);
       }
     );
   }

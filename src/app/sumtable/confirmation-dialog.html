@@ -60,6 +60,13 @@
 
       </div>
     </div>
+    <div class="col-md-12 row">
+      <div class="form-group">
+        <label class="input-lg" for="file">3.ผลการรัน OPSAonGIS</label>
+        <input type="file" id="file" [(ngModel)]="fileOPSA" (change)="handleFileOPSA($event)" ngModel>
+        <label class="input-lg"> {{uploadOPSAResponse}} </label>
+      </div>
+    </div>
   </div>
 
   <mat-dialog-actions align="center">

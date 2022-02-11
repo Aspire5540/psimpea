@@ -9,6 +9,7 @@ import { Chart } from 'chart.js';
 import { ConfirmationDialog } from '../sumtable/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import{ GlobalConstants } from '../common/global-constants';
+
 @Component({
   selector: 'app-jobapprove',
   templateUrl: './jobapprove.component.html',
@@ -66,7 +67,7 @@ export class JobapproveComponent implements OnInit {
   selected = 2;
   nWbs = 0;
   choice: number;
-  displayedColumns = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'causeName', 'solveMet', 'note', 'workCostPln', 'rename', 'reTr', 'del', 'ldcad'];
+  displayedColumns = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'causeName', 'solveMet', 'note', 'workCostPln', 'rename', 'reTr', 'app','del', 'ldcad'];
   displayedColumns1 = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'totalcost', 'matCostInPln', 'workCostPln', 'appNo', 'appDoc'];
   notes = ['1.งานร้องเรียน', '2.PM/PS', '3.งานเร่งด่วน', '4.งานปกติ']
   @ViewChild('paginator', { static: false }) paginator: MatPaginator;
@@ -127,13 +128,13 @@ export class JobapproveComponent implements OnInit {
           if (this.trObj[element.trim()].minV < 200) {
             status = status + "V";
           }
-          if (this.trObj[element.trim()].Load > 80) {
+          if (this.trObj[element.trim()].Load > 100) {
             status = status + "L";
           }
   
-          if (this.trObj[element.trim()].Ub > 25) {
-            status = status + "U";
-          }
+          // if (this.trObj[element.trim()].Ub > 25) {
+          //   status = status + "U";
+          // }
   
         }
       });
@@ -388,6 +389,19 @@ export class JobapproveComponent implements OnInit {
 
   }
   delWbs(wbsdata) {
+    //console.log(wbsdata.wbs);
+    this.configService.postdata2('delimjob.php', wbsdata).subscribe((data => {
+      if (data['status'] == 1) {
+        // this.registerForm.resetForm();
+        this.getData(this.selPea, this.selBudjet);
+        alert("ลบข้อมูลแล้วเสร็จ");
+      } else {
+        alert(data['data']);
+      }
+
+    }))
+  }
+  appWbs(wbsdata) {
     //console.log(wbsdata);
     this.configService.postdata2('addjob.php', { wbs: wbsdata.wbs, status: 0 }).subscribe((data => {
       if (data['status'] == 1) {
@@ -491,7 +505,7 @@ export class JobapproveComponent implements OnInit {
     }))
   }
   openDialog(wbs, choice): void {
-    console.log("open");
+    // console.log("open",choice,wbs);
     this.choice = choice;
     const dialogRef = this.dialog.open(ConfirmationDialog, {
       width: '300px',
