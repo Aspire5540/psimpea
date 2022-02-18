@@ -2659,7 +2659,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                 ctx.fillStyle = "white";
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'center';
-                // console.log(this.data.datasets);
+                // console.log("dataSet",this.data.datasets);
                 var sum = [];
                 var sumClsd = [];
                 var psum = [];
@@ -2667,7 +2667,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                 var aryLen = this.data.datasets.length - 1;
                 if (this.data.datasets.length == 7) {
                   for (var i = 0; i < this.data.datasets[1].data.length; i++) {
-                    sum.push(this.data.datasets[1].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
+                    sum.push(this.data.datasets[4].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
                     sumClsd.push(this.data.datasets[0].data[i] + this.data.datasets[1].data[i] + this.data.datasets[2].data[i])
                     psum.push(Math.round(sum[i] / this.data.datasets[aryLen].data[i] * 100));
                     pclsd.push(Math.round(sumClsd[i] / this.data.datasets[aryLen].data[i] * 100));
@@ -2699,7 +2699,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                     total.push(Number(this.data.datasets[aryLen - 1].data[i]) + Number(this.data.datasets[aryLen].data[i]));
                   }
                   for (var i = 0; i < this.data.datasets[1].data.length; i++) {
-                    sum.push(this.data.datasets[1].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
+                    sum.push(this.data.datasets[4].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
                     sumClsd.push(this.data.datasets[0].data[i] + this.data.datasets[1].data[i] + this.data.datasets[2].data[i])
                     psum.push(Math.round(sum[i] / total[i] * 100));
                     pclsd.push(Math.round(sumClsd[i] / total[i] * 100));

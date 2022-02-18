@@ -1,4 +1,4 @@
-<div *ngIf="choice==1">
+<div *ngIf="choice==1 || choice==4">
   <mat-dialog-content>
     <p>
       {{message}}
@@ -125,5 +125,46 @@
     <button mat-raised-button color="primary" (click)="onConfirmClick()" tabindex="1">{{confirmButtonText}}</button>
     <button mat-raised-button mat-dialog-close tabindex="-1">{{cancelButtonText}}</button>
   </mat-dialog-actions>
+</div>
+
+<div *ngIf="choice==5">
+  <mat-dialog-content>
+    <h1 mat-dialog-title>หมายเลขงาน</h1>
+    <p>WBS {{wbs.wbs}}</p>
+    <mat-form-field>
+      <mat-label>แก้ไข เงินลงทุนตามประมาณการ เป็น</mat-label>
+      <input matInput [(ngModel)]="totalcost">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>แก้ไข พัสดุเข้างานอนุมัติ เป็น</mat-label>
+      <input matInput [(ngModel)]="matCostInPln">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>แก้ไข คชจ.หน้างานอนุมัติ เป็น</mat-label>
+      <input matInput [(ngModel)]="workCostPln">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>แก้ไข หมายเลขใบสั่ง เป็น</mat-label>
+      <input matInput [(ngModel)]="newPm">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>แก้ไข แรงสูง(วงจร-กม.) เป็น</mat-label>
+      <input matInput [(ngModel)]="newMv">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>แก้ไข แรงต่ำ(วงจร-กม.) เป็น</mat-label>
+      <input matInput [(ngModel)]="newLv">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>แก้ไข หม้อแปลง(kVA) เป็น</mat-label>
+      <input matInput [(ngModel)]="newTr">
+    </mat-form-field>
+
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="onConfirmClick()" tabindex="1">{{confirmButtonText}}</button>
+    <button mat-raised-button mat-dialog-close tabindex="-1">{{cancelButtonText}}</button>
+  </mat-dialog-actions>
+</mat-dialog-content>
+
 
 </div>

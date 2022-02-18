@@ -68,7 +68,7 @@ export class JobapproveComponent implements OnInit {
   nWbs = 0;
   choice: number;
   displayedColumns = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'causeName', 'solveMet', 'note', 'workCostPln', 'rename', 'reTr', 'app','del', 'ldcad'];
-  displayedColumns1 = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'totalcost', 'matCostInPln', 'workCostPln', 'appNo', 'appDoc'];
+  displayedColumns1 = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'totalcost', 'matCostInPln', 'workCostPln', 'appNo', 'appDoc','reWBS','del'];
   notes = ['1.งานร้องเรียน', '2.PM/PS', '3.งานเร่งด่วน', '4.งานปกติ']
   @ViewChild('paginator', { static: false }) paginator: MatPaginator;
   @ViewChild('sort', { static: false }) sort: MatSort;
@@ -401,6 +401,19 @@ export class JobapproveComponent implements OnInit {
 
     }))
   }
+  delAppWbs(wbsdata) {
+    //console.log(wbsdata.wbs);
+    this.configService.postdata2('delAppWbs.php', wbsdata).subscribe((data => {
+      if (data['status'] == 1) {
+        // this.registerForm.resetForm();
+        this.getData(this.selPea, this.selBudjet);
+        alert("ลบข้อมูลแล้วเสร็จ");
+      } else {
+        alert(data['data']);
+      }
+
+    }))
+  }
   appWbs(wbsdata) {
     //console.log(wbsdata);
     this.configService.postdata2('addjob.php', { wbs: wbsdata.wbs, status: 0 }).subscribe((data => {
@@ -491,6 +504,19 @@ export class JobapproveComponent implements OnInit {
 
     }))
   }
+  reAppWbs(wbsdata) {
+    //console.log(wbsdata.wbs);
+    this.configService.postdata2('reAppWBS.php', wbsdata).subscribe((data => {
+      if (data['status'] == 1) {
+        //this.getData();
+        this.getAppData(this.selBudjet);
+        alert("แก้ไขข้อมูลแล้วเสร็จ");
+      } else {
+        alert(data['data']);
+      }
+
+    }))
+  }
   reTr(wbsdata) {
     //console.log(wbsdata.wbs);
     this.configService.postdata2('reTR.php', wbsdata).subscribe((data => {
@@ -518,6 +544,8 @@ export class JobapproveComponent implements OnInit {
         if (this.choice == 1) { this.delWbs(wbsdata); }
         if (this.choice == 2) { this.renameWbs(wbsdata); }
         if (this.choice == 3) { this.reTr(wbsdata); }
+        if (this.choice == 4) { this.delAppWbs(wbsdata); }
+        if (this.choice == 5) { this.reAppWbs(wbsdata); }
       }
     });
   }

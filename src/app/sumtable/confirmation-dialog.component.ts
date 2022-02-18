@@ -1,3 +1,4 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, Inject } from '@angular/core';
 import { VERSION, MatDialogRef, MatDialog, MatSnackBar, MAT_DIALOG_DATA } from '@angular/material';
 import { FileuploadService } from '../config/fileupload.service';
@@ -31,10 +32,13 @@ export class ConfirmationDialog {
   newIc:number;
   newLen:number;
   newNday:number;
-  newPm:string;
+  newPm='';
   uploadFileDocname='';
   uploadFilename='';
   uploadFileOpsa='';
+  totalcost:number;
+  matCostInPln:number;
+  workCostPln:number;
   constructor(private uploadService: FileuploadService,
     @Inject(MAT_DIALOG_DATA) private data: any,
     private dialogRef: MatDialogRef<ConfirmationDialog>) {
@@ -60,7 +64,9 @@ export class ConfirmationDialog {
     this.newIb=data.wbs.ib;
     this.newIc=data.wbs.ic;
     this.newLen=data.wbs.len;
-
+    this.totalcost=data.wbs.totalcost;
+    this.matCostInPln=data.wbs.matCostInPln; 
+    this.workCostPln= Math.round(data.wbs.workCostPln * 100) / 100;
 
 
       }
@@ -86,7 +92,10 @@ export class ConfirmationDialog {
     this.wbs["newLen"]=this.newLen;
     this.wbs["filename"]=this.uploadFilename;
     this.wbs["fileDocname"]=this.uploadFileDocname;
-    this.wbs["opsafile"]=this.uploadFileOpsa;
+    
+    this.wbs["totalcost"]=this.totalcost;
+    this.wbs["matCostInPln"]=this.matCostInPln;
+    this.wbs["workCostPln"]=this.workCostPln;
 
     this.dialogRef.close(this.wbs);
   }

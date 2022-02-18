@@ -209,9 +209,7 @@
               <ng-container matColumnDef="rename">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
                 <td class="table-lg" mat-cell *matCellDef="let jobreq">
-
                   <button class="btn btn-primary" mat-raised-button (click)="openDialog(jobreq,2)">WBS</button>
-
                 </td>
               </ng-container>
               <ng-container matColumnDef="reTr">
@@ -400,6 +398,20 @@
                 <td class="table-lg" mat-cell *matCellDef="let appJob"> {{appJob.appDoc}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="reWBS">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                <td class="table-lg" mat-cell *matCellDef="let appJob">
+                  <button class="btn btn-primary" mat-raised-button (click)="openDialog(appJob,5)">WBS</button>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="del">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                <td class="table-lg" mat-cell *matCellDef="let appJob">
+         
+                    <button class="btn btn-danger" mat-raised-button (click)="openDialog(appJob,4)">ลบ</button>
+               
+                </td>
+              </ng-container>
               <tr class="table-lg" mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
               <tr class="table-lg" mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
             </table>
