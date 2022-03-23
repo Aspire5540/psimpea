@@ -35,7 +35,7 @@ export class UploadopsaComponent implements OnInit {
 
   ngOnInit() {
     this.peaCode = localStorage.getItem('peaCode'); 
-    // this.peaCode = 'E00000'; 
+    // this.peaCode = 'D00000'; 
   }
   checkAutho() {
     // return true;

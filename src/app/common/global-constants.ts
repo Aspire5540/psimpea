@@ -3,7 +3,7 @@ export class GlobalConstants {
     // console.log(parts);
     // var subdomain = parts.shift();
     // console.log(subdomain);
-    //  public static region: string = 'n1';
+    //  public static region: string = 'n2';
     public static region: string = location.hostname.split('.').shift();
     public static regionLetter = {'n1': 'A',
     'n2': 'B',

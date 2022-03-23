@@ -179,8 +179,10 @@ export class OPSAComponent implements OnInit, AfterViewInit {
   TrTotalProblem = 0;
   TrTotalPln = 0;
   TrTotalDone = 0;
+  TrTotalHavePln=0;
   TrWBS = 0;
   groupselect=0;
+  groupP1Select='';
   Statuss = [
     { value: 'จัดทำแผนงานแล้ว' },
     { value: 'อยู่ระหว่างตรวจสอบ' },
@@ -196,6 +198,12 @@ export class OPSAComponent implements OnInit, AfterViewInit {
     { value: 'ไม่พบปัญหา' },
     { value: 'อื่นๆ โปรดระบุ' },
     { value: 'แก้ไขปัญหาแล้ว' },
+  ];
+  groupName = [
+    { value: '',viewvalue: 'ทั้งหมด' },
+    { value: '1',viewvalue: 'กลุ่มที่ 1' },
+    { value: '2',viewvalue: 'กลุ่มที่ 2' },
+    { value: '3',viewvalue: 'กลุ่มที่ 3' },
   ];
   dataDashboard = {};
 
@@ -260,7 +268,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
   navigationInterceptor(event: RouterEvent): void {
-    console.log("showoverlay");
+    // console.log("showoverlay");
     if (event instanceof NavigationStart) {
       this.showOverlay = true;
     }
@@ -329,7 +337,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(wbsdata => {
       if (wbsdata) {
-        console.log(wbsdata);
+        // console.log(wbsdata);
         if (this.checkAoj(wbsdata.aoj)) {
           this.reTr(wbsdata);
         } else {
@@ -533,7 +541,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
   getLoad100() {
     this.configService.postdata2('opsa/rdLoad100.php', { nDay: this.nDate }).subscribe((data => {
       if (data['status'] == 1) {
-        console.log(data['data']);
+        // console.log(data['data']);
         var label = ['30 kVA']
         var nTR = [0];
         data['data'].forEach(element => {
@@ -633,6 +641,11 @@ export class OPSAComponent implements OnInit, AfterViewInit {
 
 
   }
+  selectGroup(event){
+    // console.log(event);
+    this.groupP1Select=event.value[0];
+    this.getJobProgressPea2();
+  }
   selectMatchPea(event) {
 
     this.selMatchPeaName = event.value[2];
@@ -658,7 +671,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
     }));
     this.regionData = [];
     regions.forEach(region => {
-      this.configService.postdata('opsa/rdProblemAll3.php', { region: region }).subscribe((data => {
+      this.configService.postdata('opsa/rdProblemAll4.php', { region: region }).subscribe((data => {
         if (data['status'] == 1) {
           this.regionData[region] = data["data"][0];
           this.dataDashboard[region] = (Number(data["data"][0].nTR) - Number(data["data"][0].nCLSD) - Number(data["data"][0].nGIS) - Number(data["data"][0].nNo));
@@ -683,7 +696,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
     this.problemPEA3 = [];
     var regions = Object.keys(GlobalConstants.regionLetter);
     regions.forEach(region => {
-      this.configService.postdata('opsa/rdLoadRegion2.php', { region: region }).subscribe((data => {
+      this.configService.postdata('opsa/rdLoadRegion2.php', { region: region}).subscribe((data => {
         if (data['status'] == 1) {
           this.problemPEA1[region] = data["data1"][0];
           this.problemPEA2[region] = data["data2"][0];
@@ -807,6 +820,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
           yAxes: [{
             gridLines: { color: "white", },
             ticks: {
+              beginAtZero: true,
               fontSize: 16,
               fontColor: "white",
               callback: function (value, index, values) {
@@ -849,7 +863,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
     this.problemPEA3 = [];
     var regions = Object.keys(GlobalConstants.regionLetter);
     regions.forEach(region => {
-      this.configService.postdata('opsa/rdLoadRegion3.php', { region: region}).subscribe((data => {
+      this.configService.postdata('opsa/rdLoadRegion4.php', { region: region}).subscribe((data => {
         if (data['status'] == 1) {
           // this.problemPEA1[region]=data["data"];
           this.problemPEA1[region]=[];
@@ -876,7 +890,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
           dataCnt++;
           if (dataCnt == 12) {
             
-            console.log(this.problemPEA);
+            // console.log(this.problemPEA);
             console.log(this.problemPEA1);
             
             // this.problemPEA = this.problemPEA1;
@@ -968,7 +982,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
         jobDoneList.push(this.problemPEA1[regions[i]][this.groupselect]['nCLSD']);
         inprogress.push((this.problemPEA1[regions[i]][this.groupselect]['nPlan'] / this.problemPEA1[regions[i]][this.groupselect]['nTR'] * 100).toFixed(2));
         inprogressList.push(this.problemPEA1[regions[i]][this.groupselect]['nPlan']);
-        console.log(jobDone,inprogress);
+        // console.log(jobDone,inprogress);
         // jobRemain.push(100 - Math.round((Number(data['nNo']) + Number(data['nGIS']) + Number(data['nCLSD'])) / Number(data['nTR']) * 100) - Math.round((Number(data['nWBS']) - Number(data['nCLSD'])) / Number(data['nTR']) * 100)-Math.round((Number(data['nSerway']) + Number(data['nEst'])) / Number(data['nTR']) * 100));
         // jobRemain.push((100 - jobDone[i] - inprogress[i]).toFixed(2));
         // jobRemainList.push(data['nTR'] - jobDoneList[i] - inprogressList[i]);
@@ -1037,6 +1051,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
           yAxes: [{
             gridLines: { color: "white", },
             ticks: {
+              beginAtZero: true,
               fontSize: 16,
               fontColor: "white",
               callback: function (value, index, values) {
@@ -2039,7 +2054,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
   }
   getJobProgressPea2() {
 
-    this.configService.postdata2('opsa/rdLoad3.php', { peaCode: this.selPeapeaCode, option: this.option }).subscribe((data => {
+    this.configService.postdata2('opsa/rdLoad5.php', { peaCode: this.selPeapeaCode, option: this.option,group:this.groupP1Select }).subscribe((data => {
       if (data['status'] == 1) {
 
         var Pea = [];
@@ -2051,6 +2066,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
         var Volt = [];
         this.TrTotal = 0;
         var kvaPln = [];
+        var havePln=[];
         this.TrPlnTal = 0;
         var VoltObj = [];
         this.TrTotalClsd = 0;
@@ -2062,7 +2078,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
         this.TrGIS2 = 0;
         this.TrNo = 0;
         this.TrClsd = 0;
-
+        this.TrTotalHavePln=0;
 
         firstLoop = true;
         lastPea = '';
@@ -2102,7 +2118,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
         var totalNO = 0;
         var totalCLSD = 0;
         var peaInd = [];
-
+        var totalHavePln=0;
         // var kvaPln=[];
         kvaByPeaObj['plan'] = [];
         kvaByPeaObj['wbs'] = [];
@@ -2110,6 +2126,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
         kvaByPeaObj['gis2'] = [];
         kvaByPeaObj['no'] = [];
         kvaByPeaObj['clsd'] = [];
+        kvaByPeaObj['havePlan'] = [];
         for (var i = 0; i < data['data'].length; i++) {
           if (kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]]) {
             kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nTR)]);
@@ -2118,6 +2135,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
             kvaByPeaObj['gis2'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nGIS2)]);
             kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nNo)]);
             kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nCLSD)]);
+            kvaByPeaObj['havePlan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nPln)-Number(data['data'][i].nNo)- Number(data['data'][i].nWBS)-Number(data['data'][i].nGIS2)]);
           } else {
             kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
             kvaByPeaObj['plan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nTR)]);
@@ -2131,10 +2149,13 @@ export class OPSAComponent implements OnInit, AfterViewInit {
             kvaByPeaObj['no'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nNo)]);
             kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
             kvaByPeaObj['clsd'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nCLSD)]);
+            kvaByPeaObj['havePlan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]] = [];
+            kvaByPeaObj['havePlan'][this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i].Pea]].push([data['data'][i].kva, Number(data['data'][i].nPln)-Number(data['data'][i].nNo)- Number(data['data'][i].nWBS)-Number(data['data'][i].nGIS2)]);
 
           }
           
           // console.log(data['data'][i],data['data'][i].Pea!=lastPea && !firstLoop);
+          // console.log(kvaByPeaObj['havePlan']);
           if (data['data'][i].Pea != lastPea && !firstLoop) {
             Pea.push(this.peaname[GlobalConstants.regionLetter[GlobalConstants.region] + data['data'][i - 1].Pea]);
             peaInd.push(data['data'][i - 1].Pea);
@@ -2144,12 +2165,14 @@ export class OPSAComponent implements OnInit, AfterViewInit {
             GIS2.push(totalGIS2);
             No.push(totalNO);
             CLSD.push(totalCLSD);
+            havePln.push(totalHavePln);
             totalTR = Number(data['data'][i].nTR);
             totalWBS = Number(data['data'][i].nWBS);
             totalGIS = Number(data['data'][i].nGIS);
             totalGIS2 = Number(data['data'][i].nGIS2);
             totalNO = Number(data['data'][i].nNo);
             totalCLSD = Number(data['data'][i].nCLSD);
+            totalHavePln = Number(data['data'][i].nPln)- Number(data['data'][i].nNo)- Number(data['data'][i].nWBS)-Number(data['data'][i].nGIS2);
           } else {
             totalTR = totalTR + Number(data['data'][i].nTR);
             totalWBS = totalWBS + Number(data['data'][i].nWBS);
@@ -2157,6 +2180,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
             totalGIS2 = totalGIS2 + Number(data['data'][i].nGIS2);
             totalNO = totalNO + Number(data['data'][i].nNo);
             totalCLSD = totalCLSD + Number(data['data'][i].nCLSD);
+            totalHavePln = totalHavePln + Number(data['data'][i].nPln)- Number(data['data'][i].nNo)- Number(data['data'][i].nWBS)-Number(data['data'][i].nGIS2);
           }
           
           if (i == data['data'].length - 1) {
@@ -2167,6 +2191,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
             GIS2.push(totalGIS2);
             No.push(totalNO);
             CLSD.push(totalCLSD);
+            havePln.push(totalHavePln);
             peaInd.push(data['data'][i].Pea);
           }
           this.TrPlnTal = this.TrPlnTal + Number(data['data'][i].nTR);
@@ -2174,8 +2199,9 @@ export class OPSAComponent implements OnInit, AfterViewInit {
           firstLoop = false;
           this.TrTotal = this.TrTotal + Number(data['data'][i].nWBS) + Number(data['data'][i].nGIS2) + Number(data['data'][i].nNo);
           this.TrTotalClsd = this.TrTotalClsd + Number(data['data'][i].nCLSD) + Number(data['data'][i].nGIS) + Number(data['data'][i].nNo);
+          this.TrTotalHavePln=this.TrTotalHavePln+Number(data['data'][i].nPln);
         }
-
+        // console.log(havePln);
         for (var i = 0; i < peaInd.length; i++) {
 
           if (this.option == '1' || this.option == '3' || this.option == '6') {
@@ -2190,7 +2216,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
           }
         }
         // });
-        console.log(GIS,GIS2);
+        // console.log(GIS,GIS2);
         // var sum = GIS.reduce((sum, p) => sum + p);
         this.TrGIS = GIS.reduce((a, b) => a + b, 0);
         this.TrGIS2 = GIS2.reduce((a, b) => a + b, 0);
@@ -2200,7 +2226,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
         //this.kvaTotal=505;
         //APEX CHART
         this.chartOptions1 = {
-          series: [Math.round(this.TrTotal / this.TrPlnTal * 100), Math.round(this.TrTotalClsd / this.TrPlnTal * 100)],
+          series: [Math.round(this.TrTotalHavePln / this.TrPlnTal * 100), Math.round(this.TrTotalClsd / this.TrPlnTal * 100)],
           chart: {
             height: 400,
             type: "radialBar",
@@ -2253,7 +2279,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                 },
                 total: {
                   show: true,
-                  label: 'ผลการตรวจสอบ : ผลการปิดงาน',
+                  label: 'มีแผนงาน : ปิดงาน',
                   color: "white",
                   formatter: function (val) {
                     return parseInt(val.config.series[0].toString(), 10).toString() + "%" + " : " + parseInt(val.config.series[1].toString(), 10).toString() + "%";
@@ -2326,6 +2352,12 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                 backgroundColor: '#ffd166',
               },
               {
+                label: 'อยู่ระหว่างตรวจสอบ',
+                stack: 'Stack 2',
+                data: havePln,
+                backgroundColor: '#f2f4f4',
+              },
+              {
                 label: 'หม้อแปลงทั้งหมด',
                 stack: 'Stack 3',
                 data: kvaPln,
@@ -2365,7 +2397,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                 {
                   label: 'แก้ไข GIS',
                   stack: 'Stack 2',
-                  data: GIS,
+                  data: GIS2,
                   backgroundColor: '#ffd166',
                 },
                 {
@@ -2373,6 +2405,12 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                   stack: 'Stack 2',
                   data: No,
                   backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'อยู่ระหว่างตรวจสอบ',
+                  stack: 'Stack 2',
+                  data: havePln,
+                  backgroundColor: '#f2f4f4',
                 },
                 {
                   label: 'แรงดัน 200-204 V',
@@ -2474,7 +2512,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                 {
                   label: 'แก้ไข GIS',
                   stack: 'Stack 2',
-                  data: GIS,
+                  data: GIS2,
                   backgroundColor: '#ffd166',
                 },
                 {
@@ -2482,6 +2520,12 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                   stack: 'Stack 2',
                   data: No,
                   backgroundColor: '#ffd166',
+                },
+                {
+                  label: 'อยู่ระหว่างตรวจสอบ',
+                  stack: 'Stack 2',
+                  data: havePln,
+                  backgroundColor: '#f2f4f4',
                 },
                 {
                   label: 'โหลด 90-100%',
@@ -2525,7 +2569,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
               callbacks: {
                 label: function (tooltipItem, data, myData = kvaByPeaObj) {
                   // console.log(myData[tooltipItem.label],tooltipItem);
-                  // console.log(data);
+                  // console.log(data,tooltipItem.datasetIndex);
                   var ind = tooltipItem.datasetIndex;
                   var arryLabel = [];
                   var kvaObj = [];
@@ -2536,6 +2580,8 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                     kvaObj = myData["plan"][tooltipItem.label];
                   } else if (data.datasets[tooltipItem.datasetIndex].label.includes('มี WBS')) {
                     kvaObj = myData["wbs"][tooltipItem.label];
+                  } else if (data.datasets[tooltipItem.datasetIndex].label.includes('อยู่ระหว่างตรวจสอบ')) {
+                    kvaObj = myData["havePlan"][tooltipItem.label];
                   } else if (data.datasets[tooltipItem.datasetIndex].label.includes('ปิด WBS')) {
                     kvaObj = myData["clsd"][tooltipItem.label];
                   } else if (data.datasets[tooltipItem.datasetIndex].label.includes('แรงดัน 205-210') ||
@@ -2559,7 +2605,12 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                   } else if (data.datasets[tooltipItem.datasetIndex].label.includes('ไม่พบ') ||
                     data.datasets[tooltipItem.datasetIndex].label.includes('GIS')) {
                     noObj = myData["no"][tooltipItem.label] ? myData["no"][tooltipItem.label] : [];
-                    gisObj = myData["gis"][tooltipItem.label] ? myData["gis"][tooltipItem.label] : [];
+                    if(tooltipItem.datasetIndex==1 || tooltipItem.datasetIndex==2){
+                      gisObj = myData["gis"][tooltipItem.label] ? myData["gis"][tooltipItem.label] : [];
+                    }else{
+                      gisObj = myData["gis2"][tooltipItem.label] ? myData["gis2"][tooltipItem.label] : [];
+                    }
+                    
                     var kvalist = [];
                     for (var i = 0; i < gisObj.length; i++) {
                       kvaObj.push([gisObj[i][0], gisObj[i][1], 0]);
@@ -2665,9 +2716,9 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                 var psum = [];
                 var pclsd = [];
                 var aryLen = this.data.datasets.length - 1;
-                if (this.data.datasets.length == 7) {
+                if (this.data.datasets.length == 8) {
                   for (var i = 0; i < this.data.datasets[1].data.length; i++) {
-                    sum.push(this.data.datasets[4].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
+                    sum.push(this.data.datasets[4].data[i] + this.data.datasets[5].data[i] + this.data.datasets[3].data[i]+this.data.datasets[6].data[i])
                     sumClsd.push(this.data.datasets[0].data[i] + this.data.datasets[1].data[i] + this.data.datasets[2].data[i])
                     psum.push(Math.round(sum[i] / this.data.datasets[aryLen].data[i] * 100));
                     pclsd.push(Math.round(sumClsd[i] / this.data.datasets[aryLen].data[i] * 100));
@@ -2682,7 +2733,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                           ctx.fillText(dataset.data[i] + " เครื่อง", model.x + 10, model.y);
                         } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 1")) {
                           ctx.fillText(sumClsd[i] + " เครื่อง , " + pclsd[i] + "%", model.x + 10, model.y);
-                        } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 2")) {
+                        } else if (model.datasetLabel.includes("อยู่ระหว่างตรวจสอบ") && dataset.stack.includes("Stack 2")) {
                           ctx.fillText(sum[i] + " เครื่อง , " + psum[i] + "%", model.x + 10, model.y);
                         }
                         // else if (model.datasetLabel.includes("ปิด WBS/ใบสั่ง")) {
@@ -2699,7 +2750,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                     total.push(Number(this.data.datasets[aryLen - 1].data[i]) + Number(this.data.datasets[aryLen].data[i]));
                   }
                   for (var i = 0; i < this.data.datasets[1].data.length; i++) {
-                    sum.push(this.data.datasets[4].data[i] + this.data.datasets[2].data[i] + this.data.datasets[3].data[i])
+                    sum.push(this.data.datasets[4].data[i] + this.data.datasets[5].data[i] + this.data.datasets[3].data[i]+this.data.datasets[6].data[i])
                     sumClsd.push(this.data.datasets[0].data[i] + this.data.datasets[1].data[i] + this.data.datasets[2].data[i])
                     psum.push(Math.round(sum[i] / total[i] * 100));
                     pclsd.push(Math.round(sumClsd[i] / total[i] * 100));
@@ -2713,7 +2764,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
                           ctx.fillText(total[i] + " เครื่อง", model.x + 10, model.y);
                         } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 1")) {
                           ctx.fillText(sumClsd[i] + " เครื่อง , " + pclsd[i] + "%", model.x + 10, model.y);
-                        } else if (model.datasetLabel.includes("ไม่พบปัญหา") && dataset.stack.includes("Stack 2")) {
+                        } else if (model.datasetLabel.includes("อยู่ระหว่างตรวจสอบ") && dataset.stack.includes("Stack 2")) {
                           ctx.fillText(sum[i] + " เครื่อง , " + psum[i] + "%", model.x + 10, model.y);
                         }
                         // console.log(model);
@@ -3246,7 +3297,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
   }
 
   selectStatus(event) {
-    console.log(event);
+    // console.log(event);
     this.configService.postdata2('opsa/wristatus.php', { TRNumber: event.value[1].PEA_TR, status: event.value[0] }).subscribe((data => {
       if (data['status'] == 1) {
         // console.log(data['data']);
