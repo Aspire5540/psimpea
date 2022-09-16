@@ -17,7 +17,7 @@
         </mat-card-header>
         <mat-card-content>
 
-          <div class="row">
+          <div class="row mt-5">
             <div class="col-xl-1 col-lg-1 col-md-1 mt-5"></div>
             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12  mt-5">
               <button type="button" class="btn text-right" style="background-color:#9DC3E6; font-size: 26px;width: 100%; height: 100px;">หม้อแปลงที่มีปัญหาทั้งหมด <br> {{TrTotalProblem | number}} เครื่อง</button>
@@ -827,142 +827,180 @@
 
     </div>
   </mat-tab>
-</mat-tab-group>
+  <mat-tab label="VCARE">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title style="color:white;">Dashboard การปรับปรุงหม้อแปลงและระบบจำหน่ายแรงต่ำ จาก VCARE และ OPSAonGIS สถานะวันที่ {{vcaredate}} 
+        </mat-card-title>
 
+      </mat-card-header>
+      <mat-card-content>
 
-<!-- 
-<div class="row">
-  <div class="col-lg-12 grid-margin stretch-card">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">ข้อมูลมิเตอร์</h4>
+        <div class="row">
+
+          <div class="col-md-11">
+            <!-- <mat-form-field>
+              <mat-label style="color:white;">กฟฟ. </mat-label>
+              <mat-select (selectionChange)="selectPea($event)">
+                <mat-option class="not-empty-select" *ngFor="let pea of peaname2"
+                  [value]="[pea.peaEng,pea.peaCode,pea.peaName]">
+                  {{pea.peaCode +" "+pea.peaName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field> -->
+            <!-- <div *ngIf="option=='7'">
+            <mat-form-field>
+              <mat-label style="color:white;">กลุ่มแผนงาน</mat-label>
+              <mat-select (selectionChange)="selectGroup($event)">
+                <mat-option class="not-empty-select" *ngFor="let grpup of groupName"
+                [value]="[grpup.value]">
+                  {{grpup.viewvalue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> -->
+        </div>
+          <!-- <div class="col-md-1">
+            <a target="_blank"
+              href='http://psim.pea.co.th/psisservice/opsa/exportresult.php?option={{option}}&region={{currentReggion}}&group={{groupP1Select}}'><i
+                class="fa fa-file-excel-o" style="font-size:40px;color:white;"></i></a>
+          </div> -->
+        </div>
+        <!-- <div class="col-md-12 d-flex justify-content-center" style="color: white;">
+          <mat-button-toggle-group style="border-radius: 20px;height: 80%;color: rgb(70, 124, 172);" value="7">
+            <mat-button-toggle (change)="onValChange($event.value)" value="7" style="width: 300px;">แรงดันต่ำกว่า 200 V หรือ โหลดเกิน 100%</mat-button-toggle>
+            <mat-button-toggle (change)="onValChange($event.value)" value="1">โหลด 80-100%</mat-button-toggle>
+            <mat-button-toggle (change)="onValChange($event.value)" value="8" style="width: 300px;">Unbalance > 50% (%Loading 50-80)</mat-button-toggle>
+
+            <mat-button-toggle (change)="onValChange($event.value)" value="4">โหลดต่ำกว่า 30%</mat-button-toggle>
                
-        <mat-form-field appearance="legacy">
-            <mat-label>ค้นหาข้อมูล</mat-label>
-            <input matInput placeholder="ระบุข้อมูลที่ต้องการค้นหา" matInput (keyup)="applyFilter1($event.target.value)">
-          </mat-form-field>
-                   
-            <button (click)="exportAsXLSX2()"><i class="fa fa-file-excel-o" style="font-size:20px;color:blue"></i></button> 
-           
-        <div class="table-responsive">
-            <table class="mat-elevation-z8" mat-table  matSort #sort1="matSort" [dataSource]="dataSource1">      
-              <ng-container matColumnDef="Feeder">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> Feeder </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">  {{meterdata.Feeder}}</td>
-                </ng-container>
-              <ng-container matColumnDef="PEA_Meter">
-              <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> PEA Meter </th>
-              <td class="table-lg" mat-cell *matCellDef="let meterdata">  {{meterdata.PEA_Meter}}</td>
-              </ng-container>
-              <ng-container matColumnDef="CustName">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อผู้ใช้ไฟฟ้า </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">{{meterdata.CustName}}</td>
-              </ng-container>
-              <ng-container matColumnDef="rate">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ประเภทผู้ใช้ไฟฟ้า </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">{{meterdata.rate}}</td>
-              </ng-container>
-              <ng-container matColumnDef="rateMeter">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ขนาดมิเตอร์ </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">{{meterdata.rateMeter}}</td>
-              </ng-container>
-              <ng-container matColumnDef="kWh">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>หน่วยการใช้ไฟฟ้า </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">{{meterdata.kWh}}</td>
-              </ng-container>
-              <ng-container matColumnDef="SUBTYPECOD">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชนิดเฟสมิเตอร์ </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">{{meterdata.SUBTYPECOD}}</td>
-              </ng-container>
-              <ng-container matColumnDef="Line_Type">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชนิดเฟสสายไฟ </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">{{meterdata.Line_Type}}</td>
-              </ng-container>
-              <ng-container matColumnDef="Voltage">
-                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>แรงดัน </th>
-                <td class="table-lg" mat-cell *matCellDef="let meterdata">{{meterdata.Voltage}}</td>
-              </ng-container>
-              
+          </mat-button-toggle-group>
 
-              <tr class="table-lg" mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
-              <tr class="table-lg" mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
-            </table>
-          <mat-paginator #paginator1 [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
- -->
+        </div> -->
 
-<!-- <div class="row">
-    <div class="col-lg-12 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">ค้นหามิเตอร์ / ชื่อผู้ใช้ไฟฟ้า</h4>     
-          <form class="form-sample" #f="ngForm" (ngSubmit)="onSubmit()">
-            <div class="row">
-              <div class="col-md-3">
-                <input type="text" class="form-control" name="PEAMeter" placeholder="ระบุหมายเลขมิเตอร์หรือชื่อผู้ใช้ไฟฟ้า" ngModel> 
+        <div class="row">
+          <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12" style="color: white;">
+            <apx-chart style="color: white;" [series]="chartOptions1.series" [chart]="chartOptions1.chart"
+              [plotOptions]="chartOptions1.plotOptions" [labels]="chartOptions1.labels" [stroke]="chartOptions1.stroke"
+              [fill]="chartOptions1.fill" style="color: white;"></apx-chart>
+
+            <div class="card card-statistics mt-5">
+              <div class="card-body bg-success">
+                <div class="clearfix">
+                  <div class="float-left">
+                    <i class="mdi  mdi-chart-line text-white icon-lg"></i>
+                  </div>
+                  <div class="float-right">
+                    <p class="font-weight-medium text-right mb-0 wrfont" style="font-size:x-large;">หม้อแปลงทั้งหมด
+                      {{TrPlnTal | number}} เครื่อง</p>
+                    <div class="fluid-container">
+                      <h3 class="font-weight-medium text-right mb-0 wrfont">มีแผนงานแล้ว {{TrTotalHavePln | number}} เครื่อง
+                        <BR>
+                        ตรวจสอบแล้ว {{TrTotal | number}} เครื่อง
+                        <BR>
+                          ปิดงานแล้ว {{TrTotalClsd}} เครื่อง
+                        <BR>
+                          <h4>(ไม่พบปัญหา {{TrNo}} เครื่อง <BR> แก้ไข GIS {{TrGIS}}  เครื่อง
+                            <BR>  ปิดงาน/เปิดงาน PM PS {{TrClsd}}/{{TrWBS}} เครื่อง)</h4>
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
               </div>
-              
-                <button type="submit" [disabled]="!f.valid" class="btn btn-success mr-2">ค้นหา</button>
-             
             </div>
-          </form>
-        
-            
-             
-        <div class="table-responsive">
-              <table class="mat-elevation-z8" mat-table  matSort #sort2="matSort" [dataSource]="dataSource2"> 
-                <ng-container matColumnDef="PEA_TR">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> หม้อแปลง </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2"> <a target="_blank" href="http://172.30.212.148/transformer/Vmap.php?pea_no={{meterdata2.PEA_TR}}&submit=submit">{{meterdata2.PEA_TR}}</a></td>
-                </ng-container>     
-                <ng-container matColumnDef="Feeder">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> Feeder </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">  {{meterdata2.Feeder}}</td>
-                </ng-container>
-                <ng-container matColumnDef="PEA_Meter">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> PEA Meter </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">  {{meterdata2.PEA_Meter}}</td>
-                </ng-container>
-                <ng-container matColumnDef="CustName">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อผู้ใช้ไฟฟ้า </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">{{meterdata2.CustName}}</td>
-                </ng-container>
-                <ng-container matColumnDef="rate">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ประเภทผู้ใช้ไฟฟ้า </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">{{meterdata2.rate}}</td>
-                </ng-container>
-                <ng-container matColumnDef="rateMeter">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ขนาดมิเตอร์ </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">{{meterdata2.rateMeter}}</td>
-                </ng-container>
-                <ng-container matColumnDef="kWh">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>หน่วยการใช้ไฟฟ้า </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">{{meterdata2.kWh}}</td>
-                </ng-container>
-                <ng-container matColumnDef="SUBTYPECOD">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชนิดเฟสมิเตอร์ </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">{{meterdata2.SUBTYPECOD}}</td>
-                </ng-container>
-                <ng-container matColumnDef="Line_Type">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>ชนิดเฟสสายไฟ </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">{{meterdata2.Line_Type}}</td>
-                </ng-container>
-                <ng-container matColumnDef="Voltage">
-                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>แรงดัน </th>
-                  <td class="table-lg" mat-cell *matCellDef="let meterdata2">{{meterdata2.Voltage}}</td>
-                </ng-container>
+          </div> -->
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="height: 50pc;">
 
-  
-                <tr class="table-lg" mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                <tr class="table-lg" mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-              </table>
-            <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+            <canvas id='chartVcare'></canvas>
+
+          </div>
+          
+          <div class="mt-4 table-responsive" style="background-color:royalblue">
+            <table class="mat-elevation-z8" style="background-color:royalblue" mat-table matSort
+              #sort4="matSort" [dataSource]="dataSource4">
+              <ng-container matColumnDef="pea">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> กฟฟ. </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.pea}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="PEANO_TR">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> PEA หม้อแปลง </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.PEANO_TR}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="PEANO_METER">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> PEA มิเตอร์ </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.PEANO_METER}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Location">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> Location </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.Location}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="pload">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> โหลดหม้อแปลง </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.pload}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="voltage">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> แรงดัน </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.voltage}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="wbs">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> wbs </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.wbs}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="JOB_STATUS">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> สถานะงาน </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.JOB_STATUS}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="NOTE">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> หมายเหตุ </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{matreq.NOTE}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="jobprogress">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header
+                  style="color: black;background-color:lightgray;"> สถานะการปิดงาน </th>
+                <td class="table-lg" mat-cell *matCellDef="let matreq" style="color: black;">
+                  {{chkPSIM(matreq)}}
+                </td>
+              </ng-container>     
+
+              <tr class="table-lg" mat-header-row *matHeaderRowDef="displayedColumns4" style="color: white;">
+              </tr>
+              <tr class="table-lg" mat-row *matRowDef="let row; columns: displayedColumns4;"></tr>
+            </table>
+            <mat-paginator #paginator4 [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons>
+            </mat-paginator>
+          </div>
         </div>
-      </div>
-    </div>
-  
-</div> -->
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

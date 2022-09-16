@@ -37,6 +37,16 @@ export class User {
   peacode: string;
   peaname: string;
 }
+export class vcare {
+  PEANO_TR: string;
+  PEANO_METER: string;
+  voltage: number;
+  pload: number;
+  wbs: string;
+  Location: string;
+  JOB_STATUS: string;
+  NOTE: string;
+}
 export interface wbsdata {
   projectType: string;
   wbs: string;
