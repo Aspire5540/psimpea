@@ -85,6 +85,7 @@ import { UploadopsaComponent } from './uploadopsa/uploadopsa.component';
 import { JobapproveComponent } from './jobapprove/jobapprove.component';
 import { LVProComponent,DialogOverviewExampleDialog } from './lvpro/lvpro.component';
 import { OPSAComponent,DialogOverviewExampleDialog1 } from './opsa/opsa.component';
+import { OPSA66Component,DialogOverviewExampleDialog2 } from './opsa66/opsa66.component';
 import { PsimdashboardComponent } from './psimdashboard/psimdashboard.component';
 import { PhasechkComponent } from './phasechk/phasechk.component';
 import { RoicComponent } from './roic/roic.component';
@@ -96,6 +97,7 @@ import { LoaderInterceptorService } from './config/loader-interceptor.service';
 import {LoaderserviceService} from './config/loaderservice.service';
 import { EzxComponent } from './ezx/ezx.component';
 import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
+import { Uploadopsa2Component } from './uploadopsa2/uploadopsa2.component';
 
 
 @NgModule({
@@ -127,6 +129,7 @@ import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
     JobapproveComponent,
     LVProComponent,
     OPSAComponent,
+    OPSA66Component,
     PsimdashboardComponent,
     PhasechkComponent,
     RoicComponent,
@@ -136,6 +139,8 @@ import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
     ConfirmdlgComponent,
     DialogOverviewExampleDialog,
     DialogOverviewExampleDialog1,
+    DialogOverviewExampleDialog2,
+    Uploadopsa2Component,
     
   ],
   imports: [
@@ -191,7 +196,7 @@ import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
     //HttpModule,
     NgApexchartsModule,
   ],
-  entryComponents: [ConfirmationDialog,ConfirmdlgComponent,DialogOverviewExampleDialog,DialogOverviewExampleDialog1],
+  entryComponents: [ConfirmationDialog,ConfirmdlgComponent,DialogOverviewExampleDialog,DialogOverviewExampleDialog1,DialogOverviewExampleDialog2],
   providers: [ConfigService,
     AuthGuard,
     FileuploadService,

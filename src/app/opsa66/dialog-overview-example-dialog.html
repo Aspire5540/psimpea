@@ -1,0 +1,230 @@
+<mat-dialog-content>
+  <h1 mat-dialog-title>PEA หม้อแปลง {{data.trdata.PEA_TR}}</h1>
+  <mat-form-field appearance="legacy">
+    <mat-label style="color: rgb(0, 0, 0);">เลือกระบบเฟส {{modeselect}}</mat-label>
+    <mat-select  (selectionChange)="selectCondition($event)">
+      <mat-option class="not-empty-select" *ngFor="let Condition of Conditions"
+        [value]="[Condition.value]">
+        {{Condition.value}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="row  ml-3">
+    <mat-form-field>
+      <mat-label>วันที่วัดโหลด</mat-label>
+      <input matInput [(ngModel)]="meaDate">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>เวลา</mat-label>
+      <input matInput [(ngModel)]="meaTime">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>TAP หม้อแปลง</mat-label>
+      <input matInput [(ngModel)]="trtab">
+    </mat-form-field>
+  </div>
+
+  <div class="row ml-3">
+    <mat-form-field>
+      <mat-label>%โหลดหม้อแปลง</mat-label>
+      <input [disabled]="true" matInput [(ngModel)]="RLoad">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>%๊UB</mat-label>
+      <input [disabled]="true" matInput [(ngModel)]="realUb">
+    </mat-form-field>
+  </div>
+  <mat-tab-group [backgroundColor]="'primary'" [color]="'warn'">
+    <mat-tab label="วงจรที่ 1">
+      <div class="row mt-3 ml-3">
+        <mat-form-field>
+          <mat-label>กรแสเฟส A</mat-label>
+          <input matInput [(ngModel)]="realIa1" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส B</mat-label>
+          <input matInput [(ngModel)]="realIb1" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส C</mat-label>
+          <input matInput [(ngModel)]="realIc1" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVinA1" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVinB1" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVinC1" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVminA1" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVminB1" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVminC1" (change)="calload()">
+        </mat-form-field>
+      </div>
+    </mat-tab>
+    <mat-tab label="วงจรที่ 2">
+      <div class="row mt-3 ml-3">
+        <mat-form-field>
+          <mat-label>กรแสเฟส A</mat-label>
+          <input matInput [(ngModel)]="realIa2" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส B</mat-label>
+          <input matInput [(ngModel)]="realIb2" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส C</mat-label>
+          <input matInput [(ngModel)]="realIc2" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVinA2" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVinB2" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVinC2" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVminA2" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVminB2" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVminC2" (change)="calload()">
+        </mat-form-field>
+      </div>
+    </mat-tab>
+    <mat-tab label="วงจรที่ 3">
+      <div class="row mt-3 ml-3">
+        <mat-form-field>
+          <mat-label>กรแสเฟส A</mat-label>
+          <input matInput [(ngModel)]="realIa3" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส B</mat-label>
+          <input matInput [(ngModel)]="realIb3" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส C</mat-label>
+          <input matInput [(ngModel)]="realIc3" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVinA3" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVinB3" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVinC3" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVminA3" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVminB3" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVminC3" (change)="calload()">
+        </mat-form-field>
+      </div>
+    </mat-tab>
+    <mat-tab label="วงจรที่ 4">
+      <div class="row mt-3 ml-3">
+        <mat-form-field>
+          <mat-label>กรแสเฟส A</mat-label>
+          <input matInput [(ngModel)]="realIa4" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส B</mat-label>
+          <input matInput [(ngModel)]="realIb4" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>กรแสเฟส C</mat-label>
+          <input matInput [(ngModel)]="realIc4" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVinA4" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVinB4" (change)="calload()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>แรงดันต้นทาง เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVinC4" (change)="calload()">
+        </mat-form-field>
+      </div>
+      <div class="row  ml-3">
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส A</mat-label>
+          <input matInput [(ngModel)]="realVminA4" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส B</mat-label>
+          <input matInput [(ngModel)]="realVminB4" (change)="calload()">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>แรงดันปลายสาย เฟส C</mat-label>
+          <input matInput [(ngModel)]="realVminC4"(change)="calload()">
+        </mat-form-field>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-raised-button color="primary" (click)="onConfirmClick()" tabindex="1">ยืนยัน</button>
+  <button mat-raised-button mat-dialog-close tabindex="-1">ยกเลิก</button>
+</mat-dialog-actions>
