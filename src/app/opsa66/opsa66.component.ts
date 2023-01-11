@@ -98,6 +98,7 @@ export class OPSA66Component implements OnInit, AfterViewInit {
 
   // myBarClsd: Chart;
   // BarMat: Chart;
+  
   testArry = { '100': 20 };
   trAllReg: any;
   option = "7";
@@ -248,6 +249,7 @@ export class OPSA66Component implements OnInit, AfterViewInit {
     { value: 3, viewvalue: 'N+R' },
 
   ];
+  checked = false;
 
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer, private router: Router, private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) {
     router.events.subscribe((event: RouterEvent) => {
@@ -795,7 +797,7 @@ export class OPSA66Component implements OnInit, AfterViewInit {
       this.TrTotalProblem = this.TrTotalProblem + this.problemPEA[i]['nTR'];
     }
 
-    regionsLabel = ['วัดโหลด/จัดทำแผน', 'ปรับปรุงแล้วในปี 64', 'ผลการรันผิดปกติ'];
+    regionsLabel = ['วัดโหลด/จัดทำแผน', 'ปรับปรุงแล้วในปี 65', 'ผลการรันผิดปกติ'];
 
     var chartData = {};
     chartData = {
@@ -2945,7 +2947,7 @@ export class OPSA66Component implements OnInit, AfterViewInit {
   public getTrData = () => {
     // this.peaCode = "G00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode == 'Z00000' || this.peaCode == 'B00000') {
-      this.configService.getTr('opsa66/TR.php?condition=' + this.condition + '&peaCode0=' + this.peaCode)
+      this.configService.getTr('opsa66/TR2.php?condition=' + this.condition + '&peaCode0=' + this.peaCode+'&checked=' + this.checked)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
         .subscribe(res => {
           // this.dataSource.paginator = this.paginator1;

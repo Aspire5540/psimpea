@@ -39,7 +39,7 @@ export class Uploadopsa2Component implements OnInit {
     // this.peaCode = 'D00000'; 
   }
   checkAutho() {
-    return true;
+    // return true;
     this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";
     if (this.peaCode == this.autoPeaCod) {
       return true;
