@@ -165,6 +165,18 @@
     <button mat-raised-button mat-dialog-close tabindex="-1">{{cancelButtonText}}</button>
   </mat-dialog-actions>
 </mat-dialog-content>
+</div>
 
-
+<div *ngIf="choice==6">
+  <mat-dialog-content>
+    <h1 mat-dialog-title>สาเหตุที่ปฏิเสธงาน</h1>
+    <mat-form-field>
+      <mat-label>ข้อมูล</mat-label>
+      <input matInput [(ngModel)]="newComment">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="onConfirmClick()" tabindex="1">{{confirmButtonText}}</button>
+    <button mat-raised-button mat-dialog-close tabindex="-1">{{cancelButtonText}}</button>
+  </mat-dialog-actions>
 </div>

@@ -46,6 +46,7 @@ export class JobapproveComponent implements OnInit {
   chartData: any;
   chartTitle: string;
   selectAppChoice = '';
+  selJobStatus = '';
   budjets = [];
   trObj = {};
   dataTypes = [
@@ -60,14 +61,21 @@ export class JobapproveComponent implements OnInit {
     { value: '', viewValue: 'ทั้งหมด' },
 
   ];
+  jobreqStatus = [
+    { value: 0, viewValue: 'ยกเลิก' },
+    { value: 1, viewValue: 'อนุมัติ' },
+    { value: 2, viewValue: 'ปฏิเสธ' },
+
+  ];
   autoPeaCod = '';
   selPea = '';
+  wbsdata = '';
   totalWbs = 0;
   selBudjet = ['', ''];
   selected = 2;
   nWbs = 0;
   choice: number;
-  displayedColumns = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'causeName', 'solveMet', 'note', 'workCostPln', 'rename', 'reTr', 'app','del', 'ldcad'];
+  displayedColumns = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'causeName', 'solveMet', 'note', 'workCostPln', 'comment', 'rename', 'reTr', 'app','del', 'ldcad'];
   displayedColumns1 = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'totalcost', 'matCostInPln', 'workCostPln', 'appNo', 'appDoc','reWBS','del'];
   notes = ['1.งานร้องเรียน', '2.PM/PS', '3.งานเร่งด่วน', '4.งานปกติ']
   @ViewChild('paginator', { static: false }) paginator: MatPaginator;
@@ -186,7 +194,7 @@ export class JobapproveComponent implements OnInit {
     this.dataSource1.filter = (filterValue).trim().toLowerCase();
   }
   selWbs(wbsdata) {
-    this.configService.postdata2('addjob.php', { wbs: wbsdata.wbs, status: 1 }).subscribe((data => {
+    this.configService.postdata2('addjob.php', { wbs: wbsdata.wbs, status: 1, comment: ''}).subscribe((data => {
       if (data['status'] == 1) {
         this.getData(this.selPea, this.selBudjet);
         this.rdsumcost();
@@ -416,7 +424,7 @@ export class JobapproveComponent implements OnInit {
   }
   appWbs(wbsdata) {
     //console.log(wbsdata);
-    this.configService.postdata2('addjob.php', { wbs: wbsdata.wbs, status: 0 }).subscribe((data => {
+    this.configService.postdata2('addjob.php', { wbs: wbsdata.wbs, status: 0, comment: '' }).subscribe((data => {
       if (data['status'] == 1) {
         this.getData(this.selPea, this.selBudjet);
         this.rdsumcost();
@@ -442,6 +450,15 @@ export class JobapproveComponent implements OnInit {
   selectApprove(event) {
     this.selectAppChoice = event.value;
     this.getData(this.selPea, this.selBudjet);
+  }
+  selectjobstatus(event) {
+      this.selJobStatus = event.value;
+      if(event.value == 1){
+        this.selWbs;
+      }
+      else if(event.value == 0){
+        this.appWbs;
+      }
   }
   selectBudget(event) {
 
@@ -530,6 +547,20 @@ export class JobapproveComponent implements OnInit {
 
     }))
   }
+  reComment(wbsdata) {
+    console.log(wbsdata.wbs);
+    wbsdata.status = 2;
+    this.configService.postdata2('reComment.php', wbsdata).subscribe((data => {
+      if (data['status'] == 1) {
+        //this.getData();
+        this.getData(this.selPea, this.selBudjet);
+        alert("แก้ไขข้อมูลแล้วเสร็จ");
+      } else {
+        alert(data['data']);
+      }
+
+    }))
+  }
   openDialog(wbs, choice): void {
     // console.log("open",choice,wbs);
     this.choice = choice;
@@ -546,6 +577,7 @@ export class JobapproveComponent implements OnInit {
         if (this.choice == 3) { this.reTr(wbsdata); }
         if (this.choice == 4) { this.delAppWbs(wbsdata); }
         if (this.choice == 5) { this.reAppWbs(wbsdata); }
+        if (this.choice == 6) { this.reComment(wbsdata); }
       }
     });
   }

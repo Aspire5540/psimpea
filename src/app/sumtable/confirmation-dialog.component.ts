@@ -39,6 +39,7 @@ export class ConfirmationDialog {
   totalcost:number;
   matCostInPln:number;
   workCostPln:number;
+  newComment:string;
   constructor(private uploadService: FileuploadService,
     @Inject(MAT_DIALOG_DATA) private data: any,
     private dialogRef: MatDialogRef<ConfirmationDialog>) {
@@ -67,6 +68,7 @@ export class ConfirmationDialog {
     this.totalcost=data.wbs.totalcost;
     this.matCostInPln=data.wbs.matCostInPln; 
     this.workCostPln= Math.round(data.wbs.workCostPln * 100) / 100;
+    this.newComment=data.wbs.comment;
 
 
       }
@@ -96,6 +98,7 @@ export class ConfirmationDialog {
     this.wbs["totalcost"]=this.totalcost;
     this.wbs["matCostInPln"]=this.matCostInPln;
     this.wbs["workCostPln"]=this.workCostPln;
+    this.wbs["newComment"]=this.newComment;
 
     this.dialogRef.close(this.wbs);
   }

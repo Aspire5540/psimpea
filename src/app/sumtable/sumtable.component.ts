@@ -66,6 +66,7 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
   appStatus=[
     {value: 0, viewValue: 'ยังไม่อนุมัติ'},
     {value: 1, viewValue: 'อยู่ระหว่างขออนุมัติฯ'},
+    {value: 2, viewValue: 'ปฏิเสธ'},
     {value: '', viewValue: 'ทั้งหมด'},
 
   ];

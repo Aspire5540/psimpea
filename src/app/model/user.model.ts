@@ -79,6 +79,7 @@ export interface jobreq {
   note: string;
   user: string;
   workCostPln: number;
+  comment: string;
 
 }
 export interface jobprogress {

@@ -206,6 +206,11 @@
                 <td class="table-lg" mat-cell *matCellDef="let jobreq"> {{jobreq.workCostPln | number}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="comment">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>สาเหตุการปฏิเสธ</th>
+                <td class="table-lg" mat-cell *matCellDef="let jobreq"> {{jobreq.comment}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="rename">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
                 <td class="table-lg" mat-cell *matCellDef="let jobreq">
@@ -221,7 +226,76 @@
                 </td>
               </ng-container>
 
+              <!-- <ng-container matColumnDef="app"> 
+                    <th class="table-lg" mat-header-cell *matHeaderCellDef> </th>
+                    <td class="table-lg" mat-cell *matCellDef="let jobreq">
+                    <mat-label>ผลการอนุมัติ</mat-label>
+                    <mat-select (selectionChange)="selectjobstatus($event)">
+                      <mat-option *ngFor="let status of jobreqStatus" [value]="status.value">
+                        {{status.viewValue}}
+                        <div *ngIf="jobreq.status == 0">
+                          <button type="button" class="btn btn-success btn-fw btn-sm"
+                          (click)="selWbs(jobreq)"><i class="fa fa-plus-square"></i>อนุมัติ
+                          </button>
+                          <button type="button" class="btn btn-black btn-fw btn-sm"
+                          (click)="selWbs(jobreq)"><i class="fa fa-plus-square"></i>ปฏิเสธ
+                          </button>                         
+                        </div>
+                        <div *ngIf="jobreq.status == 1">
+                          <button type="button" class="btn btn-warning btn-fw btn-sm"
+                          (click)="selWbs(jobreq)"><i class="fa fa-plus-square"></i>ยกเลิก
+                          </button>
+                          <button type="button" class="btn btn-black btn-fw btn-sm"
+                          (click)="selWbs(jobreq)"><i class="fa fa-plus-square"></i>ปฏิเสธ
+                          </button> </div>
+                      </mat-option>
+                    </mat-select>
+                  </td>
+              </ng-container> -->
+
               <ng-container matColumnDef="app">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef> </th>
+                <td class="table-lg" mat-cell *matCellDef="let jobreq">
+                  <div *ngIf="jobreq.status == 0">
+                          <button type="button" class="btn btn-success btn-fw btn-sm"
+                          (click)="selWbs(jobreq)"><i class="fa fa-plus-square"></i>อนุมัติ
+                          </button>
+                          <button type="button" class="btn btn-black btn-fw btn-sm"
+                          (click)="openDialog(jobreq,6)"><i class="fa fa-trash-o"></i>ปฏิเสธ
+                          </button>                         
+                  </div>
+                  <div *ngIf="jobreq.status == 1">
+                          <button type="button" class="btn btn-warning btn-fw btn-sm"
+                          (click)="appWbs(jobreq)"><i class="fa fa-minus-square"></i>ยกเลิก
+                          </button>
+                          <button type="button" class="btn btn-black btn-fw btn-sm"
+                          (click)="openDialog(jobreq,6)"><i class="fa fa-trash-o"></i>ปฏิเสธ
+                          </button> 
+                  </div>
+                  <div *ngIf="jobreq.status == 2">
+                          <button type="button" class="btn btn-success btn-fw btn-sm"
+                          (click)="selWbs(jobreq)"><i class="fa fa-plus-square"></i>อนุมัติ
+                          </button>
+                          <button type="button" class="btn btn-warning btn-fw btn-sm"
+                          (click)="appWbs(jobreq)"><i class="fa fa-minus-square"></i>ยกเลิก
+                          </button> 
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="app">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef> </th>
+                <td class="table-lg" mat-cell *matCellDef="let jobreq">
+                  <div *ngIf="jobreq.status == 0"><button type="button" class="btn btn-success btn-fw btn-sm"
+                      (click)="selWbs(jobreq)"><i class="fa fa-plus-square"></i>อนุมัติ</button></div>
+                  <div *ngIf="jobreq.status == 1"><button type="button" class="btn btn-warning btn-fw btn-sm"
+                      (click)="appWbs(jobreq)"><i class="fa fa-minus-square"></i>ยกเลิก</button></div>
+                  <div *ngIf="jobreq.status == 2"><button type="button" class="btn btn-warning btn-fw btn-sm"
+                      (click)="appWbs(jobreq)"><i class="fa fa-minus-square"></i>ปฏิเสธ</button></div>
+                </td>
+              </ng-container> -->
+
+             <!-- <ng-container matColumnDef="app">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef> </th>
                 <td class="table-lg" mat-cell *matCellDef="let jobreq">
                   <div *ngIf="jobreq.status == 0"><button type="button" class="btn btn-success btn-fw btn-sm"
@@ -229,7 +303,8 @@
                   <div *ngIf="jobreq.status == 1"><button type="button" class="btn btn-warning btn-fw btn-sm"
                       (click)="appWbs(jobreq)"><i class="fa fa-minus-square"></i>ยกเลิก</button></div>
                 </td>
-              </ng-container>
+              </ng-container> -->
+
               <ng-container matColumnDef="del">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
                 <td class="table-lg" mat-cell *matCellDef="let jobreq">
@@ -238,6 +313,7 @@
                
                 </td>
               </ng-container>
+
               <ng-container matColumnDef="ldcad">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header></th>
                 <td class="table-lg" mat-cell *matCellDef="let jobreq"> <label

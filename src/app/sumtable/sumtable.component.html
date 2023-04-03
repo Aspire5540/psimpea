@@ -541,6 +541,9 @@
               <td class="table-lg" mat-cell *matCellDef="let wbsdata">
                 <div *ngIf="wbsdata['status'] == 1"><label class="badge badge-warning"
                     style="font-size: small;">กำลังดำเนินการ</label> </div>
+
+                <div *ngIf="wbsdata['status'] == 2"><label class="badge badge-warning"
+                    style="font-size: small;">ปฏิเสธเนื่องจาก: {{wbsdata.comment}} </label> </div>
               </td>
             </ng-container>
 
