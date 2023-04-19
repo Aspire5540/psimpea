@@ -704,16 +704,29 @@
                   <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.PLoadTOT | number:'1.2-2'}}</td>
                 </ng-container>
 
+                <ng-container matColumnDef="PLoadTOTnow">
+                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> % Load OSPA </th>
+                  <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.PLoadTOT_Now | number:'1.2-2'}}</td>
+                </ng-container>
+
                 <ng-container matColumnDef="minV">
                   <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> แรงดัน<BR>ปลายสาย </th>
                   <td class="table-lg" mat-cell *matCellDef="let trdata"> {{trdata.minV | number:'1.2-2'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="minVnow">
+                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> แรงดัน<BR>ปลายสาย OPSA </th>
+                  <td class="table-lg" mat-cell *matCellDef="let trdata"> {{trdata.minV_Now | number:'1.2-2'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Ub">
                   <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> %UB </th>
                   <td class="table-lg" mat-cell *matCellDef="let trdata"> {{trdata.Ub | number:'1.2-2'}} </td>
                 </ng-container>
-
+                <ng-container matColumnDef="Ubnow">
+                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> %UB OPSA </th>
+                  <td class="table-lg" mat-cell *matCellDef="let trdata"> {{trdata.Ub_Now | number:'1.2-2'}} </td>
+                </ng-container>
 
                 <ng-container matColumnDef="wbs">
                   <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>หมายเลข WBS/ใบสั่ง</th>
