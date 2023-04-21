@@ -694,6 +694,11 @@
                   <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.kva}}</td>
                 </ng-container>
 
+                <ng-container matColumnDef="FEEDERID">
+                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> FeederID </th>
+                  <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.FEEDERID}}</td>
+                </ng-container>
+
                 <ng-container matColumnDef="Location">
                   <th class="table-lg" mat-header-cell *matHeaderCellDef>สถานที่ติดตั้ง</th>
                   <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.LOCATION}} </td>

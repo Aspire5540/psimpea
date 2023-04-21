@@ -103,7 +103,7 @@ export class OPSA66Component implements OnInit, AfterViewInit {
   trAllReg: any;
   option = "7";
   vcaredate=""
-  displayedColumns1 = ['PEANAME', 'PEA_TR', 'kva', 'Location', 'PLoadTOT','PLoadTOTnow', 'minV', 'minVnow', 'Ub','Ubnow', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'plancat'];
+  displayedColumns1 = ['PEANAME', 'PEA_TR', 'kva', 'FEEDERID', 'Location', 'PLoadTOT','PLoadTOTnow', 'minV', 'minVnow', 'Ub','Ubnow', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'plancat'];
 
   displayedColumns2 = ['PEA_TR',
     'PEANAME',
