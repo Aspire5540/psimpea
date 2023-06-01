@@ -190,7 +190,7 @@ export class Uploadopsa2Component implements OnInit {
     }))
   }
   uploadmb52() {
-    this.configService.postdata2('uploadsql/mb52tosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/mb52OPSA2tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
@@ -201,7 +201,7 @@ export class Uploadopsa2Component implements OnInit {
     }))
   }
   uploadcn52n() {
-    this.configService.postdata2('uploadsql/cn52ntosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/cn52nOPSA2tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
@@ -212,7 +212,7 @@ export class Uploadopsa2Component implements OnInit {
     }))
   }
   uploadzcn52n() {
-    this.configService.postdata2('uploadsql/zcn52ntosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/zcn52nOPSA2tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
