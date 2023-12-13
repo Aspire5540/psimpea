@@ -464,6 +464,11 @@
                 <td class="table-lg" mat-cell *matCellDef="let appJob"> {{appJob.workCostPln| number}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="lastStatus">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>สถานะงาน</th>
+                <td class="table-lg" mat-cell *matCellDef="let appJob"> {{appJob.lastStatus}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="appNo">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>อนุมัติครั้งที่</th>
                 <td class="table-lg" mat-cell *matCellDef="let appJob"> {{appJob.appNo}} </td>

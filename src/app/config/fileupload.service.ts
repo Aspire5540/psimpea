@@ -76,6 +76,11 @@ export class FileuploadService {
     data.append('region',GlobalConstants.region);
     return this.http.post<any>(uploadURL, data);
   }
+  public uploadMS(data) {
+    let uploadURL = `${this.SERVER_URL}/uploadMS.php`; 
+    data.append('region',GlobalConstants.region);
+    return this.http.post<any>(uploadURL, data);
+  }
   public uploadPMOPSA(data) {
     let uploadURL = `${this.SERVER_URL}/opsa/uploadPM.php`; 
     data.append('region',GlobalConstants.region);

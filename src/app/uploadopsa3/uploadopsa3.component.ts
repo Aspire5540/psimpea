@@ -10,14 +10,15 @@ import { FileuploadService } from '../config/fileupload.service';
 import{ GlobalConstants } from '../common/global-constants';
 
 @Component({
-  selector: 'app-upload',
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.scss']
+  selector: 'app-uploadopsa3',
+  templateUrl: './uploadopsa3.component.html',
+  styleUrls: ['./uploadopsa3.component.scss']
 })
-export class UploadComponent implements OnInit {
+export class Uploadopsa3Component implements OnInit {
+
   @ViewChild('f', { static: false }) registerForm: NgForm;
   @ViewChild('pm', { static: false }) pmForm: NgForm;
-  @ViewChild('ldcad', { static: false }) ldcadForm: NgForm;
+  @ViewChild('opsa', { static: false }) opsaForm: NgForm;
 
   // URL = "http://127.0.0.1/psisservice/uploadssap/";
   uploadDocResponse = '';
@@ -28,7 +29,6 @@ export class UploadComponent implements OnInit {
   uploadDocResponse6 = '';
   uploadDocResponse7 = '';
   uploadDocResponse8 = '';
-  uploadDocResponse9 = '';
   autoPeaCod = '';
   constructor(private configService: ConfigService, public authService: AuthService, private http: HttpClient, private uploadService: FileuploadService) { }
   peaCode = "";
@@ -36,9 +36,10 @@ export class UploadComponent implements OnInit {
 
   ngOnInit() {
     this.peaCode = localStorage.getItem('peaCode'); 
-    // this.peaCode = 'E00000'; 
+    // this.peaCode = 'D00000'; 
   }
   checkAutho() {
+    // return true;
     this.autoPeaCod=GlobalConstants.regionLetter[GlobalConstants.region]+"00000";
     if (this.peaCode == this.autoPeaCod) {
       return true;
@@ -52,17 +53,17 @@ export class UploadComponent implements OnInit {
     //console.log(event.target.files[0]);
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
-    this.uploadService.uploadZap048(formData).subscribe(res => {
+    this.uploadService.uploadZap048OPSA(formData).subscribe(res => {
       this.uploadDocResponse = res.status;
       //console.log(res);   
     }
     );
   }
-  handleFileLDCAD(event) {
+  handleFileOPSA(event) {
     //console.log(event.target.files[0]);
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
-    this.uploadService.uploadLDCAD(formData).subscribe(res => {
+    this.uploadService.uploadOPSA(formData).subscribe(res => {
       this.uploadDocResponse2 = res.status;
       console.log(this.uploadDocResponse2);
     }
@@ -92,7 +93,7 @@ export class UploadComponent implements OnInit {
     //console.log(event.target.files[0]);
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
-    this.uploadService.uploadPM(formData).subscribe(res => {
+    this.uploadService.uploadPMOPSA(formData).subscribe(res => {
       this.uploadDocResponse4 = res.status;
       //console.log(res);   
     }
@@ -129,20 +130,10 @@ export class UploadComponent implements OnInit {
     }
     );
   }
-  handleFileMS(event) {
-    //console.log(event.target.files[0]);
-    const formData = new FormData();
-    formData.append('avatar', event.target.files[0]);
-    this.uploadService.uploadMS(formData).subscribe(res => {
-      this.uploadDocResponse9 = res.status;
-      //console.log(res);   
-    }
-    );
-  }
 
   onSubmit() {
 
-    this.configService.postdata2('uploadsql/w048tosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/w048OPSA3tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.registerForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
@@ -153,10 +144,10 @@ export class UploadComponent implements OnInit {
     }))
   }
 
-  uploadLDCAD() {
-    this.configService.postdata2('uploadsql/ldcadtosql.php', {}).subscribe((data => {
+  uploadOPSA() {
+    this.configService.postdata2('uploadsql/opsa3tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
-        this.ldcadForm.resetForm();
+        this.opsaForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
       } else {
         alert(data['data']);
@@ -164,10 +155,11 @@ export class UploadComponent implements OnInit {
 
     }))
   }
+
   uploadPEANAME() {
     this.configService.postdata2('uploadsql/peanametosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
-        this.ldcadForm.resetForm();
+        this.opsaForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
       } else {
         alert(data['data']);
@@ -178,7 +170,7 @@ export class UploadComponent implements OnInit {
   uploadPEANAME2() {
     this.configService.postdata2('uploadsql/peaname2tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
-        this.ldcadForm.resetForm();
+        this.opsaForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
       } else {
         alert(data['data']);
@@ -187,18 +179,7 @@ export class UploadComponent implements OnInit {
     }))
   }
   uploadPM() {
-    this.configService.postdata2('uploadsql/PMtosql.php', {}).subscribe((data => {
-      if (data['status'] == 1) {
-        this.pmForm.resetForm();
-        alert("เก็บข้อมูลแล้วเสร็จ");
-      } else {
-        alert(data['data']);
-      }
-
-    }))
-  }
-  uploadMS() {
-    this.configService.postdata2('uploadsql/MStosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/PMOPSA3tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
@@ -209,7 +190,7 @@ export class UploadComponent implements OnInit {
     }))
   }
   uploadmb52() {
-    this.configService.postdata2('uploadsql/mb52tosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/mb52OPSA3tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
@@ -220,7 +201,7 @@ export class UploadComponent implements OnInit {
     }))
   }
   uploadcn52n() {
-    this.configService.postdata2('uploadsql/cn52ntosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/cn52nOPSA3tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");
@@ -231,7 +212,7 @@ export class UploadComponent implements OnInit {
     }))
   }
   uploadzcn52n() {
-    this.configService.postdata2('uploadsql/zcn52ntosql.php', {}).subscribe((data => {
+    this.configService.postdata2('uploadsql/zcn52nOPSA3tosql.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.pmForm.resetForm();
         alert("เก็บข้อมูลแล้วเสร็จ");

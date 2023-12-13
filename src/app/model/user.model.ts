@@ -103,6 +103,7 @@ export interface appJob {
   workCostPln: number;
   totalcost: number;
   matCostInPln: number;
+  lastStatus: string;
   appNo: string;
   appDoc: string;
 

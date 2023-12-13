@@ -86,6 +86,7 @@ import { JobapproveComponent } from './jobapprove/jobapprove.component';
 import { LVProComponent,DialogOverviewExampleDialog } from './lvpro/lvpro.component';
 import { OPSAComponent,DialogOverviewExampleDialog1 } from './opsa/opsa.component';
 import { OPSA66Component,DialogOverviewExampleDialog2 } from './opsa66/opsa66.component';
+import { OPSA67Component,DialogOverviewExampleDialog3 } from './opsa67/opsa67.component';
 import { PsimdashboardComponent } from './psimdashboard/psimdashboard.component';
 import { PhasechkComponent } from './phasechk/phasechk.component';
 import { RoicComponent } from './roic/roic.component';
@@ -98,6 +99,7 @@ import {LoaderserviceService} from './config/loaderservice.service';
 import { EzxComponent } from './ezx/ezx.component';
 import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
 import { Uploadopsa2Component } from './uploadopsa2/uploadopsa2.component';
+import { Uploadopsa3Component } from './uploadopsa3/uploadopsa3.component';
 
 
 @NgModule({
@@ -130,6 +132,7 @@ import { Uploadopsa2Component } from './uploadopsa2/uploadopsa2.component';
     LVProComponent,
     OPSAComponent,
     OPSA66Component,
+    OPSA67Component,
     PsimdashboardComponent,
     PhasechkComponent,
     RoicComponent,
@@ -141,6 +144,7 @@ import { Uploadopsa2Component } from './uploadopsa2/uploadopsa2.component';
     DialogOverviewExampleDialog1,
     DialogOverviewExampleDialog2,
     Uploadopsa2Component,
+    Uploadopsa3Component,
     
   ],
   imports: [

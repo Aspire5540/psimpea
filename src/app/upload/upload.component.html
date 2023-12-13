@@ -129,10 +129,35 @@
       </div>
     </div>
   </div>
+  <div class="col-12 grid-margin">
+    <div class="card">
+      <div class="card-body">     
+        <h1 class="card-title">3. Upload MS </h1>        
+        <form class="form-sample" #ms="ngForm" (ngSubmit)="uploadMS()">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="input-lg" for="file">เลือกไฟล์ MS</label>
+                    <input type="file"
+                           id="file"
+                           name="filename"
+                           (change)="handleFileMS($event)" ngModel required>
+                    <label class="input-lg"> {{uploadDocResponse9}} </label>                  
+                </div>
+            </div>
+          </div>
+            <div class="col-md-3">
+              <button type="submit" [disabled]="!ms.valid" class="btn btn-success mr-2">Submit</button>
+            </div>
+        
+         </form>
+      </div>
+    </div>
+  </div>
 </mat-card-content>
 </mat-card>
 
-<mat-card class="example-card">
+<!-- <mat-card class="example-card">
   <mat-card-header>
     <mat-card-title style="color:black;">Update เพื่อขึ้นระบบใหม่
     </mat-card-title>
@@ -304,6 +329,6 @@
     </div>
   </div>
 </mat-card-content>
-</mat-card>
+</mat-card> -->
 
 </div>
