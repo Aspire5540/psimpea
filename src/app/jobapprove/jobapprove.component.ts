@@ -115,7 +115,7 @@ export class JobapproveComponent implements OnInit {
 
   }
   getTRList() {
-    this.configService.getData('opsa/rdtr.php?').subscribe(res => {
+    this.configService.getData('opsa67/rdtr.php?').subscribe(res => {
       this.trObj = {};
       res["data"].forEach(element => {
         this.trObj[element.PEA_TR] = { 'minV': element.minV, 'Load': element.PLoadTOT, 'Ub': element.Ub }
@@ -220,6 +220,15 @@ export class JobapproveComponent implements OnInit {
     }))
 
   }
+  checkOPSA(filename){
+    if (filename){
+      if(filename.length>0){return true}else{return false}
+    }else{
+      return false
+    }
+    
+  }
+
   getJobProgressPea() {
 
     if (this.selected == 2) {

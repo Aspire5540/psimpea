@@ -184,7 +184,15 @@
               </ng-container>
               <ng-container matColumnDef="tr">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> TR </th>
-                <td class="table-lg" mat-cell *matCellDef="let jobreq">{{jobreq.tr}}</td>
+                <td class="table-lg" mat-cell *matCellDef="let jobreq">
+                  <div *ngIf="checkOPSA(jobreq.opsafile)">
+                    <a target="_blank" rel="noopener noreferrer"
+                      href='{{URL}}/download_file.php?filename={{jobreq.opsafile}}&region={{region}}'>{{jobreq.tr}}</a>
+                  </div>
+                  <div *ngIf="!checkOPSA(jobreq.opsafile)">
+                    {{jobreq.tr}}
+                  </div>
+                  </td>
               </ng-container>
               <ng-container matColumnDef="causeName">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> สาเหตุการดำเนินการ </th>
