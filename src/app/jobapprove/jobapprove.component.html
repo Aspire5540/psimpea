@@ -214,6 +214,11 @@
                 <td class="table-lg" mat-cell *matCellDef="let jobreq"> {{jobreq.workCostPln | number}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="percentWorkCost">
+                <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> % คชจ.หน้างาน </th>
+                <td class="table-lg" mat-cell *matCellDef="let jobreq"> {{jobreq.percentWorkCost | number}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="comment">
                 <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header>สาเหตุการปฏิเสธ</th>
                 <td class="table-lg" mat-cell *matCellDef="let jobreq"> {{jobreq.comment}} </td>

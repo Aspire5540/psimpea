@@ -75,7 +75,7 @@ export class JobapproveComponent implements OnInit {
   selected = 2;
   nWbs = 0;
   choice: number;
-  displayedColumns = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'causeName', 'solveMet', 'note', 'workCostPln', 'comment', 'rename', 'reTr', 'app','del', 'ldcad'];
+  displayedColumns = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'causeName', 'solveMet', 'note', 'workCostPln','percentWorkCost', 'comment', 'rename', 'reTr', 'app','del', 'ldcad'];
   displayedColumns1 = ['wbs', 'jobName', 'mv', 'lv', 'tr', 'totalcost', 'matCostInPln', 'workCostPln', 'lastStatus', 'appNo', 'appDoc','reWBS','del'];
   notes = ['1.งานร้องเรียน', '2.PM/PS', '3.งานเร่งด่วน', '4.งานปกติ']
   @ViewChild('paginator', { static: false }) paginator: MatPaginator;

@@ -21,6 +21,7 @@ export class ConfirmationDialog {
   newMv:number;
   newLv:number;
   newTr:number;
+  newpercentWorkCost:number;
   newPeaTr:string;
   newKva:number;
   newVin:number;
@@ -53,6 +54,7 @@ export class ConfirmationDialog {
     this.newMv=data.wbs.mv;
     this.newLv=data.wbs.lv;
     this.newTr=data.wbs.tr;
+    this.newpercentWorkCost=data.wbs.percentWorkCost;
     this.newNday=data.wbs.nday;
     this.newPm=data.wbs.pm;
     this.newPeaTr=data.wbs.peatr;
@@ -80,6 +82,7 @@ export class ConfirmationDialog {
     this.wbs["newMv"]=this.newMv;
     this.wbs["newLv"]=this.newLv;
     this.wbs["newTr"]=this.newTr;
+    this.wbs["newpercentWorkCost"]=this.newpercentWorkCost;
     this.wbs["newNday"]=this.newNday;
     this.wbs["newPm"]=this.newPm;
     this.wbs["newPeaTr"]=this.newPeaTr;
