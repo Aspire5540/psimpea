@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+
 import { Observable ,  BehaviorSubject }   from 'rxjs';
 
 import { wbsdata,jobreq,trdata,appJob,jobprogress,meterdata,meterdata2,
@@ -7,6 +9,7 @@ import { wbsdata,jobreq,trdata,appJob,jobprogress,meterdata,meterdata2,
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import{ GlobalConstants } from '../common/global-constants';
+import {GetCookie} from '../common/cookies'
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -23,15 +26,19 @@ export class ConfigService {
   hostUrl = 'http://172.30.212.189/psisservice/';
   //hostUrl = 'http://172.30.212.148/psisservice/';
   // hostUrl = 'http://127.0.0.1/psisservice/';
-  
-  //headers = new Headers();
-  //options = new RequestOptions()
+  authUrl ='http://172.30.212.148:4000'
+  redirectUrl=window.location.origin;
+  // headers = new Headers();
+  // options = new RequestOptions()
   subdomain = "";
   constructor(private http: HttpClient) {
+   
+    // this.http.
     //this.headers.append('Content-Type','application/x-www-form-urlencoded');
     //this.options.headers = this.headers;
     //GlobalConstants.region = "n2";
    }
+
    getData(endpoint){
      return this.http.get(this.hostUrl+endpoint+"region="+GlobalConstants.region);
    }
@@ -87,6 +94,34 @@ export class ConfigService {
     return this.http2.post(this.hostUrl+endpoint,JSON.stringify(params),this.options).pipe(map(res=>res.json()));
   }
   */
+  getToken (code){
+
+    let options = {
+      headers: new HttpHeaders().set(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+      )
+    };
+    const body = new URLSearchParams();
+    body.set('code', code);
+    body.set('url', this.redirectUrl);
+
+    return this.http.post(this.authUrl+"/gettoken",body.toString(),options);
+  }
+getUserProfile(token){
+  let options = {
+    headers: new HttpHeaders().set(
+      'Content-Type',
+      'application/x-www-form-urlencoded'
+    )
+  };
+  const body = new URLSearchParams();
+  body.set('token', token);
+  body.set('url', this.redirectUrl);
+
+  return this.http.post(this.authUrl+"/getprofile",body.toString(),options);
+}
+
  postdata (endpoint,params){
   return this.http.post(this.hostUrl+endpoint,JSON.stringify(params));
 }
@@ -103,7 +138,8 @@ export class ConfigService {
   }
   */
   changeMessage() {
-    this.messageSource.next(localStorage.getItem('name'))
+    // this.messageSource.next(localStorage.getItem('name'))
+    this.messageSource.next(GetCookie('name'))
   }
   exportAsExcelFile(json: any[], excelFileName: string): void {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);

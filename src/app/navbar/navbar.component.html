@@ -19,7 +19,7 @@
   <div class="navbar-menu-wrapper d-flex align-items-center">
     
     
-    <h4>Power System Improvement Management</h4>
+    <h4>{{region}} : Power System Improvement Management</h4>
     <!--
     <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
       <li class="nav-item">
@@ -182,7 +182,7 @@
             Check Inbox
           </a>
           -->
-          <a class="dropdown-item" routerLink="/login" routerLinkActive="active">
+          <a class="dropdown-item" (click)="logout()">
             Sign Out
           </a>
         </div>

@@ -9,7 +9,7 @@ import { Chart } from 'chart.js';
 import { ConfirmationDialog } from '../sumtable/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import{ GlobalConstants } from '../common/global-constants';
-
+import {GetCookie} from '../common/cookies'
 @Component({
   selector: 'app-jobapprove',
   templateUrl: './jobapprove.component.html',
@@ -89,7 +89,7 @@ export class JobapproveComponent implements OnInit {
 
     //this.getData(this.selPea,this.selBudjet);
     //this.rdsumcost();
-    this.peaCode = localStorage.getItem('peaCode');
+    this.peaCode = GetCookie('peaCode');
     // this.peaCode='Z00000'
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -157,7 +157,7 @@ export class JobapproveComponent implements OnInit {
 
   }
   getAppData = (filter) => {
-    this.configService.getAppJob('rdAppJob.php?peaEng=' + localStorage.getItem('peaEng') + '&filter1=' + filter[0] + '&filter2=' + filter[1])
+    this.configService.getAppJob('rdAppJob.php?peaEng=' + GetCookie('peaEng') + '&filter1=' + filter[0] + '&filter2=' + filter[1])
       .subscribe(res => {
         this.dataSource1.paginator = this.paginator1;
         this.dataSource1.sort = this.sort1;
@@ -186,7 +186,6 @@ export class JobapproveComponent implements OnInit {
       })
   }
   applyFilter(filterValue: string) {
-    //console.log((filterValue+" "+localStorage.getItem('peaEng')).trim().toLowerCase());
     this.dataSource.filter = (filterValue).trim().toLowerCase();
   }
   applyFilter1(filterValue: string) {

@@ -38,6 +38,7 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../format-datepicker';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GlobalConstants } from '../common/global-constants';
+import {GetCookie} from '../common/cookies';
 // import { ConsoleReporter } from 'jasmine';
 // import { Console } from 'console';
 
@@ -271,7 +272,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
     this.getinfo();
     this.getJobProgressPea2();
 
-    this.peaCode = localStorage.getItem('peaCode');
+    this.peaCode = GetCookie('peaCode');
     // this.peaCode='C06101';
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
@@ -3400,7 +3401,7 @@ export class OPSAComponent implements OnInit, AfterViewInit {
   //     })
   // }
   applyFilter(filterValue: string) {
-    // console.log((filterValue + " " + localStorage.getItem('peaEng')).trim().toLowerCase());
+
     this.dataSource1.filter = (filterValue).trim().toLowerCase();
   }
   applyFilter1(filterValue: string) {
@@ -3487,10 +3488,10 @@ export class OPSAComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     var input = this.registerForm.value;
-    input["user"] = localStorage.getItem('name');
+    input["user"] = GetCookie('name');
     // input["peaCode"] = "B06101";
     // input["peaCode"] = "B01101";
-    input["peaCode"] = localStorage.getItem('peaCode');
+    input["peaCode"] = GetCookie('peaCode');
     input["nDay"] = this.nDate;
     this.getMat(this.choice);
     // console.log(this.registerForm.value);

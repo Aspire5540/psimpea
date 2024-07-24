@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot,Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { GetCookie } from './common/cookies';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +25,13 @@ verifyLogin(url) : boolean{
 }
 public isLoggedIn(): boolean{
     let status = false;
-    if( localStorage.getItem('isLoggedIn') == "true"){
+    if( GetCookie('isLoggedIn').search("true")>-1){
       status = true;
     }
     else{
       status = false;
     }
+    console.log("stat",status)
     return status;
 }
 }

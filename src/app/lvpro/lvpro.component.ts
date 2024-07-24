@@ -38,7 +38,7 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../format-datepicker';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GlobalConstants } from '../common/global-constants';
-
+import {GetCookie} from '../common/cookies';
 
 
 
@@ -248,7 +248,7 @@ export class LVProComponent implements OnInit,AfterViewInit {
     this.getinfo();
     this.getJobProgressPea2();
     
-    this.peaCode = localStorage.getItem('peaCode');
+    this.peaCode = GetCookie('peaCode');
     this.selPeapeaCode = this.peaCode.substr(0, 4);
   }
   navigationInterceptor(event: RouterEvent): void {
@@ -3132,7 +3132,6 @@ export class LVProComponent implements OnInit,AfterViewInit {
   //     })
   // }
   applyFilter(filterValue: string) {
-    // console.log((filterValue + " " + localStorage.getItem('peaEng')).trim().toLowerCase());
     this.dataSource1.filter = (filterValue).trim().toLowerCase();
   }
   applyFilter1(filterValue: string) {
@@ -3219,10 +3218,10 @@ export class LVProComponent implements OnInit,AfterViewInit {
 
   onSubmit() {
     var input = this.registerForm.value;
-    input["user"] = localStorage.getItem('name');
+    input["user"] = GetCookie('name');
     // input["peaCode"] = "B06101";
     // input["peaCode"] = "B01101";
-    input["peaCode"] = localStorage.getItem('peaCode');
+    input["peaCode"] = GetCookie('peaCode');
     input["nDay"] = this.nDate;
     this.getMat(this.choice);
     // console.log(this.registerForm.value);

@@ -35,7 +35,7 @@ import {RoicComponent} from './roic/roic.component';
 import {EzxComponent} from './ezx/ezx.component'
 //,canActivate:[AuthGuard]
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  // { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent,canActivate:[AuthGuard]},
   { path: 'forms', component: FormsComponent },
   { path: 'buttons', component: ButtonsComponent },
@@ -71,7 +71,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, { useHash: false })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

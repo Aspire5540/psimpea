@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DocumentCreator } from "./newdox";
 import { saveAs } from "file-saver";
 import { Document, Packer, Paragraph, TextRun } from "docx";
-
+import {GetCookie} from '../common/cookies';
 
 @Component({
   selector: 'app-ezx',
@@ -73,7 +73,8 @@ export class EzxComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.peaCode = localStorage.getItem('peaCode');
+    // this.peaCode = localStorage.getItem('peaCode');
+    this.peaCode = GetCookie('peaCode');
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.filteredDevice = this.control.valueChanges.pipe(
@@ -143,8 +144,8 @@ export class EzxComponent implements OnInit {
   onSubmit() {
 
     var wdata = this.registerForm.value;
-    wdata["user"] = localStorage.getItem('name');
-    wdata["peaCode"] = localStorage.getItem('peaCode');
+    wdata["user"] = GetCookie('name');
+    wdata["peaCode"] = GetCookie('peaCode');
     wdata["indexKey"] = this.indexKey;
 
     this.configService.postdata2('ezx/wrJob.php', wdata).subscribe((data => {
@@ -250,7 +251,7 @@ export class EzxComponent implements OnInit {
   }
   getJobList() {
 
-    this.configService.postdata2('ezx/rdjob.php', {peaCode: localStorage.getItem('peaCode')}).subscribe((data => {
+    this.configService.postdata2('ezx/rdjob.php', {peaCode: GetCookie('peaCode')}).subscribe((data => {
       this.joblist = [];
       if (data["status"] == 1) {
         data["data"].forEach(element => {

@@ -10,6 +10,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationDialog } from './confirmation-dialog.component';
 import { GlobalConstants } from '../common/global-constants';
+import { GetCookie } from '../common/cookies';
 @Component({
   selector: 'app-sumtable',
   templateUrl: './sumtable.component.html',
@@ -25,9 +26,9 @@ export class SumtableComponent implements OnInit {
   projects = [];
   causeNames = [];
   solveMets = [];
-  userPeaCode=localStorage.getItem('peaCode');
+  userPeaCode=GetCookie('peaCode');
   
-  peaCode=localStorage.getItem('peaCode');
+  peaCode=GetCookie('peaCode');
   
   nwbsPTDD: number;
   workCostPerPTDD: number;
@@ -104,7 +105,7 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
       this.peaCode='B00000';
     }
    //------------------------------
-   this.peaCode = localStorage.getItem('peaCode');
+   this.peaCode = GetCookie('peaCode');
   //  this.peaCode='I00000';
     if (this.userPeaCode.slice(-1)=='1' || this.userPeaCode.slice(-1)=='0'){
       this.userPeaCode=this.userPeaCode.substr(0,4);
@@ -191,7 +192,7 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
 
 
     this.wdata = this.registerForm.value;
-    this.wdata["user"] = localStorage.getItem('name');
+    this.wdata["user"] = GetCookie('name');
     this.wdata["peaCode"] = this.peaCode;
     //console.log(this.wdata);
 
@@ -362,8 +363,7 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
     
   }
   wbsChange(event) {
-  
-    if (event.target.value.toUpperCase().search(".HK.")>=0){
+    if (event.target.value.toUpperCase().indexOf(".HK.")!==-1){
       alert("ระงับการอนมุัติงบประมาณ I67-B.HK ชั่วคราว เนื่องจากงบประมาณหมด อยู่ระหว่างของบประมาณเพิ่มเติม")
       this.registerForm.resetForm();
       return
@@ -390,7 +390,7 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
     );
   }
   getJobProgress() {
-    this.configService.postdata2('rdprogress.php', { peaEng: localStorage.getItem('peaEng') }).subscribe((data => {
+    this.configService.postdata2('rdprogress.php', { peaEng: GetCookie('peaEng') }).subscribe((data => {
       if (data['status'] == 1) {
         this.nwbsPTDD = data['data'].PTDD.nwbs;
         this.workCostPerPTDD = Number(data['data'].PTDD.workCostAct) / Number(data['data'].PTDD.workCostPln) * 100;

@@ -8,7 +8,7 @@ import { AuthService } from '../config/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { FileuploadService } from '../config/fileupload.service';
 import{ GlobalConstants } from '../common/global-constants';
-
+import {GetCookie} from '../common/cookies';
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -35,7 +35,7 @@ export class UploadComponent implements OnInit {
 
 
   ngOnInit() {
-    this.peaCode = localStorage.getItem('peaCode'); 
+    this.peaCode = GetCookie('peaCode'); 
     // this.peaCode = 'E00000'; 
   }
   checkAutho() {
