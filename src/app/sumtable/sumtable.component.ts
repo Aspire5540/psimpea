@@ -363,11 +363,11 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
     
   }
   wbsChange(event) {
-    if (event.target.value.toUpperCase().indexOf(".HK.")!==-1){
-      alert("ระงับการอนมุัติงบประมาณ I67-B.HK ชั่วคราว เนื่องจากงบประมาณหมด อยู่ระหว่างของบประมาณเพิ่มเติม")
-      this.registerForm.resetForm();
-      return
-    }
+    // if (event.target.value.toUpperCase().indexOf(".HK.")!==-1){
+    //   alert("ระงับการอนมุัติงบประมาณ I67-B.HK ชั่วคราว เนื่องจากงบประมาณหมด อยู่ระหว่างของบประมาณเพิ่มเติม")
+    //   this.registerForm.resetForm();
+    //   return
+    // }
     this.chgWbs = 1;
 
 

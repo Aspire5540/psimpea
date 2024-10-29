@@ -97,7 +97,7 @@ export class ConfirmationDialog {
     this.wbs["newLen"]=this.newLen;
     this.wbs["filename"]=this.uploadFilename;
     this.wbs["fileDocname"]=this.uploadFileDocname;
-    
+    this.wbs["opsafile"] =this.uploadFileOpsa
     this.wbs["totalcost"]=this.totalcost;
     this.wbs["matCostInPln"]=this.matCostInPln;
     this.wbs["workCostPln"]=this.workCostPln;
