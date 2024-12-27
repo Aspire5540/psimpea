@@ -147,10 +147,10 @@ import { Uploadopsa4Component } from './uploadopsa4/uploadopsa4.component';
     DialogOverviewExampleDialog1,
     DialogOverviewExampleDialog2,
     DialogOverviewExampleDialog3,
+    DialogOverviewExampleDialog4,
     Uploadopsa2Component,
     Uploadopsa3Component,
-    Uploadopsa4Component,
-    
+    Uploadopsa4Component
   ],
   imports: [
     BrowserModule,
@@ -205,7 +205,7 @@ import { Uploadopsa4Component } from './uploadopsa4/uploadopsa4.component';
     //HttpModule,
     NgApexchartsModule,
   ],
-  entryComponents: [ConfirmationDialog,ConfirmdlgComponent,DialogOverviewExampleDialog,DialogOverviewExampleDialog1,DialogOverviewExampleDialog2,DialogOverviewExampleDialog3],
+  entryComponents: [ConfirmationDialog,ConfirmdlgComponent,DialogOverviewExampleDialog,DialogOverviewExampleDialog1,DialogOverviewExampleDialog2,DialogOverviewExampleDialog3,DialogOverviewExampleDialog4],
   providers: [ConfigService,
     AuthGuard,
     FileuploadService,
