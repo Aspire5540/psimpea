@@ -27,9 +27,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
 
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/opsa67';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/opsa68';
     const codeParams = window.location.href.split("code=")[1];
-   
+    console.log("returnUrl",this.returnUrl);
     // const token = GetCookie("token");
    
     if (codeParams === undefined) {
@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
       // console.log(window.location.href);
       }
       else{
-        console.log(codeParams);
         this.configService.getToken(codeParams).subscribe((data=>{
           
           if (data["status"]===1){

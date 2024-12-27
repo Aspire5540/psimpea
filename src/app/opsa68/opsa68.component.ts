@@ -71,14 +71,14 @@ export type ChartOptions3 = {
 
 @Component({
   selector: 'app-opsa',
-  templateUrl: './opsa67.component.html',
-  styleUrls: ['./opsa67.component.scss'],
+  templateUrl: './opsa68.component.html',
+  styleUrls: ['./opsa68.component.scss'],
   providers: [
     { provide: DateAdapter, useClass: AppDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
   ]
 })
-export class OPSA67Component implements OnInit, AfterViewInit {
+export class OPSA68Component implements OnInit, AfterViewInit {
   public showOverlay = true;
   public pClsChart: Partial<ChartOptions2>;
   public chartOptions1: Partial<ChartOptions2>;
@@ -341,7 +341,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
 
   }
   getTRload(trdata) {
-    this.configService.postdata2('opsa67/gettrload.php', { PEA_TR: trdata.PEA_TR }).subscribe((data => {
+    this.configService.postdata2('opsa68/gettrload.php', { PEA_TR: trdata.PEA_TR }).subscribe((data => {
       if (data['status'] == 1) {
         var data = data['data'];
         this.openDialog(data);
@@ -356,7 +356,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   }
   openDialog(trdata): void {
 
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog3, {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog4, {
       width: '800px',
       data: { trdata }
     });
@@ -383,7 +383,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     }
   }
   getinfo() {
-    this.configService.postdata2('opsa67/rdInfo.php', { data: 'roicdate' }).subscribe((data => {
+    this.configService.postdata2('opsa68/rdInfo.php', { data: 'roicdate' }).subscribe((data => {
       if (data['status'] == 1) {
         this.updateDate = data['data'][0].info;
         //--------------------------------
@@ -396,7 +396,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
 
   }
   getvcaredate() {
-    this.configService.postdata2('opsa67/rdvcaredate.php', {}).subscribe((data => {
+    this.configService.postdata2('opsa68/rdvcaredate.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.vcaredate = data['data'][0].updatedate;
         //--------------------------------
@@ -423,7 +423,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     // console.log([year,month,day].join('-'));
   }
   writeDate(trdata, date) {
-    this.configService.postdata2('opsa67/wriDate.php', { TRNumber: trdata, rundate: date }).subscribe((data => {
+    this.configService.postdata2('opsa68/wriDate.php', { TRNumber: trdata, rundate: date }).subscribe((data => {
       if (data['status'] == 1) {
         this.getTrData();
         //  this.getStatus();
@@ -436,7 +436,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     }))
   }
   onOther(value, trdata) {
-    this.configService.postdata2('opsa67/wriNote.php', { TRNumber: trdata, note: value }).subscribe((data => {
+    this.configService.postdata2('opsa68/wriNote.php', { TRNumber: trdata, note: value }).subscribe((data => {
       if (data['status'] == 1) {
         this.getTrData();
         //  this.getStatus();
@@ -530,7 +530,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
 
   }
   getpeaList() {
-    this.configService.postdata2('opsa67/rdpeaall2.php', {}).subscribe((data => {
+    this.configService.postdata2('opsa68/rdpeaall2.php', {}).subscribe((data => {
 
 
       if (data["status"] == 1) {
@@ -555,7 +555,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
 
   }
   getpeaList2() {
-    this.configService.postdata2('opsa67/rdpeaall.php', {}).subscribe((data => {
+    this.configService.postdata2('opsa68/rdpeaall.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         //console.log(data['data']);
         this.peaname2 = data['data'];
@@ -578,7 +578,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
 
   }
   getLoad100() {
-    this.configService.postdata2('opsa67/rdLoad100.php', { nDay: this.nDate }).subscribe((data => {
+    this.configService.postdata2('opsa68/rdLoad100.php', { nDay: this.nDate }).subscribe((data => {
       if (data['status'] == 1) {
         // console.log(data['data']);
         var label = ['30 kVA']
@@ -699,7 +699,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   getDataRegion() {
     var dataCnt = 0;
     var regions = Object.keys(GlobalConstants.regionLetter);
-    this.configService.postdata2('opsa67/rdTRAll.php', {}).subscribe((data => {
+    this.configService.postdata2('opsa68/rdTRAll.php', {}).subscribe((data => {
       if (data['status'] == 1) {
         this.trAllReg = data;
         //console.log('trall',data);
@@ -710,7 +710,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     }));
     this.regionData = [];
     regions.forEach(region => {
-      this.configService.postdata('opsa67/rdProblemAll4.php', { region: region }).subscribe((data => {
+      this.configService.postdata('opsa68/rdProblemAll4.php', { region: region }).subscribe((data => {
         if (data['status'] == 1) {
           this.regionData[region] = data["data"][0];
           this.dataDashboard[region] = (Number(data["data"][0].nTR) - Number(data["data"][0].nCLSD) - Number(data["data"][0].nGIS) - Number(data["data"][0].nNo));
@@ -735,7 +735,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     this.problemPEA3 = [];
     var regions = Object.keys(GlobalConstants.regionLetter);
     regions.forEach(region => {
-      this.configService.postdata('opsa67/rdLoadRegion2.php', { region: region }).subscribe((data => {
+      this.configService.postdata('opsa68/rdLoadRegion2.php', { region: region }).subscribe((data => {
         if (data['status'] == 1) {
           this.problemPEA1[region] = data["data1"][0];
           this.problemPEA2[region] = data["data2"][0];
@@ -798,7 +798,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
       this.TrTotalProblem = this.TrTotalProblem + this.problemPEA[i]['nTR'];
     }
 
-    regionsLabel = ['วัดโหลด/จัดทำแผน', 'ปรับปรุงแล้วในปี 66', 'ผลการรันผิดปกติ'];
+    regionsLabel = ['วัดโหลด/จัดทำแผน', 'ปรับปรุงแล้วในปี 67', 'ผลการรันผิดปกติ'];
 
     var chartData = {};
     chartData = {
@@ -902,7 +902,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     this.problemPEA3 = [];
     var regions = Object.keys(GlobalConstants.regionLetter);
     regions.forEach(region => {
-      this.configService.postdata('opsa67/rdLoadRegion4.php', { region: region }).subscribe((data => {
+      this.configService.postdata('opsa68/rdLoadRegion4.php', { region: region }).subscribe((data => {
         if (data['status'] == 1) {
           // this.problemPEA1[region]=data["data"];
           this.problemPEA1[region] = [];
@@ -1141,7 +1141,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1223,7 +1223,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1305,7 +1305,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1387,7 +1387,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1469,7 +1469,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1551,7 +1551,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1633,7 +1633,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1715,7 +1715,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1797,7 +1797,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1879,7 +1879,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -1961,7 +1961,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -2043,7 +2043,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
           },
           track: {
             background: "#F0EEED",
-            strokeWidth: "67%",
+            strokeWidth: "68%",
             margin: 0, // margin is in pixels
             dropShadow: {
               enabled: true,
@@ -2099,7 +2099,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     var peaInd = [];
     var pea = [];
     var nVcare = [];
-    this.configService.postdata2('opsa67/rdVcare.php', { peaCode: this.selPeapeaCode }).subscribe((data => {
+    this.configService.postdata2('opsa68/rdVcare.php', { peaCode: this.selPeapeaCode }).subscribe((data => {
       if (data['status'] == 1) {
         // get data
         console.log(this.peaname,)
@@ -2207,7 +2207,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   }
   getJobProgressPea2() {
 
-    this.configService.postdata2('opsa67/rdLoad5.php', { peaCode: this.selPeapeaCode, option: this.option, group: this.groupP1Select }).subscribe((data => {
+    this.configService.postdata2('opsa68/rdLoad5.php', { peaCode: this.selPeapeaCode, option: this.option, group: this.groupP1Select }).subscribe((data => {
       if (data['status'] == 1) {
 
         var Pea = [];
@@ -2411,7 +2411,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
               },
               track: {
                 background: "#fff",
-                strokeWidth: "67%",
+                strokeWidth: "68%",
                 margin: 0, // margin is in pixels
                 dropShadow: {
                   enabled: true,
@@ -2948,7 +2948,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   public getTrData = () => {
     // this.peaCode = "G00000";
     if (this.peaCode.includes(GlobalConstants.regionLetter[GlobalConstants.region].trim()) || this.peaCode == 'Z00000' || this.peaCode == 'B00000') {
-      this.configService.getTr('opsa67/TR2.php?condition=' + this.condition + '&peaCode0=' + this.peaCode+'&checked=' + this.checked)
+      this.configService.getTr('opsa68/TR2.php?condition=' + this.condition + '&peaCode0=' + this.peaCode+'&checked=' + this.checked)
         //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
         .subscribe(res => {
           // this.dataSource.paginator = this.paginator1;
@@ -2962,7 +2962,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   public getVcareData = () => {
     // this.peaCode = "G00000";
 
-    this.configService.getTr('opsa67/vcare.php?peaCode0=' + this.peaCode)
+    this.configService.getTr('opsa68/vcare.php?peaCode0=' + this.peaCode)
       //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
       .subscribe(res => {
         // this.dataSource.paginator = this.paginator1;
@@ -2974,7 +2974,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
 
   }
   getTRmatch() {
-    this.configService.getTrMatch('opsa67/rdMatchTR.php?aoj=' + this.selAoj)
+    this.configService.getTrMatch('opsa68/rdMatchTR.php?aoj=' + this.selAoj)
       //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000')
       .subscribe(res => {
         this.dataSource2.data = res as trmatch[];
@@ -2986,7 +2986,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   }
 
   getMatReq() {
-    this.configService.getMatReq('opsa67/getmatreq.php?nDay=' + this.nDate)
+    this.configService.getMatReq('opsa68/getmatreq.php?nDay=' + this.nDate)
       //this.configService.getTr('TR.php?condition='+this.condition+'&peaCode0='+'B00000)
       .subscribe(res => {
         this.dataSource3.data = res as matreq[];
@@ -3023,7 +3023,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   }
   getMat(choice) {
     this.choice = choice;
-    this.configService.postdata2('opsa67/rdMatSAP.php', { bat: this.bat }).subscribe((data => {
+    this.configService.postdata2('opsa68/rdMatSAP.php', { bat: this.bat }).subscribe((data => {
       if (data['status'] == 1) {
         // console.log(data);
         var label = ["30 kVA", "50 kVA", "100  kVA", "160  kVA"];
@@ -3412,7 +3412,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   }
   applyWBS(event) {
     if (window.confirm('คุณต้องการแก้ไขข้อมูล WBS/หมายเลขใบสั่ง ใช่หรือไม่?')) {
-      this.configService.postdata2('opsa67/wriWBS.php', { TRNumber: event[1].PEA_TR, WBS: event[0] }).subscribe((data => {
+      this.configService.postdata2('opsa68/wriWBS.php', { TRNumber: event[1].PEA_TR, WBS: event[0] }).subscribe((data => {
         if (data['status'] == 1) {
           this.getTrData();
           //  this.getStatus();
@@ -3469,7 +3469,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
 
   selectStatus(event) {
     // console.log(event);
-    this.configService.postdata2('opsa67/wristatus.php', { TRNumber: event.value[1].PEA_TR, status: event.value[0] }).subscribe((data => {
+    this.configService.postdata2('opsa68/wristatus.php', { TRNumber: event.value[1].PEA_TR, status: event.value[0] }).subscribe((data => {
       if (data['status'] == 1) {
         // console.log(data['data']);
         this.getTrData();
@@ -3497,7 +3497,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
     input["nDay"] = this.nDate;
     this.getMat(this.choice);
     // console.log(this.registerForm.value);
-    this.configService.postdata2('opsa67/wriMat.php', this.registerForm.value).subscribe((data => {
+    this.configService.postdata2('opsa68/wriMat.php', this.registerForm.value).subscribe((data => {
       if (data['status'] == 1) {
         //this.getTrData();
         this.getMatReq();
@@ -3509,7 +3509,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   }
   reTr(wbsdata) {
 
-    this.configService.postdata2('opsa67/reTR2.php', wbsdata).subscribe((data => {
+    this.configService.postdata2('opsa68/reTR2.php', wbsdata).subscribe((data => {
       if (data['status'] == 1) {
         // this.getData();
         this.getTrData();
@@ -3555,7 +3555,7 @@ export class OPSA67Component implements OnInit, AfterViewInit {
   selector: 'dialog-overview-example-dialog',
   templateUrl: 'dialog-overview-example-dialog.html',
 })
-export class DialogOverviewExampleDialog3 {
+export class DialogOverviewExampleDialog4 {
   RVoltage: number;
   RLoad: number;
   realUb: number
@@ -3623,7 +3623,7 @@ export class DialogOverviewExampleDialog3 {
 
   ];
   constructor(
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog3>,
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog4>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     if (data) {

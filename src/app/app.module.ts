@@ -87,6 +87,7 @@ import { LVProComponent,DialogOverviewExampleDialog } from './lvpro/lvpro.compon
 import { OPSAComponent,DialogOverviewExampleDialog1 } from './opsa/opsa.component';
 import { OPSA66Component,DialogOverviewExampleDialog2 } from './opsa66/opsa66.component';
 import { OPSA67Component,DialogOverviewExampleDialog3 } from './opsa67/opsa67.component';
+import { OPSA68Component,DialogOverviewExampleDialog4 } from './opsa68/opsa68.component';
 import { PsimdashboardComponent } from './psimdashboard/psimdashboard.component';
 import { PhasechkComponent } from './phasechk/phasechk.component';
 import { RoicComponent } from './roic/roic.component';
@@ -100,6 +101,7 @@ import { EzxComponent } from './ezx/ezx.component';
 import { ConfirmdlgComponent } from './confirmdlg/confirmdlg.component';
 import { Uploadopsa2Component } from './uploadopsa2/uploadopsa2.component';
 import { Uploadopsa3Component } from './uploadopsa3/uploadopsa3.component';
+import { Uploadopsa4Component } from './uploadopsa4/uploadopsa4.component';
 
 
 @NgModule({
@@ -133,6 +135,7 @@ import { Uploadopsa3Component } from './uploadopsa3/uploadopsa3.component';
     OPSAComponent,
     OPSA66Component,
     OPSA67Component,
+    OPSA68Component,
     PsimdashboardComponent,
     PhasechkComponent,
     RoicComponent,
@@ -146,6 +149,7 @@ import { Uploadopsa3Component } from './uploadopsa3/uploadopsa3.component';
     DialogOverviewExampleDialog3,
     Uploadopsa2Component,
     Uploadopsa3Component,
+    Uploadopsa4Component,
     
   ],
   imports: [

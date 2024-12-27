@@ -24,11 +24,13 @@ import {UploadComponent} from'./upload/upload.component';
 import {UploadopsaComponent} from'./uploadopsa/uploadopsa.component';
 import {Uploadopsa2Component} from './uploadopsa2/uploadopsa2.component';
 import {Uploadopsa3Component} from './uploadopsa3/uploadopsa3.component';
+import {Uploadopsa4Component} from './uploadopsa4/uploadopsa4.component';
 import {JobapproveComponent} from './jobapprove/jobapprove.component';
 import {LVProComponent} from'./lvpro/lvpro.component';
 import {OPSAComponent} from'./opsa/opsa.component';
 import {OPSA66Component} from'./opsa66/opsa66.component';
 import {OPSA67Component} from'./opsa67/opsa67.component';
+import {OPSA68Component} from'./opsa68/opsa68.component';
 import {PsimdashboardComponent} from './psimdashboard/psimdashboard.component';
 import {PhasechkComponent} from './phasechk/phasechk.component';
 import {RoicComponent} from './roic/roic.component';
@@ -58,11 +60,13 @@ const routes: Routes = [
   { path: 'uploadopsa', component: UploadopsaComponent },
   { path: 'uploadopsa2', component: Uploadopsa2Component },
   { path: 'uploadopsa3', component: Uploadopsa3Component },
+  { path: 'uploadopsa4', component: Uploadopsa4Component },
   { path: 'jobapprove', component: JobapproveComponent,canActivate:[AuthGuard] },
   // { path: 'ldcad', component: LVProComponent,canActivate:[AuthGuard]},
   { path: 'opsa', component: OPSAComponent,canActivate:[AuthGuard]},
   { path: 'opsa66', component: OPSA66Component,canActivate:[AuthGuard]},
   { path: 'opsa67', component: OPSA67Component,canActivate:[AuthGuard]},
+  { path: 'opsa68', component: OPSA68Component,canActivate:[AuthGuard]},
   { path: 'psim', component: PsimdashboardComponent,canActivate:[AuthGuard] },
   { path: 'phasecheck', component: PhasechkComponent,canActivate:[AuthGuard] },
   { path: 'roic', component: RoicComponent,canActivate:[AuthGuard] },

@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/opsa67';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/opsa68';
     const codeParams = window.location.href.split("code=")[1];
    
     // const token = GetCookie("token");
@@ -35,7 +35,6 @@ export class AppComponent implements OnInit {
       // console.log(window.location.href);
       }
       else{
-        console.log(codeParams);
         this.configService.getToken(codeParams).subscribe((data=>{
           console.log(data);
           if (data["status"]===1){
