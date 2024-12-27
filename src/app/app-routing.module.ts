@@ -26,7 +26,7 @@ import {Uploadopsa2Component} from './uploadopsa2/uploadopsa2.component';
 import {Uploadopsa3Component} from './uploadopsa3/uploadopsa3.component';
 import {Uploadopsa4Component} from './uploadopsa4/uploadopsa4.component';
 import {JobapproveComponent} from './jobapprove/jobapprove.component';
-import {LVProComponent} from'./lvpro/lvpro.component';
+// import {LVProComponent} from'./lvpro/lvpro.component';
 import {OPSAComponent} from'./opsa/opsa.component';
 import {OPSA66Component} from'./opsa66/opsa66.component';
 import {OPSA67Component} from'./opsa67/opsa67.component';
