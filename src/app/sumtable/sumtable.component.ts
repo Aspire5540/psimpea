@@ -500,7 +500,7 @@ solveMetsIm = ['เพิ่มเฟสแรงสูง',
   }
 
   trChange(value) {
-    this.configService.postdata2('opsa/rdtropsa.php', { PEA_TR: value }).subscribe((data => {
+    this.configService.postdata2('opsa68/rdtropsa.php', { PEA_TR: value }).subscribe((data => {
       if (data['status'] == 1) {
         if (data['data']) {
           this.trLoad = data['data'].PLoadTOT;

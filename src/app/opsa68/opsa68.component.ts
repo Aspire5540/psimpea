@@ -104,7 +104,7 @@ export class OPSA68Component implements OnInit, AfterViewInit {
   trAllReg: any;
   option = "7";
   vcaredate=""
-  displayedColumns1 = ['PEANAME', 'PEA_TR', 'kva', 'FEEDERID', 'Location', 'PLoadTOT','PLoadTOTnow', 'minV', 'minVnow', 'Ub','Ubnow', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'plancat'];
+  displayedColumns1 = ['PEANAME', 'PEA_TR', 'kva', 'FEEDERID', 'Location', 'PLoadTOT','PloadPhase','PLoadTOTnow', 'minV', 'minVnow', 'Ub','Ubnow', 'wbs', 'jobStatus', 'Status', 'loadResult', 'loadMea', 'plancat'];
 
   displayedColumns2 = ['PEA_TR',
     'PEANAME',
@@ -220,9 +220,7 @@ export class OPSA68Component implements OnInit, AfterViewInit {
   batName = 'N และ R';
   regionData = {};
   Conditions = [
-
     { value: 13, viewvalue: 'V <200 or Load>100' },
-
     // { value: 2, viewvalue: 'แรงดัน<200 Volt' },
     // { value: 7, viewvalue: 'แรงดัน 200-210 Volt' },
     // { value: 1, viewvalue: 'โหลด>100%' },
@@ -231,6 +229,7 @@ export class OPSA68Component implements OnInit, AfterViewInit {
     { value: 11, viewvalue: '%UB>50% (%Load 50-80)' },
     { value: 4, viewvalue: 'โหลด<30%' },
     { value: 12, viewvalue: 'V <200 or Load>80 or %UB>50%' },
+    { value: 14, viewvalue: 'V <170 or %Load>100 or %LoadPerPhase>150' },
     { value: 6, viewvalue: 'ทั้งหมด' },
 
   ];

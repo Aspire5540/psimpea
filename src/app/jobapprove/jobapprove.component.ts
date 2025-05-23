@@ -115,7 +115,7 @@ export class JobapproveComponent implements OnInit {
 
   }
   getTRList() {
-    this.configService.getData('opsa67/rdtr.php?').subscribe(res => {
+    this.configService.getData('opsa68/rdtr.php?').subscribe(res => {
       this.trObj = {};
       res["data"].forEach(element => {
         this.trObj[element.PEA_TR] = { 'minV': element.minV, 'Load': element.PLoadTOT, 'Ub': element.Ub }
@@ -139,7 +139,7 @@ export class JobapproveComponent implements OnInit {
           if (this.trObj[element.trim()].Load > 100) {
             status = status + "L";
           }
-  
+          // status = status + "V"+Math.round(this.trObj[element.trim()].minV)+ "L"+Math.round(this.trObj[element.trim()].Load)
           // if (this.trObj[element.trim()].Ub > 25) {
           //   status = status + "U";
           // }

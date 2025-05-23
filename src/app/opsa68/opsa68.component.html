@@ -708,7 +708,11 @@
                   <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> % Load </th>
                   <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.PLoadTOT | number:'1.2-2'}}</td>
                 </ng-container>
-
+                <ng-container matColumnDef="PloadPhase">
+                  <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> % Load/Phase </th>
+                  <td class="table-lg" mat-cell *matCellDef="let trdata"> {{trdata.PloadPhase}}
+                  </td>
+                </ng-container>
                 <ng-container matColumnDef="PLoadTOTnow">
                   <th class="table-lg" mat-header-cell *matHeaderCellDef mat-sort-header> % Load OSPA </th>
                   <td class="table-lg" mat-cell *matCellDef="let trdata">{{trdata.PLoadTOT_Now | number:'1.2-2'}}</td>
